@@ -1,0 +1,71 @@
+/* =========================================
+   BASE & SYSTEM VARIABLES
+   Todo valor debe ser divisible por 4.
+========================================= */
+:root {
+  /* Paleta de Colores (Estricta) */
+  --color-bg: #030303;
+  --color-primary: #0091ff; /* Azul eléctrico */
+  --color-primary-dim: rgba(0, 240, 255, 0.25);
+  --color-text: #FFFFFF;
+  --color-text-muted: #a3a3a3;
+  --color-alert: #FF003C;
+
+  /* Sistema Espacial (Multiplos de 4px) */
+  --space-4:  4px;
+  --space-8:  8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+
+  /* Bordes */
+  --border-thin: 1px solid var(--color-primary); /* 1px es la excepción para nitidez de línea */
+  --border-thick: 4px solid var(--color-primary);
+
+  /* Escala Tipográfica (Mobile First por defecto) */
+  --font-mono: 'Space Mono', 'Courier New', monospace;
+  --text-xs: 12px;
+  --text-sm: 16px;
+  --text-md: 20px;
+  --text-lg: 28px;
+  --text-xl: 40px;
+
+  /* Transiciones mecánicas */
+  --transition-fast: 0.1s ease-out;
+  --transition-smooth: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Escalado para Tablet / Desktop (Mantenemos múltiplos de 4) */
+@media (min-width: 768px) {
+  :root {
+    --text-md: 24px;
+    --text-lg: 32px;
+    --text-xl: 64px;
+  }
+}
+
+/* Reset Profesional */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: -0.5px;
+  line-height: 1.5;
+  /* El HUD ocupa toda la pantalla, sin scroll en el body */
+  height: 100vh; 
+  height: 100dvh; /* Evita que la barra de Safari móvil tape el contenido */
+  overflow: hidden; 
+  /* Evitar selección de texto accidental al interactuar rápido */
+  user-select: none; 
+}

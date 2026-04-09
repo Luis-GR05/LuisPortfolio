@@ -1,0 +1,190 @@
+/* ============================================================
+   HOME VIEW — LuisPortfolio.OS v2.0
+   ============================================================ */
+
+/* ── Layout raíz de la vista home ── */
+.home-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+  height: 100%;
+  align-content: center;
+}
+
+@media (min-width: 768px) {
+  .home-grid {
+    grid-template-columns: 200px 1fr;
+    align-items: center;
+  }
+}
+
+/* ── Avatar zone ── */
+.home-avatar-zone {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar-frame {
+  position: relative;
+  width: 180px; height: 180px;
+  border: var(--border-bright);
+  box-shadow: var(--glow-md);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.dev-avatar {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated; /* Preserva el pixel art */
+}
+
+/* Scanlines sobre el avatar */
+.avatar-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    hsla(0, 0%, 0%, 0.08) 2px,
+    hsla(0, 0%, 0%, 0.08) 4px
+  );
+  pointer-events: none;
+}
+
+/* Overlay de texto en avatar */
+.avatar-overlay-text {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: var(--sp-1) var(--sp-2);
+  background: hsla(195, 100%, 10%, 0.85);
+  font-size: var(--t-xs);
+  color: var(--c-primary);
+  letter-spacing: var(--ls-wide);
+  text-align: center;
+  border-top: var(--border-primary);
+}
+
+/* ── Contenido textual ── */
+.home-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.home-label {
+  font-size: var(--t-xs);
+  color: var(--c-primary);
+  letter-spacing: var(--ls-wider);
+}
+
+.dev-name-hero {
+  font-size: var(--t-3xl);
+  font-weight: 700;
+  color: var(--c-text);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-tight);
+  line-height: var(--lh-tight);
+}
+
+.dev-role-hero {
+  font-size: var(--t-md);
+  color: var(--c-primary);
+  letter-spacing: var(--ls-wide);
+}
+
+/* Bio con typewriter */
+.dev-bio {
+  font-size: var(--t-sm);
+  color: var(--c-text-sub);
+  font-family: var(--font-ui);
+  line-height: var(--lh-loose);
+  max-width: 60ch;
+}
+
+.bio-cursor {
+  display: inline-block;
+  color: var(--c-primary);
+  animation: cursor-blink 1s step-end infinite;
+  margin-left: 2px;
+}
+
+/* ── CTAs ── */
+.home-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-6);
+  background: var(--c-primary);
+  color: var(--c-bg);
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  border: var(--border-primary);
+  transition:
+    background-color var(--tr-fast),
+    box-shadow var(--tr-fast),
+    transform var(--tr-fast);
+}
+
+.btn-primary:hover {
+  background: var(--c-text);
+  box-shadow: var(--glow-sm);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-6);
+  background: transparent;
+  color: var(--c-primary);
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  border: var(--border-primary);
+  transition:
+    background-color var(--tr-fast),
+    box-shadow var(--tr-fast),
+    transform var(--tr-fast);
+}
+
+.btn-secondary:hover {
+  background: var(--c-primary-dim);
+  box-shadow: var(--glow-sm);
+  transform: translateY(-2px);
+}
+
+/* ── Tech badges ── */
+.skill-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.tech-badge {
+  font-size: var(--t-xs);
+  padding: var(--sp-1) var(--sp-3);
+  border: var(--border-1);
+  color: var(--c-text-muted);
+  letter-spacing: var(--ls-wide);
+  transition: color var(--tr-fast), border-color var(--tr-fast);
+}
+
+.tech-badge:hover {
+  color: var(--c-primary);
+  border-color: var(--c-primary);
+}

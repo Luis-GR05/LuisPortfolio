@@ -1,0 +1,165 @@
+/* ============================================================
+   SKILL TREE — LuisPortfolio.OS v2.0
+   MEJORAS: panel responsive, nodos con nivel (arc SVG),
+            colores por categoría, sin width hardcodeado
+   ============================================================ */
+
+/* ── Layout contenedor ── */
+.tree-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-4);
+  height: calc(100% - 80px);
+}
+
+@media (min-width: 768px) {
+  .tree-layout {
+    grid-template-columns: 1fr 280px;
+  }
+}
+
+/* ── Canvas SVG del árbol ── */
+.tree-canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  cursor: crosshair;
+  overflow: hidden;
+}
+
+/* ── Líneas de conexión ── */
+.tree-edge {
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+  animation: flow 20s linear infinite;
+  opacity: 0.5;
+}
+
+/* ── Nodos ── */
+.tree-node { cursor: pointer; }
+
+/* Área de click ampliada (invisible) */
+.node-hitbox {
+  fill: transparent;
+}
+
+/* Círculo principal del nodo */
+.node-core {
+  fill: var(--c-bg);
+  stroke-width: 1.5;
+  transition: fill 150ms, filter 150ms;
+}
+
+/* Label del nodo */
+.node-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: hsl(0, 0%, 55%);
+  pointer-events: none;
+  transition: fill 150ms;
+}
+
+/* Arco de nivel de proficiency (stroke-dasharray calculado en JS) */
+.node-level-arc {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+  transition: opacity 250ms;
+}
+
+/* Onda de ping (se añade dinámicamente via JS) */
+.node-ping {
+  fill: none;
+  stroke-width: 1;
+  animation: node-ping 1.2s var(--ease-out) forwards;
+  pointer-events: none;
+}
+
+/* ── Estados interactivos ── */
+.tree-node:hover .node-core,
+.tree-node.is-active .node-core {
+  filter: drop-shadow(0 0 10px currentColor);
+}
+
+.tree-node:hover .node-label,
+.tree-node.is-active .node-label {
+  fill: hsl(0, 0%, 92%);
+  font-weight: bold;
+}
+
+.tree-node:hover .node-level-arc,
+.tree-node.is-active .node-level-arc {
+  opacity: 1;
+}
+
+.tree-node.is-active .node-core {
+  stroke-width: 2.5;
+}
+
+/* ── Panel de detalles ── */
+.details-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--c-bg-elevated);
+  border: var(--border-primary);
+  border-left-width: 4px;
+  backdrop-filter: blur(8px);
+  transition: opacity var(--tr-normal), transform var(--tr-normal);
+  /* En móvil: panel inferior */
+  position: relative;
+}
+
+.details-panel[hidden] {
+  display: none;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--sp-3);
+}
+
+.detail-title {
+  font-size: var(--t-md);
+  color: var(--c-primary);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+}
+
+/* Indicador visual del nivel (1-5 puntos) */
+.detail-level {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.level-pip {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--c-border-bright);
+}
+
+.level-pip.is-filled {
+  background: var(--c-primary);
+  box-shadow: var(--glow-sm);
+}
+
+.detail-desc {
+  font-size: var(--t-sm);
+  color: var(--c-text-sub);
+  font-family: var(--font-ui);
+  line-height: var(--lh-loose);
+  user-select: text;
+}
+
+.detail-meta {
+  font-size: var(--t-xs);
+  color: var(--c-text-muted);
+  padding-top: var(--sp-3);
+  border-top: var(--border-1);
+  letter-spacing: var(--ls-wide);
+}

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── Primary Meta ── -->
+  <title>Luis Gordillo Rodríguez | Frontend Developer & DAW</title>
+  <meta name="description" content="Portfolio de Luis Gordillo Rodríguez — Técnico Superior en DAW. Especialista en frontend, arquitecturas web y experiencias de usuario interactivas.">
+  <meta name="author" content="Luis Gordillo Rodríguez">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://luis-gordillo.dev">
+
+  <!-- ── Open Graph (para compartir en LinkedIn, Twitter, etc.) ── -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://luis-gordillo.dev">
+  <meta property="og:title"       content="Luis Gordillo Rodríguez | Frontend Developer">
+  <meta property="og:description" content="Portfolio interactivo de Luis Gordillo — DAW Developer. Skills, proyectos y contacto.">
+  <meta property="og:image"       content="assets/img/avatar.png">
+  <meta name="twitter:card"       content="summary_large_image">
+  <meta name="twitter:title"      content="Luis Gordillo Rodríguez | Frontend Developer">
+  <meta name="twitter:description"content="Portfolio interactivo de Luis Gordillo — DAW Developer.">
+
+  <!-- ── Fonts (Space Mono + Inter, con display=swap para no bloquear render) ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ── Design System CSS ── -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/hud-overlays.css">
+
+  <!-- ── Component CSS ── -->
+  <link rel="stylesheet" href="css/components/home.css">
+  <link rel="stylesheet" href="css/components/skill-tree.css">
+  <link rel="stylesheet" href="css/components/project-cards.css">
+  <link rel="stylesheet" href="css/components/contact.css">
+
+  <!-- ── Structured Data (JSON-LD) ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Luis Gordillo Rodríguez",
+    "jobTitle": "Técnico Superior en Desarrollo de Aplicaciones Web",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Montijo",
+      "addressRegion": "Badajoz",
+      "addressCountry": "ES"
+    },
+    "url": "https://luis-gordillo.dev",
+    "sameAs": ["https://github.com/Luis-GR05"],
+    "knowsAbout": ["HTML5","CSS3","JavaScript","React","Java","Python","Laravel","C++","SQL"]
+  }
+  </script>
+
+  <!-- GSAP CDN para transiciones avanzadas (35KB, valor 10x) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+<body>
+
+  <!-- Accesibilidad: skip navigation para lectores de pantalla -->
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- Cursor personalizado (JS lo posiciona via CSS custom properties) -->
+  <div id="cursor" aria-hidden="true">
+    <div class="cursor-ring"></div>
+    <div class="cursor-dot"></div>
+  </div>
+
+  <!-- ── Boot Sequence Overlay ────────────────────────────────────────── -->
+  <div id="boot-overlay" role="status" aria-live="polite" aria-label="Sistema cargando">
+    <div class="boot-header">
+      <span class="boot-logo">SYS_INIT</span>
+      <span class="boot-progress-label">LOADING...</span>
+    </div>
+    <ul id="boot-log" class="boot-log" aria-label="Log de arranque del sistema"></ul>
+    <div class="boot-bar">
+      <div class="boot-bar-fill" id="boot-bar-fill"></div>
+    </div>
+  </div>
+
+  <!-- ── Aplicación Principal ─────────────────────────────────────────── -->
+  <main class="hud-container" id="main-content">
+
+    <!-- SIDEBAR / HEADER HUD -->
+    <header class="hud-header" role="banner">
+
+      <div class="brand-id">
+        <!-- CRÍTICO: data-text y textContent se sincronizan en app.js para que el glitch funcione -->
+        <span class="glitch-name" id="dev-name" data-text="LGR05" aria-label="Luis Gordillo Rodríguez">LGR05</span>
+        <div class="version-badge" aria-label="Versión del sistema">
+          <span class="badge-dot" aria-hidden="true"></span>
+          <span>v2.0</span>
+        </div>
+      </div>
+
+      <!-- Navegación principal -->
+      <nav class="main-nav" aria-label="Secciones del portfolio">
+        <button class="nav-btn is-active" data-target="view-home"     id="nav-home"
+                aria-current="page" aria-controls="view-home">/INIT</button>
+        <button class="nav-btn"           data-target="view-skills"   id="nav-skills"
+                aria-controls="view-skills">/SKILLS</button>
+        <button class="nav-btn"           data-target="view-projects" id="nav-projects"
+                aria-controls="view-projects">/PROJECTS</button>
+        <button class="nav-btn"           data-target="view-contact"  id="nav-contact"
+                aria-controls="view-contact">/CONTACT</button>
+      </nav>
+
+      <!-- Stats rápidos del dev -->
+      <div class="sidebar-stats" aria-label="Información del desarrollador">
+        <div class="stat-row">
+          <span class="stat-label">STATUS</span>
+          <span class="stat-value stat-online" id="sys-status">ONLINE</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">LOC</span>
+          <span class="stat-value" id="sys-location">Montijo, ES</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">ROLE</span>
+          <span class="stat-value">DAW Dev</span>
+        </div>
+      </div>
+
+    </header>
+
+    <!-- VIEWPORT / PANTALLA CENTRAL -->
+    <section class="hud-screen" id="viewport-screen" aria-label="Contenido principal">
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║   VISTA: /INIT (Home)                ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <article id="view-home" class="view-section is-active"
+               role="region" aria-label="Presentación">
+        <div class="home-grid">
+
+          <!-- Avatar -->
+          <div class="home-avatar-zone" aria-hidden="true">
+            <div class="avatar-frame">
+              <img src="assets/img/avatar.png"
+                   alt="Avatar pixel-art de Luis Gordillo"
+                   class="dev-avatar"
+                   width="200" height="200"
+                   loading="eager">
+              <div class="avatar-scanlines"></div>
+              <div class="avatar-overlay-text">LGR05.exe</div>
+            </div>
+          </div>
+
+          <!-- Contenido textual -->
+          <div class="home-content">
+            <div class="home-label" aria-hidden="true">// PROFILE LOADED</div>
+
+            <!-- H1 pre-renderizado (SEO: crawlers ven texto real, no vacío) -->
+            <h1 class="dev-name-hero" id="hero-name">Luis Gordillo</h1>
+            <p  class="dev-role-hero" id="hero-role">Técnico Superior en DAW</p>
+
+            <!-- Bio (rellenada por Typewriter tras el boot) -->
+            <p class="dev-bio" id="hero-bio" aria-label="Presentación personal"></p>
+            <span class="bio-cursor" aria-hidden="true">▋</span>
+
+            <!-- CTAs -->
+            <div class="home-ctas" role="group" aria-label="Acciones principales">
+              <a href="https://github.com/Luis-GR05"
+                 target="_blank" rel="noopener noreferrer"
+                 class="btn-primary" id="cta-github">
+                <span aria-hidden="true">▶</span> GitHub
+              </a>
+              <button class="btn-secondary" id="cta-contact" data-target="view-contact">
+                <span aria-hidden="true">◈</span> Contacto
+              </button>
+            </div>
+
+            <!-- Tech stack badges -->
+            <div class="skill-badges" role="list" aria-label="Tecnologías principales">
+              <span role="listitem" class="tech-badge">HTML/CSS</span>
+              <span role="listitem" class="tech-badge">JavaScript</span>
+              <span role="listitem" class="tech-badge">React</span>
+              <span role="listitem" class="tech-badge">Java</span>
+              <span role="listitem" class="tech-badge">Python</span>
+              <span role="listitem" class="tech-badge">Laravel</span>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║   VISTA: /SKILLS                     ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <article id="view-skills" class="view-section"
+               role="region" aria-label="Árbol de habilidades">
+        <header class="section-header">
+          <h2 class="section-title">
+            <span class="section-prefix" aria-hidden="true">//</span>
+            Skill_Tree.exe
+          </h2>
+          <p class="section-subtitle">Mapa de competencias técnicas. Haz click en un nodo para explorar.</p>
+        </header>
+        <div class="tree-layout">
+          <div class="tree-canvas" id="skill-canvas"
+               role="img" aria-label="Árbol visual de habilidades técnicas"></div>
+          <aside class="details-panel" id="skill-details" aria-live="polite" hidden>
+            <div class="detail-header">
+              <h3 class="detail-title" id="detail-title"></h3>
+              <div class="detail-level" id="detail-level" aria-label="Nivel de dominio"></div>
+            </div>
+            <p class="detail-desc" id="detail-desc"></p>
+            <div class="detail-meta" id="detail-meta"></div>
+          </aside>
+        </div>
+      </article>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║   VISTA: /PROJECTS                   ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <article id="view-projects" class="view-section"
+               role="region" aria-label="Proyectos">
+        <header class="section-header">
+          <h2 class="section-title">
+            <span class="section-prefix" aria-hidden="true">//</span>
+            Project_Select
+          </h2>
+          <p class="section-subtitle">Casos de estudio y proyectos reales.</p>
+        </header>
+        <div class="projects-grid" id="project-grid"
+             role="list" aria-label="Lista de proyectos"></div>
+      </article>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║   VISTA: /CONTACT                    ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <article id="view-contact" class="view-section"
+               role="region" aria-label="Contacto">
+        <header class="section-header">
+          <h2 class="section-title">
+            <span class="section-prefix" aria-hidden="true">//</span>
+            Contact.init()
+          </h2>
+          <p class="section-subtitle">Canal seguro de comunicación establecido.</p>
+        </header>
+        <div class="contact-layout">
+
+          <!-- Formulario estilo terminal -->
+          <form class="terminal-form" id="contact-form" novalidate>
+
+            <div class="form-field" id="field-name">
+              <label class="field-prompt" for="input-name">
+                <span class="prompt-glyph" aria-hidden="true">&gt;</span>
+                <span>SENDER_NAME</span>
+              </label>
+              <input type="text" id="input-name" name="name"
+                     class="terminal-input"
+                     placeholder="Tu nombre completo"
+                     autocomplete="name"
+                     required minlength="2">
+              <span class="field-error" id="error-name" role="alert"></span>
+            </div>
+
+            <div class="form-field" id="field-email">
+              <label class="field-prompt" for="input-email">
+                <span class="prompt-glyph" aria-hidden="true">&gt;</span>
+                <span>SENDER_EMAIL</span>
+              </label>
+              <input type="email" id="input-email" name="email"
+                     class="terminal-input"
+                     placeholder="tu@email.com"
+                     autocomplete="email"
+                     required>
+              <span class="field-error" id="error-email" role="alert"></span>
+            </div>
+
+            <div class="form-field" id="field-message">
+              <label class="field-prompt" for="input-message">
+                <span class="prompt-glyph" aria-hidden="true">&gt;</span>
+                <span>MESSAGE_BODY</span>
+              </label>
+              <textarea id="input-message" name="message"
+                        class="terminal-input terminal-textarea"
+                        placeholder="Escribe tu mensaje aquí..."
+                        rows="5" required minlength="10"></textarea>
+              <span class="field-error" id="error-message" role="alert"></span>
+            </div>
+
+            <button type="submit" class="btn-submit" id="btn-submit">
+              <span class="submit-icon" aria-hidden="true">◈</span>
+              <span class="submit-text">TRANSMIT_MESSAGE</span>
+              <span class="submit-loader" aria-hidden="true"></span>
+            </button>
+
+            <div class="form-response" id="form-response"
+                 aria-live="polite" role="status"></div>
+          </form>
+
+          <!-- Info de contacto lateral -->
+          <div class="contact-info" aria-label="Canales de contacto alternativos">
+            <div class="contact-channel">
+              <span class="channel-label">GITHUB</span>
+              <a href="https://github.com/Luis-GR05"
+                 target="_blank" rel="noopener noreferrer"
+                 class="channel-link">@Luis-GR05</a>
+            </div>
+            <div class="contact-channel">
+              <span class="channel-label">LOCATION</span>
+              <span class="channel-value">Montijo, Badajoz, ES</span>
+            </div>
+            <div class="contact-channel">
+              <span class="channel-label">STATUS</span>
+              <span class="channel-value stat-online">OPEN TO WORK</span>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+    </section>
+
+    <!-- FOOTER HUD -->
+    <footer class="hud-footer" role="contentinfo">
+      <div class="status-bar">
+        <span class="status-led" aria-hidden="true"></span>
+        <span id="sys-status-bar">SYS_READY</span>
+      </div>
+      <div class="footer-center">
+        <span id="footer-clock" class="footer-clock" aria-label="Hora actual"></span>
+      </div>
+      <div class="footer-right">
+        <span id="footer-uptime" class="footer-uptime" aria-label="Tiempo de sesión">UP: 00:00:00</span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- Entry point ESModule — un solo script tag, sin globals -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

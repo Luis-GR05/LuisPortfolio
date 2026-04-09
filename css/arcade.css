@@ -1,0 +1,110 @@
+/* css/arcade.css */
+
+.arcade-grid {
+  display: grid;
+  /* Magia matemática: Tarjetas de mínimo 320px, que se expanden si hay espacio */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--space-24);
+  padding: var(--space-16);
+  width: 100%;
+}
+
+.arcade-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg);
+  border: var(--border-thick);
+  padding: var(--space-16);
+  position: relative;
+  /* Transición rápida tipo "snappy" de videojuego */
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+  cursor: pointer;
+  outline: none; /* Quitamos el outline por defecto del focus... */
+}
+
+/* ...y lo reemplazamos por nuestro sistema visual (Hover & Keyboard Focus) */
+.arcade-card:hover,
+.arcade-card:focus-visible {
+  border-color: var(--color-text);
+  transform: translateY(-8px) scale(1.02);
+  z-index: 10;
+  /* Brillo sutil de la pantalla CRT */
+  box-shadow: 0 12px 24px var(--color-primary-dim);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  margin-bottom: var(--space-16);
+  color: var(--color-text-muted);
+}
+
+.proj-status.deployed { color: var(--color-primary); }
+.proj-status.beta { color: #FFD700; }
+.proj-status.offline { color: var(--color-alert); }
+
+.card-body {
+  flex-grow: 1;
+  margin-bottom: var(--space-24);
+}
+
+.proj-title {
+  font-size: var(--text-lg);
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin-bottom: var(--space-8);
+  /* Efecto de texto agresivo Arcade */
+  letter-spacing: -1px;
+}
+
+.proj-cat {
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+}
+
+.proj-case {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-12);
+  padding-left: var(--space-8);
+  border-left: 2px solid var(--color-primary-dim); /* Línea sutil a la izquierda */
+  line-height: 1.4;
+}
+
+.arcade-card:hover .proj-case {
+  border-left-color: var(--color-primary);
+  color: var(--color-text);
+}
+
+.tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  list-style: none;
+  margin-bottom: var(--space-16);
+}
+
+.tech-list li {
+  font-size: var(--text-xs);
+  padding: var(--space-4) var(--space-8);
+  border: var(--border-thin);
+  border-color: var(--color-text-muted);
+}
+
+.btn-launch {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  padding: var(--space-12);
+  background-color: var(--color-primary);
+  color: var(--color-bg);
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color var(--transition-fast);
+}
+
+.arcade-card:hover .btn-launch {
+  background-color: var(--color-text);
+}

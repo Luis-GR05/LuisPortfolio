@@ -1,0 +1,188 @@
+/* ============================================================
+   CONTACT VIEW — LuisPortfolio.OS v2.0
+   Formulario estilo terminal con inputs tipo prompt
+   ============================================================ */
+
+/* ── Layout de dos columnas en desktop ── */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+}
+
+@media (min-width: 768px) {
+  .contact-layout {
+    grid-template-columns: 1fr 240px;
+    align-items: start;
+  }
+}
+
+/* ── Formulario terminal ── */
+.terminal-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.field-prompt {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--t-xs);
+  color: var(--c-text-muted);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  cursor: text;
+}
+
+.prompt-glyph {
+  color: var(--c-primary);
+  font-size: var(--t-md);
+  line-height: 1;
+}
+
+/* Input estilo terminal */
+.terminal-input {
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--c-surface);
+  border: var(--border-1);
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  resize: none;
+  transition: border-color var(--tr-fast), box-shadow var(--tr-fast);
+}
+
+.terminal-input::placeholder {
+  color: var(--c-text-muted);
+  font-size: var(--t-xs);
+}
+
+.terminal-input:focus {
+  border-color: var(--c-primary);
+  box-shadow: var(--glow-sm);
+  outline: none;
+}
+
+/* Estado de error */
+.terminal-input.has-error { border-color: var(--c-alert); }
+
+.field-error {
+  font-size: var(--t-xs);
+  color: var(--c-alert);
+  letter-spacing: var(--ls-wide);
+  min-height: 16px;
+}
+
+/* ── Botón de envío ── */
+.btn-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-8);
+  background: var(--c-primary);
+  color: var(--c-bg);
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  border: var(--border-primary);
+  transition:
+    background-color var(--tr-fast),
+    transform var(--tr-fast),
+    box-shadow var(--tr-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-submit:hover:not(:disabled) {
+  background: var(--c-text);
+  transform: translateY(-2px);
+  box-shadow: var(--glow-sm);
+}
+
+.btn-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit-loader {
+  display: none;
+  width: 12px; height: 12px;
+  border: 2px solid var(--c-bg);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: rotation 0.6s linear infinite;
+}
+
+.btn-submit.is-loading .submit-loader { display: block; }
+.btn-submit.is-loading .submit-icon,
+.btn-submit.is-loading .submit-text { opacity: 0.5; }
+
+@keyframes rotation {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Respuesta del formulario ── */
+.form-response {
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--t-sm);
+  letter-spacing: var(--ls-wide);
+  border-left: 4px solid transparent;
+  transition: all var(--tr-normal);
+}
+
+.form-response.is-success {
+  color: var(--c-success);
+  border-color: var(--c-success);
+  background: hsla(142, 70%, 45%, 0.08);
+}
+
+.form-response.is-error {
+  color: var(--c-alert);
+  border-color: var(--c-alert);
+  background: hsla(348, 100%, 50%, 0.08);
+}
+
+/* ── Info de contacto lateral ── */
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  padding: var(--sp-4);
+  border: var(--border-1);
+  background: var(--c-bg-elevated);
+}
+
+.contact-channel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.channel-label {
+  font-size: var(--t-xs);
+  color: var(--c-text-muted);
+  letter-spacing: var(--ls-wider);
+}
+
+.channel-link,
+.channel-value {
+  font-size: var(--t-sm);
+  color: var(--c-text);
+}
+
+.channel-link {
+  color: var(--c-primary);
+  transition: text-shadow var(--tr-fast);
+}
+.channel-link:hover { text-shadow: var(--glow-sm); }
