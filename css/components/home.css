@@ -250,42 +250,42 @@
 }
 
 /* ── ANIMACIONES DE ENTRADA (SEO y A11Y Friendly) ── */
-.view-section.is-active .avatar-frame {
-  animation: avatar-reveal 1s var(--ease-bounce) both;
-  animation-delay: 0.4s; /* Acorde al nuevo tiempo de boot rápido */
+.is-booted .view-section.is-active .avatar-frame {
+  animation: avatar-reveal 0.8s var(--ease-bounce) both;
+  animation-delay: 0.05s; /* Animación rapidísima garantizada al navegar */
 }
 
-.view-section.is-active .avatar-overlay-text {
+.is-booted .view-section.is-active .avatar-overlay-text {
+  animation: fade-in-up 0.5s var(--ease-out) both;
+  animation-delay: 0.1s;
+}
+
+.is-booted .view-section.is-active .home-label {
+  animation: fade-in-up 0.5s var(--ease-out) both;
+  animation-delay: 0.1s;
+}
+
+.is-booted .view-section.is-active .dev-name-hero {
+  animation: fade-in-up 0.5s var(--ease-out) both;
+  animation-delay: 0.15s;
+}
+
+.is-booted .view-section.is-active .dev-role-hero {
+  animation: fade-in-up 0.5s var(--ease-out) both;
+  animation-delay: 0.2s;
+}
+
+.is-booted .view-section.is-active .dev-bio {
+  animation: fade-in-up 0.5s var(--ease-out) both;
+  animation-delay: 0.25s;
+}
+
+.is-booted .view-section.is-active .home-ctas {
+  animation: fade-in-up 0.5s var(--ease-out) both;
+  animation-delay: 0.3s;
+}
+
+.is-booted .view-section.is-active .skill-badges {
   animation: fade-in-up 0.6s var(--ease-out) both;
-  animation-delay: 0.5s;
-}
-
-.view-section.is-active .home-label {
-  animation: fade-in-up 0.8s var(--ease-out) both;
-  animation-delay: 0.6s;
-}
-
-.view-section.is-active .dev-name-hero {
-  animation: fade-in-up 0.8s var(--ease-out) both;
-  animation-delay: 0.7s;
-}
-
-.view-section.is-active .dev-role-hero {
-  animation: fade-in-up 0.8s var(--ease-out) both;
-  animation-delay: 0.8s;
-}
-
-.view-section.is-active .dev-bio {
-  animation: fade-in-up 0.8s var(--ease-out) both;
-  animation-delay: 0.9s;
-}
-
-.view-section.is-active .home-ctas {
-  animation: fade-in-up 0.8s var(--ease-out) both;
-  animation-delay: 1.0s;
-}
-
-.view-section.is-active .skill-badges {
-  animation: fade-in-up 0.8s var(--ease-out) both;
-  animation-delay: 1.1s;
+  animation-delay: 0.35s;
 }

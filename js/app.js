@@ -48,6 +48,7 @@ async function initApp() {
 
   // 6. Boot sequence — revela el HUD al terminar
   await runBoot(CONFIG.bootLines);
+  document.body.classList.add('is-booted');
 
   // 7. Typewriter del bio DESPUÉS del boot (usuario ya ve el HUD)
   const bioEl    = document.getElementById('hero-bio');
