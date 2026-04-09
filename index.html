@@ -16,7 +16,7 @@
   <meta property="og:url"         content="https://luis-gordillo.dev">
   <meta property="og:title"       content="Luis Gordillo Rodríguez | Frontend Developer">
   <meta property="og:description" content="Portfolio interactivo de Luis Gordillo — DAW Developer. Skills, proyectos y contacto.">
-  <meta property="og:image"       content="assets/img/avatar.png">
+  <meta property="og:image"       content="assets/img/avatar.webp">
   <meta name="twitter:card"       content="summary_large_image">
   <meta name="twitter:title"      content="Luis Gordillo Rodríguez | Frontend Developer">
   <meta name="twitter:description"content="Portfolio interactivo de Luis Gordillo — DAW Developer.">
@@ -35,9 +35,9 @@
 
   <!-- ── Component CSS ── -->
   <link rel="stylesheet" href="css/components/home.css">
-  <link rel="stylesheet" href="css/components/skill-tree.css">
-  <link rel="stylesheet" href="css/components/project-cards.css">
-  <link rel="stylesheet" href="css/components/contact.css">
+  <link rel="stylesheet" href="css/components/skill-tree.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="css/components/project-cards.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="css/components/contact.css" media="print" onload="this.media='all'">
 
   <!-- ── Structured Data (JSON-LD) ── -->
   <script type="application/ld+json">
@@ -59,7 +59,7 @@
   </script>
 
   <!-- GSAP CDN para transiciones avanzadas (35KB, valor 10x) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body>
 
@@ -142,11 +142,14 @@
           <!-- Avatar -->
           <div class="home-avatar-zone" aria-hidden="true">
             <div class="avatar-frame">
-              <img src="assets/img/avatar.png"
-                   alt="Avatar pixel-art de Luis Gordillo"
-                   class="dev-avatar"
-                   width="200" height="200"
-                   loading="eager">
+              <picture>
+                <source srcset="assets/img/avatar.webp" type="image/webp">
+                <img src="assets/img/avatar.webp"
+                     alt="Avatar pixel-art de Luis Gordillo"
+                     class="dev-avatar"
+                     width="221" height="221"
+                     loading="eager" decoding="sync" fetchpriority="high">
+              </picture>
               <div class="avatar-scanlines"></div>
               <div class="avatar-overlay-text">LGR05.exe</div>
             </div>

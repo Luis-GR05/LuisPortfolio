@@ -59,26 +59,43 @@ function initNoiseCanvas() {
   const ctx = canvas.getContext('2d');
   let animId;
 
+  // Pre-calcular el ruido en un canvas pequeño (altamente performante)
+  const patternCanvas = document.createElement('canvas');
+  const patternSize = 128;
+  patternCanvas.width = patternSize;
+  patternCanvas.height = patternSize;
+  const pCtx = patternCanvas.getContext('2d', { willReadFrequently: true });
+  const pData = pCtx.createImageData(patternSize, patternSize);
+  const data = pData.data;
+
+  // Llenar con ruido estático
+  for (let i = 0; i < data.length; i += 4) {
+    const value = Math.random() * 255 | 0;
+    data[i]     = value;
+    data[i + 1] = value;
+    data[i + 2] = value;
+    data[i + 3] = 18; // Alpha bajo
+  }
+  pCtx.putImageData(pData, 0, 0);
+
   function resize() {
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
   }
 
   function drawNoise() {
-    const { width, height } = canvas;
-    const imageData = ctx.createImageData(width, height);
-    const data = imageData.data;
+    // Offset aleatorio para que el patrón parezca ruido dinámico
+    const offsetX = Math.random() * patternSize | 0;
+    const offsetY = Math.random() * patternSize | 0;
 
-    // Llenar con ruido aleatorio en escala de grises
-    for (let i = 0; i < data.length; i += 4) {
-      const value = Math.random() * 255 | 0;
-      data[i]     = value; // R
-      data[i + 1] = value; // G
-      data[i + 2] = value; // B
-      data[i + 3] = 18;    // Alpha muy bajo → opacidad CSS hace el resto
-    }
+    // Llenar el viewport repitiendo el patrón con el offset
+    ctx.fillStyle = ctx.createPattern(patternCanvas, 'repeat');
+    
+    // Trasladar negativamente el contexto, y dibujar un rect que cubra la pantalla + offset
+    ctx.translate(-offsetX, -offsetY);
+    ctx.fillRect(offsetX, offsetY, canvas.width + offsetX, canvas.height + offsetY);
+    ctx.translate(offsetX, offsetY);
 
-    ctx.putImageData(imageData, 0, 0);
     animId = requestAnimationFrame(drawNoise);
   }
 
