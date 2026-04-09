@@ -22,12 +22,16 @@
 /* ── Avatar zone ── */
 .home-avatar-zone {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
 }
 
 .avatar-frame {
   position: relative;
-  width: 140px; height: 140px; /* Reducido para móvil */
+  width: 140px;
+  height: 170px;
+  /* Rectangular: más alto en móvil */
   border: var(--border-bright);
   box-shadow: var(--glow-md);
   overflow: hidden;
@@ -36,41 +40,44 @@
 
 @media (min-width: 768px) {
   .avatar-frame {
-    width: 180px; height: 180px;
+    width: 180px;
+    height: 230px;
+    /* Rectangular y mucho más alto en escritorio */
   }
 }
 
 .dev-avatar {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  image-rendering: pixelated; /* Preserva el pixel art */
+  object-position: center top;
+  /* Alinea hacia la parte superior para asegurar que la cabeza no sea recortada */
+  image-rendering: pixelated;
+  /* Preserva el pixel art */
 }
 
 /* Scanlines sobre el avatar */
 .avatar-scanlines {
   position: absolute;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    hsla(0, 0%, 0%, 0.08) 2px,
-    hsla(0, 0%, 0%, 0.08) 4px
-  );
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      hsla(0, 0%, 0%, 0.08) 2px,
+      hsla(0, 0%, 0%, 0.08) 4px);
   pointer-events: none;
 }
 
-/* Overlay de texto en avatar */
+/* Banner de texto debajo del avatar */
 .avatar-overlay-text {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: var(--sp-1) var(--sp-2);
+  padding: var(--sp-1) var(--sp-3);
   background: hsla(195, 100%, 10%, 0.85);
   font-size: var(--t-xs);
   color: var(--c-primary);
   letter-spacing: var(--ls-wide);
   text-align: center;
-  border-top: var(--border-primary);
+  border: var(--border-primary);
+  box-shadow: var(--glow-sm);
 }
 
 /* ── Contenido textual ── */
@@ -97,7 +104,8 @@
 }
 
 .dev-name-hero {
-  font-size: var(--t-2xl); /* Algo más pequeño en móvil */
+  font-size: var(--t-2xl);
+  /* Algo más pequeño en móvil */
   font-weight: 700;
   color: var(--c-text);
   text-transform: uppercase;
@@ -106,7 +114,9 @@
 }
 
 @media (min-width: 768px) {
-  .dev-name-hero { font-size: var(--t-3xl); }
+  .dev-name-hero {
+    font-size: var(--t-3xl);
+  }
 }
 
 .dev-role-hero {
@@ -116,12 +126,15 @@
 }
 
 @media (min-width: 768px) {
-  .dev-role-hero { font-size: var(--t-md); }
+  .dev-role-hero {
+    font-size: var(--t-md);
+  }
 }
 
 /* Bio con typewriter */
 .dev-bio {
-  font-size: var(--t-xs); /* Más pequeño en móvil */
+  font-size: var(--t-xs);
+  /* Más pequeño en móvil */
   color: var(--c-text-sub);
   font-family: var(--font-ui);
   line-height: var(--lh-loose);
@@ -129,7 +142,9 @@
 }
 
 @media (min-width: 768px) {
-  .dev-bio { font-size: var(--t-sm); }
+  .dev-bio {
+    font-size: var(--t-sm);
+  }
 }
 
 .bio-cursor {
@@ -149,7 +164,9 @@
 }
 
 @media (min-width: 768px) {
-  .home-ctas { justify-content: flex-start; }
+  .home-ctas {
+    justify-content: flex-start;
+  }
 }
 
 .btn-primary {
@@ -211,12 +228,15 @@
 }
 
 @media (min-width: 768px) {
-  .skill-badges { justify-content: flex-start; }
+  .skill-badges {
+    justify-content: flex-start;
+  }
 }
 
 .tech-badge {
   font-size: var(--t-xs);
-  padding: var(--sp-1) var(--sp-2); /* Ligeramente más compacto en móvil */
+  padding: var(--sp-1) var(--sp-2);
+  /* Ligeramente más compacto en móvil */
   border: var(--border-1);
   color: var(--c-text-muted);
   letter-spacing: var(--ls-wide);
@@ -231,29 +251,41 @@
 /* ── ANIMACIONES DE ENTRADA (SEO y A11Y Friendly) ── */
 .view-section.is-active .avatar-frame {
   animation: avatar-reveal 1.2s var(--ease-bounce) both;
-  animation-delay: 2.1s; /* Acorde al tiempo de boot */
+  animation-delay: 2.1s;
+  /* Acorde al tiempo de boot */
 }
-.view-section.is-active .home-label {
-  animation: fade-in-up 0.8s var(--ease-out) both;
+
+.view-section.is-active .avatar-overlay-text {
+  animation: fade-in-up 0.6s var(--ease-out) both;
   animation-delay: 2.2s;
 }
-.view-section.is-active .dev-name-hero {
+
+.view-section.is-active .home-label {
   animation: fade-in-up 0.8s var(--ease-out) both;
   animation-delay: 2.3s;
 }
-.view-section.is-active .dev-role-hero {
+
+.view-section.is-active .dev-name-hero {
   animation: fade-in-up 0.8s var(--ease-out) both;
   animation-delay: 2.4s;
 }
-.view-section.is-active .dev-bio {
+
+.view-section.is-active .dev-role-hero {
   animation: fade-in-up 0.8s var(--ease-out) both;
   animation-delay: 2.5s;
 }
-.view-section.is-active .home-ctas {
+
+.view-section.is-active .dev-bio {
   animation: fade-in-up 0.8s var(--ease-out) both;
   animation-delay: 2.6s;
 }
-.view-section.is-active .skill-badges {
+
+.view-section.is-active .home-ctas {
   animation: fade-in-up 0.8s var(--ease-out) both;
   animation-delay: 2.7s;
+}
+
+.view-section.is-active .skill-badges {
+  animation: fade-in-up 0.8s var(--ease-out) both;
+  animation-delay: 2.8s;
 }
