@@ -7,8 +7,8 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--sp-6);
-  height: 100%;
-  align-content: center;
+  min-height: 100%; /* Permitir que crezca más allá del 100% si el contenido es largo */
+  /* align-content se elimina en móvil para evitar que el centrado forzado esconda cosas por arriaba (scroll inalcanzable) */
 }
 
 @media (min-width: 768px) {
@@ -16,6 +16,7 @@
     grid-template-columns: 200px 1fr;
     gap: var(--sp-8);
     align-items: center;
+    align-content: center; /* Centrado seguro en desktop al haber más espacio */
   }
 }
 

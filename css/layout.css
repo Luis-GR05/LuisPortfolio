@@ -9,8 +9,8 @@
   /* Móvil: Header - Pantalla central - (footer oculto o minimalista) */
   grid-template-rows: auto 1fr;
   height: 100dvh;
-  /* Genera un padding extra en móbiles para que el contenido no quede tapado por la barra inferior fija */
-  padding: var(--sp-2) var(--sp-2) calc(var(--sp-2) + 60px) var(--sp-2);
+  /* Genera un padding extra en móviles para que el contenido no quede tapado por la barra inferior fija */
+  padding: var(--sp-2) var(--sp-2) calc(var(--sp-4) + 70px) var(--sp-2);
   gap: var(--sp-2);
   animation: boot-in 0.4s var(--ease-out) both;
   position: relative;
