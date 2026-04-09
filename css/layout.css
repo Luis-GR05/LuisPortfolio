@@ -269,6 +269,10 @@
   gap: var(--sp-2);
 }
 
+.sys-status-bar{
+  color: var(--c-success);
+}
+
 .status-led {
   width: 6px; height: 6px;
   background: var(--c-success);
