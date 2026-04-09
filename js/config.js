@@ -26,14 +26,14 @@ export const CONFIG = {
   // ── Secuencia de boot ────────────────────────────────────────────────────────
   bootLines: [
     { text: 'BIOS v2.0.4 ... OK',                            delay: 0 },
-    { text: 'Iniciando módulos del sistema...',              delay: 300 },
-    { text: 'Cargando perfil: Luis Gordillo Rodríguez',     delay: 600, class: '' },
-    { text: 'Compilando árbol de habilidades... OK',        delay: 900 },
-    { text: 'Cargando base de datos de proyectos... OK',    delay: 1150 },
-    { text: 'Motor SVG: READY',                             delay: 1350 },
-    { text: 'Verificando integridad... PASSED',             delay: 1550 },
-    { text: '██████████████████████ 100%',                  delay: 1750 },
-    { text: 'SYSTEM READY. Bienvenido.',                    delay: 1950, class: 'boot-success' },
+    { text: 'Iniciando módulos del sistema...',              delay: 40 },
+    { text: 'Cargando perfil: Luis Gordillo Rodríguez',      delay: 80, class: '' },
+    { text: 'Compilando árbol de habilidades... OK',         delay: 120 },
+    { text: 'Cargando base de datos de proyectos... OK',     delay: 160 },
+    { text: 'Motor SVG: READY',                              delay: 200 },
+    { text: 'Verificando integridad... PASSED',              delay: 240 },
+    { text: '██████████████████████ 100%',                   delay: 280 },
+    { text: 'SYSTEM READY. Bienvenido.',                     delay: 300, class: 'boot-success' },
   ],
 
   // ── Habilidades (Skill Tree) ─────────────────────────────────────────────────

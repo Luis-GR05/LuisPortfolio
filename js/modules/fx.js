@@ -188,10 +188,10 @@ export async function runBoot(lines) {
 
   await Promise.all(promises);
 
-  // Pausa final antes de ocultar
-  await new Promise(r => setTimeout(r, 500));
+  // Pausa final mínima antes de ocultar
+  await new Promise(r => setTimeout(r, 100));
 
-  // Ocultar overlay — GSAP si está disponible, CSS transition como fallback
+  // Ocultar overlay rápidament
   await hideOverlay(overlay);
 }
 
@@ -201,7 +201,7 @@ function hideOverlay(overlayEl) {
     if (typeof gsap !== 'undefined') {
       gsap.to(overlayEl, {
         opacity: 0,
-        duration: 0.6,
+        duration: 0.3,
         ease: 'power2.out',
         onComplete: () => {
           overlayEl.style.display = 'none';
@@ -210,7 +210,7 @@ function hideOverlay(overlayEl) {
       });
     } else {
       // Fallback CSS
-      overlayEl.style.transition = 'opacity 0.5s ease';
+      overlayEl.style.transition = 'opacity 0.3s ease';
       overlayEl.style.opacity = '0';
       overlayEl.addEventListener('transitionend', () => {
         overlayEl.style.display = 'none';
