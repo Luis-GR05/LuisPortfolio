@@ -41,43 +41,57 @@ export const CONFIG = {
 
     // Nodos: cada skill es una entrada
     nodes: {
-      'htmlcss': {
-        label: 'HTML/CSS', col: 1, row: 2, level: 5, category: 'frontend', years: 3,
-        desc: 'Maquetación semántica, layouts complejos (Grid/Flexbox) y Responsive Design estricto. CSS custom properties y design systems escalables.',
+      'html': {
+        label: 'HTML', col: 1, row: 2, level: 5, category: 'frontend', years: 3,
+        desc: 'Maquetación semántica, layouts accesibles y estructuración para SEO.',
+        icon: 'assets/icons/html.jpg'
+      },
+      'css': {
+        label: 'CSS', col: 2, row: 2, level: 5, category: 'frontend', years: 3,
+        desc: 'Layouts complejos (Grid/Flexbox) y Responsive Design estricto. Custom properties y design systems.',
+        icon: 'assets/icons/css.webp'
       },
       'js': {
         label: 'JavaScript', col: 3, row: 2, level: 4, category: 'frontend', years: 2,
         desc: 'Ecosistema frontend moderno. ESModules, async/await, manipulación del DOM, patrones SPA sin frameworks y optimización de rendimiento.',
+        icon: 'assets/icons/javascript.png'
       },
       'react': {
         label: 'React', col: 4, row: 1, level: 3, category: 'frontend', years: 1,
         desc: 'Desarrollo de SPAs reactivas. Hooks (useState, useEffect, useContext), gestión de estado con Context API y optimización de renders.',
+        icon: 'assets/icons/react.jpg'
       },
       'java': {
         label: 'Java', col: 3, row: 4, level: 4, category: 'backend', years: 2,
         desc: 'Arquitectura OOP robusta para servidor. Patrones de diseño, Collections framework, streams y programación concurrente.',
+        icon: 'assets/icons/java.png'
       },
       'python': {
         label: 'Python', col: 5, row: 3, level: 3, category: 'backend', years: 2,
         desc: 'Scripts de automatización, procesamiento de datos y desarrollo backend ágil. Experiencia con FastAPI y scripting de sistemas.',
+        icon: 'assets/icons/python.jpg'
       },
       'laravel': {
         label: 'Laravel', col: 5, row: 2, level: 4, category: 'backend', years: 2,
         desc: 'Framework MVC PHP. Eloquent ORM, sistema de rutas, middlewares, Blade templates y desarrollo de APIs RESTful.',
+        icon: 'assets/icons/laravel.png'
       },
       'cpp': {
         label: 'C++', col: 2, row: 4, level: 2, category: 'systems', years: 1,
         desc: 'Fundamentos de gestión de memoria, punteros y rendimiento a bajo nivel. Base sólida que fortalece la comprensión del software en profundidad.',
+        icon: 'assets/icons/cpp.png'
       },
       'sql': {
         label: 'SQL/DB', col: 4, row: 4, level: 3, category: 'data', years: 2,
         desc: 'Diseño de bases de datos relacionales, consultas complejas con JOINs y subconsultas, optimización de índices. MySQL, PostgreSQL y SQLite.',
+        icon: 'assets/icons/sql.jpg'
       },
     },
 
     // Conexiones entre nodos: [origen, destino]
     edges: [
-      ['htmlcss', 'js'],
+      ['html', 'css'],
+      ['css', 'js'],
       ['js', 'react'],
       ['js', 'laravel'],
       ['java', 'python'],

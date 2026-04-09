@@ -1,26 +1,29 @@
 /* ============================================================
    HUD LAYOUT — LuisPortfolio.OS v2.0
-   Grid de 3 zonas: Sidebar | Screen | Footer
-   Mobile-first, breakpoint desktop a 1024px
+   Grid de 3 zonas adaptativo: Mobile | Tablet | Desktop
    ============================================================ */
 
 /* ── CONTENEDOR RAÍZ ── */
 .hud-container {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  /* Móvil: Header - Pantalla central - (footer oculto o minimalista) */
+  grid-template-rows: auto 1fr;
   height: 100dvh;
-  padding: var(--sp-2);
+  /* Genera un padding extra en móbiles para que el contenido no quede tapado por la barra inferior fija */
+  padding: var(--sp-2) var(--sp-2) calc(var(--sp-2) + 60px) var(--sp-2);
   gap: var(--sp-2);
   animation: boot-in 0.4s var(--ease-out) both;
+  position: relative;
 }
 
 /* ══════════════════════════════════════════════
-   HEADER / SIDEBAR
+   HEADER / SIDEBAR (Comportamiento Móvil por defecto)
    ══════════════════════════════════════════════ */
 .hud-header {
   display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
+  flex-direction: row; /* Móvil horizontal */
+  justify-content: space-between;
+  align-items: center;
   padding: var(--sp-3) var(--sp-4);
   border: var(--border-primary);
   background: var(--c-bg-elevated);
@@ -43,6 +46,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: var(--sp-3);
   font-size: var(--t-md);
   font-weight: 700;
   color: var(--c-primary);
@@ -50,7 +54,7 @@
   letter-spacing: var(--ls-wider);
 }
 
-/* ── Glitch name — CORRECCIÓN: data-text sincronizado via JS ── */
+/* ── Glitch name ── */
 .glitch-name {
   position: relative;
   display: inline-block;
@@ -58,7 +62,7 @@
 
 .glitch-name::before,
 .glitch-name::after {
-  content: attr(data-text);   /* JS setea este atributo igual que textContent */
+  content: attr(data-text); 
   position: absolute;
   inset: 0;
   background: var(--c-bg-elevated);
@@ -98,40 +102,52 @@
   animation: blink 2s ease-in-out infinite;
 }
 
-/* ── Navegación ── */
-.main-nav {
-  display: flex;
-  gap: var(--sp-2);
-  overflow-x: auto;
-  scrollbar-width: none;
+/* ── Stats del sidebar (Ocultos en móvil) ── */
+.sidebar-stats {
+  display: none;
 }
-.main-nav::-webkit-scrollbar { display: none; }
+
+/* ── Navegación (Móvil: Dock Inferior Fixed) ── */
+.main-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  background: rgba(4, 11, 20, 0.95);
+  border-top: var(--border-primary);
+  padding: var(--sp-2);
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
 
 .nav-btn {
   position: relative;
-  padding: var(--sp-2) var(--sp-4);
+  padding: var(--sp-2) var(--sp-3);
   color: var(--c-text-muted);
   font-family: var(--font-mono);
-  font-size: var(--t-xs);
+  font-size: 11px;
   letter-spacing: var(--ls-wide);
   border: 1px solid transparent;
   white-space: nowrap;
   transition: color var(--tr-fast), border-color var(--tr-fast);
   overflow: hidden;
+  text-align: center;
+  flex: 1;
 }
 
-/* Fill animado al hover/active */
 .nav-btn::before {
   content: '';
   position: absolute;
   inset: 0;
   background: var(--c-primary-dim);
-  transform: scaleX(0);
-  transform-origin: left;
+  transform: scaleY(0);
+  transform-origin: bottom;
   transition: transform var(--tr-normal);
 }
 .nav-btn:hover::before,
-.nav-btn.is-active::before { transform: scaleX(1); }
+.nav-btn.is-active::before { transform: scaleY(1); }
 
 .nav-btn:hover,
 .nav-btn:focus-visible {
@@ -145,36 +161,15 @@
   font-weight: 700;
 }
 
-/* Indicador lateral activo */
+/* Indicador activo móvil (línea inferior) */
 .nav-btn.is-active::after {
   content: '';
   position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 2px;
+  left: 0; bottom: 0; right: 0;
+  height: 2px;
   background: var(--c-primary);
   box-shadow: var(--glow-sm);
 }
-
-/* ── Stats del sidebar ── */
-.sidebar-stats {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-  margin-top: auto;
-  padding-top: var(--sp-3);
-  border-top: var(--border-1);
-  font-size: var(--t-xs);
-}
-
-.stat-row {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--sp-2);
-}
-
-.stat-label { color: var(--c-text-muted); letter-spacing: var(--ls-wide); }
-.stat-value { color: var(--c-text); text-align: right; }
-.stat-online { color: var(--c-success); }
 
 /* ══════════════════════════════════════════════
    PANTALLA CENTRAL
@@ -207,7 +202,7 @@
 .view-section {
   position: absolute;
   inset: 0;
-  padding: var(--sp-6);
+  padding: var(--sp-4); /* Menos padding en móvil */
   overflow-y: auto;
   opacity: 0;
   visibility: hidden;
@@ -222,13 +217,13 @@
 
 /* ── Cabeceras de sección ── */
 .section-header {
-  margin-bottom: var(--sp-6);
-  padding-bottom: var(--sp-4);
+  margin-bottom: var(--sp-4);
+  padding-bottom: var(--sp-3);
   border-bottom: var(--border-1);
 }
 
 .section-title {
-  font-size: var(--t-xl);
+  font-size: var(--t-lg);
   font-weight: 700;
   color: var(--c-text);
   letter-spacing: var(--ls-tight);
@@ -242,7 +237,7 @@
 }
 
 .section-subtitle {
-  font-size: var(--t-sm);
+  font-size: var(--t-xs);
   color: var(--c-text-muted);
   margin-top: var(--sp-2);
   font-family: var(--font-ui);
@@ -252,63 +247,114 @@
    FOOTER HUD
    ══════════════════════════════════════════════ */
 .hud-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--sp-2) var(--sp-4);
-  border: var(--border-primary);
-  font-size: var(--t-xs);
-  color: var(--c-text-muted);
-  background: var(--c-bg-elevated);
-  letter-spacing: var(--ls-wide);
+  display: none; /* Oculto en móvil puramente para dar espacio */
 }
 
-.status-bar {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-}
-
-.sys-status-bar{
-  color: var(--c-success);
-}
-
-.status-led {
-  width: 6px; height: 6px;
-  background: var(--c-success);
-  border-radius: 50%;
-  box-shadow: 0 0 8px var(--c-success);
-  animation: blink 2s ease-in-out infinite;
-}
-
-.footer-clock,
-.footer-uptime { font-variant-numeric: tabular-nums; color: var(--c-primary); }
 
 /* ══════════════════════════════════════════════
-   BREAKPOINT DESKTOP ≥1024px
-   Sidebar lateral | Screen + Footer right
+   BREAKPOINT TABLET ≥768px
+   Layout expandido clásico
    ══════════════════════════════════════════════ */
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .hud-container {
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 220px 1fr;
     grid-template-rows: 1fr auto;
-    padding: var(--sp-4);
+    padding: var(--sp-3);
     gap: var(--sp-3);
   }
 
   .hud-header {
     grid-column: 1;
     grid-row: 1 / 3;
+    flex-direction: column;
     justify-content: flex-start;
+    align-items: stretch;
   }
 
-  .main-nav { flex-direction: column; gap: var(--sp-1); }
+  .sidebar-stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    margin-top: auto;
+    padding-top: var(--sp-3);
+    border-top: var(--border-1);
+    font-size: var(--t-xs);
+  }
+
+  .stat-row { display: flex; justify-content: space-between; gap: var(--sp-2); }
+  .stat-label { color: var(--c-text-muted); letter-spacing: var(--ls-wide); }
+  .stat-value { color: var(--c-text); text-align: right; }
+  .stat-online { color: var(--c-success); }
+
+  .main-nav {
+    position: static;
+    flex-direction: column;
+    gap: var(--sp-1);
+    background: transparent;
+    padding: 0;
+    border: none;
+    margin-top: var(--sp-5);
+  }
 
   .nav-btn {
     text-align: left;
     width: 100%;
+    font-size: var(--t-xs);
+    padding: var(--sp-2) var(--sp-4);
+  }
+  
+  .nav-btn::before {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .nav-btn:hover::before,
+  .nav-btn.is-active::before { transform: scaleX(1); }
+
+  .nav-btn.is-active::after {
+    left: 0; top: 0; bottom: 0; width: 2px; height: auto;
   }
 
-  .hud-screen { grid-column: 2; grid-row: 1; }
-  .hud-footer { grid-column: 2; grid-row: 2; }
+  .hud-screen { 
+    grid-column: 2; grid-row: 1; 
+  }
+  
+  .view-section {
+    padding: var(--sp-6);
+  }
+  
+  .section-title { font-size: var(--t-xl); }
+  .section-subtitle { font-size: var(--t-sm); }
+  
+  .hud-footer {
+    display: flex;
+    grid-column: 2; grid-row: 2;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--sp-2) var(--sp-4);
+    border: var(--border-primary);
+    font-size: var(--t-xs);
+    color: var(--c-text-muted);
+    background: var(--c-bg-elevated);
+    letter-spacing: var(--ls-wide);
+  }
+  
+  .status-bar { display: flex; align-items: center; gap: var(--sp-2); }
+  .sys-status-bar{ color: var(--c-success); }
+  .status-led {
+    width: 6px; height: 6px; background: var(--c-success);
+    border-radius: 50%; box-shadow: 0 0 8px var(--c-success);
+    animation: blink 2s ease-in-out infinite;
+  }
+  .footer-clock, .footer-uptime { font-variant-numeric: tabular-nums; color: var(--c-primary); }
+}
+
+/* ══════════════════════════════════════════════
+   BREAKPOINT DESKTOP ≥1024px
+   Ajustes refinados del grid
+   ══════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+  .hud-container {
+    grid-template-columns: 240px 1fr;
+    padding: var(--sp-4);
+  }
 }

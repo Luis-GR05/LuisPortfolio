@@ -58,15 +58,15 @@
   --font-mono: 'Space Mono', 'JetBrains Mono', 'Courier New', monospace;
   --font-ui:   'Inter', system-ui, sans-serif;
 
-  /* Escala modular ratio 1.25 (Major Third) */
-  --t-xs:   0.64rem;    /* ~10px */
-  --t-sm:   0.8rem;     /* ~13px */
-  --t-base: 1rem;       /* 16px  */
-  --t-md:   1.25rem;    /* ~20px */
-  --t-lg:   1.563rem;   /* ~25px */
-  --t-xl:   1.953rem;   /* ~31px */
-  --t-2xl:  2.441rem;   /* ~39px */
-  --t-3xl:  3.052rem;   /* ~49px */
+  /* Escala modular ratio 1.25 (Major Third) adaptada con clamp() */
+  --t-xs:   clamp(0.60rem, 0.5rem + 0.5vw, 0.64rem);   /* ~10px */
+  --t-sm:   clamp(0.75rem, 0.6rem + 0.75vw, 0.8rem);   /* ~13px */
+  --t-base: clamp(0.90rem, 0.8rem + 1vw, 1rem);        /* 16px  */
+  --t-md:   clamp(1.10rem, 0.95rem + 1.5vw, 1.25rem);  /* ~20px */
+  --t-lg:   clamp(1.35rem, 1.15rem + 2vw, 1.563rem);   /* ~25px */
+  --t-xl:   clamp(1.65rem, 1.35rem + 3vw, 1.953rem);   /* ~31px */
+  --t-2xl:  clamp(2.00rem, 1.65rem + 4vw, 2.441rem);   /* ~39px */
+  --t-3xl:  clamp(2.40rem, 1.90rem + 5vw, 3.052rem);   /* ~49px */
 
   --lh-tight:  1.1;
   --lh-snug:   1.3;

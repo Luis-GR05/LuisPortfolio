@@ -6,7 +6,7 @@
 .home-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--sp-8);
+  gap: var(--sp-6);
   height: 100%;
   align-content: center;
 }
@@ -14,6 +14,7 @@
 @media (min-width: 768px) {
   .home-grid {
     grid-template-columns: 200px 1fr;
+    gap: var(--sp-8);
     align-items: center;
   }
 }
@@ -26,11 +27,17 @@
 
 .avatar-frame {
   position: relative;
-  width: 180px; height: 180px;
+  width: 140px; height: 140px; /* Reducido para móvil */
   border: var(--border-bright);
   box-shadow: var(--glow-md);
   overflow: hidden;
   flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .avatar-frame {
+    width: 180px; height: 180px;
+  }
 }
 
 .dev-avatar {
@@ -70,7 +77,17 @@
 .home-content {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-4);
+  gap: var(--sp-3);
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .home-content {
+    align-items: flex-start;
+    text-align: left;
+    gap: var(--sp-4);
+  }
 }
 
 .home-label {
@@ -80,7 +97,7 @@
 }
 
 .dev-name-hero {
-  font-size: var(--t-3xl);
+  font-size: var(--t-2xl); /* Algo más pequeño en móvil */
   font-weight: 700;
   color: var(--c-text);
   text-transform: uppercase;
@@ -88,19 +105,31 @@
   line-height: var(--lh-tight);
 }
 
+@media (min-width: 768px) {
+  .dev-name-hero { font-size: var(--t-3xl); }
+}
+
 .dev-role-hero {
-  font-size: var(--t-md);
+  font-size: var(--t-sm);
   color: var(--c-primary);
   letter-spacing: var(--ls-wide);
 }
 
+@media (min-width: 768px) {
+  .dev-role-hero { font-size: var(--t-md); }
+}
+
 /* Bio con typewriter */
 .dev-bio {
-  font-size: var(--t-sm);
+  font-size: var(--t-xs); /* Más pequeño en móvil */
   color: var(--c-text-sub);
   font-family: var(--font-ui);
   line-height: var(--lh-loose);
   max-width: 60ch;
+}
+
+@media (min-width: 768px) {
+  .dev-bio { font-size: var(--t-sm); }
 }
 
 .bio-cursor {
@@ -114,8 +143,13 @@
 .home-ctas {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--sp-3);
   margin-top: var(--sp-2);
+}
+
+@media (min-width: 768px) {
+  .home-ctas { justify-content: flex-start; }
 }
 
 .btn-primary {
@@ -172,12 +206,17 @@
 .skill-badges {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--sp-2);
+}
+
+@media (min-width: 768px) {
+  .skill-badges { justify-content: flex-start; }
 }
 
 .tech-badge {
   font-size: var(--t-xs);
-  padding: var(--sp-1) var(--sp-3);
+  padding: var(--sp-1) var(--sp-2); /* Ligeramente más compacto en móvil */
   border: var(--border-1);
   color: var(--c-text-muted);
   letter-spacing: var(--ls-wide);
@@ -187,4 +226,34 @@
 .tech-badge:hover {
   color: var(--c-primary);
   border-color: var(--c-primary);
+}
+
+/* ── ANIMACIONES DE ENTRADA (SEO y A11Y Friendly) ── */
+.view-section.is-active .avatar-frame {
+  animation: avatar-reveal 1.2s var(--ease-bounce) both;
+  animation-delay: 2.1s; /* Acorde al tiempo de boot */
+}
+.view-section.is-active .home-label {
+  animation: fade-in-up 0.8s var(--ease-out) both;
+  animation-delay: 2.2s;
+}
+.view-section.is-active .dev-name-hero {
+  animation: fade-in-up 0.8s var(--ease-out) both;
+  animation-delay: 2.3s;
+}
+.view-section.is-active .dev-role-hero {
+  animation: fade-in-up 0.8s var(--ease-out) both;
+  animation-delay: 2.4s;
+}
+.view-section.is-active .dev-bio {
+  animation: fade-in-up 0.8s var(--ease-out) both;
+  animation-delay: 2.5s;
+}
+.view-section.is-active .home-ctas {
+  animation: fade-in-up 0.8s var(--ease-out) both;
+  animation-delay: 2.6s;
+}
+.view-section.is-active .skill-badges {
+  animation: fade-in-up 0.8s var(--ease-out) both;
+  animation-delay: 2.7s;
 }

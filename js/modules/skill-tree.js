@@ -10,7 +10,7 @@
  */
 
 const GRID  = 120; // Distancia entre nodos (múltiplo de 8 → alineado al sistema)
-const NODE_R = 20; // Radio del nodo
+const NODE_R = 28; // Radio del nodo agrandado para aguantar la imagen
 
 /** Sanitiza texto antes de inyectarlo en SVG */
 const sanitize = (str) =>
@@ -64,8 +64,12 @@ export const SkillTreeEngine = {
       aria-hidden="true"
     >`;
 
-    // ── Defs: filtros de glow ──────────────────────────────────────────────
-    svg += `<defs>`;
+    // ── Defs: filtros de glow y clip paths para los iconos ─────────────────
+    svg += `<defs>
+      <clipPath id="circle-clip" clipPathUnits="objectBoundingBox">
+        <circle cx="0.5" cy="0.5" r="0.48"/>
+      </clipPath>
+    `;
     Object.entries(categoryColors).forEach(([cat, colors]) => {
       svg += `
         <filter id="glow-${cat}" x="-50%" y="-50%" width="200%" height="200%">
@@ -114,7 +118,11 @@ export const SkillTreeEngine = {
       const circumference = 2 * Math.PI * arcR;
       const arcLength    = circumference * (node.level / 5);
       const arcGap       = circumference - arcLength;
-      // Rotar para que empiece desde arriba (-90deg → -π/2 → rotate(-90, cx, cy))
+
+      // Medidas para la imagen
+      const imgSize = NODE_R * 2;
+      const imgX = cx - NODE_R;
+      const imgY = cy - NODE_R;
 
       svg += `
         <g class="tree-node" data-id="${sanitize(id)}" tabindex="0"
@@ -131,11 +139,14 @@ export const SkillTreeEngine = {
             transform="rotate(-90 ${cx} ${cy})"
           />
 
-          <!-- Círculo principal -->
+          <!-- Círculo principal / Fondo oscuro -->
           <circle cx="${cx}" cy="${cy}" r="${NODE_R}"
             class="node-core"
             stroke="${color}"
           />
+          
+          <!-- Imagen del Icono (con clip path circular) -->
+          ${node.icon ? `<image href="${node.icon}" x="${imgX}" y="${imgY}" width="${imgSize}" height="${imgSize}" clip-path="url(#circle-clip)" class="node-icon" preserveAspectRatio="xMidYMid slice" />` : ''}
 
           <!-- Label -->
           <text x="${cx}" y="${cy + NODE_R + 18}"
@@ -153,6 +164,20 @@ export const SkillTreeEngine = {
   attachEvents() {
     const nodeEls = this.canvas.querySelectorAll('.tree-node');
     const panel   = document.getElementById('skill-details');
+    const svgEl   = this.canvas.querySelector('svg');
+
+    // Cerrar panel al hacer click en un espacio vacío (backdrop del árbol)
+    if (svgEl) {
+      svgEl.addEventListener('click', (e) => {
+        // Cierra si el click no proviene de dentro de un elemento árbol (tree-node)
+        if (!e.target.closest('.tree-node')) {
+          this.activeNodeId = null;
+          nodeEls.forEach(n => n.classList.remove('is-active'));
+          this.canvas.querySelectorAll('.node-ping').forEach(p => p.remove());
+          if (panel) panel.setAttribute('hidden', '');
+        }
+      });
+    }
 
     nodeEls.forEach(el => {
       const activate = () => {
