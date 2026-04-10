@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="css/components/home.css">
   <link rel="stylesheet" href="css/components/skill-tree.css" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="css/components/project-cards.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="css/components/experience.css" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="css/components/contact.css" media="print" onload="this.media='all'">
 
   <!-- ── Structured Data (JSON-LD) ── -->
@@ -107,6 +108,8 @@
                 aria-controls="view-skills">/SKILLS</button>
         <button class="nav-btn"           data-target="view-projects" id="nav-projects"
                 aria-controls="view-projects">/PROJECTS</button>
+        <button class="nav-btn"           data-target="view-experience" id="nav-experience"
+                aria-controls="view-experience">/EXPERIENCE</button>
         <button class="nav-btn"           data-target="view-contact"  id="nav-contact"
                 aria-controls="view-contact">/CONTACT</button>
       </nav>
@@ -233,6 +236,46 @@
         </header>
         <div class="projects-grid" id="project-grid"
              role="list" aria-label="Lista de proyectos"></div>
+      </article>
+
+      <!-- ╔══════════════════════════════════════╗ -->
+      <!-- ║   VISTA: /EXPERIENCE                 ║ -->
+      <!-- ╚══════════════════════════════════════╝ -->
+      <article id="view-experience" class="view-section"
+               role="region" aria-label="Experiencia">
+        <header class="section-header">
+          <h2 class="section-title">
+            <span class="section-prefix" aria-hidden="true">//</span>
+            Experience.log
+          </h2>
+          <p class="section-subtitle">Registro de actividad, metodologías y trayectoria profesional.</p>
+        </header>
+
+        <div class="experience-timeline" id="experience-timeline">
+          
+          <div class="exp-item">
+            <div class="exp-date">Marzo 2026 - Junio 2026</div>
+            <div class="exp-content">
+              <h3 class="exp-role">Desarrollador Web (Prácticas / FCT)</h3>
+              <h4 class="exp-company">Bitttacora | Badajoz, España</h4>
+              <p class="exp-desc">
+                Inmersión de tres meses en el ciclo de vida del desarrollo de software. Contribución activa en la creación y mantenimiento de soluciones web, colaborando estrechamente con el equipo de programación y diseño para alcanzar entregables eficientes, escalables y orientados a resultados.
+              </p>
+            </div>
+          </div>
+
+          <div class="exp-item">
+            <div class="exp-date">Febrero 2024</div>
+            <div class="exp-content">
+              <h3 class="exp-role">Observación Técnica y Metodológica</h3>
+              <h4 class="exp-company">ecaptureDtech | Badajoz, España</h4>
+              <p class="exp-desc">
+                Intervención de dos semanas orientada a la asimilación de dinámicas reales en un entorno de producción tecnológica. Análisis directo de los flujos de trabajo en equipo, la orquestación ágil de proyectos y el ecosistema interno de desarrollo corporativo.
+              </p>
+            </div>
+          </div>
+
+        </div>
       </article>
 
       <!-- ╔══════════════════════════════════════╗ -->

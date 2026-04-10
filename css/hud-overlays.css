@@ -15,6 +15,12 @@
   will-change: transform;
 }
 
+@media (max-width: 768px), (pointer: coarse) {
+  #cursor {
+    display: none !important;
+  }
+}
+
 .cursor-ring {
   width: 28px; height: 28px;
   border: 1px solid var(--c-primary);
