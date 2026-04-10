@@ -11,7 +11,7 @@
   /* align-content se elimina en móvil para evitar que el centrado forzado esconda cosas por arriaba (scroll inalcanzable) */
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .home-grid {
     grid-template-columns: 200px 1fr;
     gap: var(--sp-8);
@@ -69,17 +69,6 @@
   pointer-events: none;
 }
 
-/* Banner de texto debajo del avatar */
-.avatar-overlay-text {
-  padding: var(--sp-1) var(--sp-3);
-  background: hsla(195, 100%, 10%, 0.85);
-  font-size: var(--t-xs);
-  color: var(--c-primary);
-  letter-spacing: var(--ls-wide);
-  text-align: center;
-  border: var(--border-primary);
-  box-shadow: var(--glow-sm);
-}
 
 /* ── Contenido textual ── */
 .home-content {
@@ -90,7 +79,7 @@
   text-align: center;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .home-content {
     align-items: flex-start;
     text-align: left;
@@ -164,7 +153,7 @@
   margin-top: var(--sp-2);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .home-ctas {
     justify-content: flex-start;
   }
@@ -228,7 +217,7 @@
   gap: var(--sp-2);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .skill-badges {
     justify-content: flex-start;
   }
@@ -255,10 +244,6 @@
   animation-delay: 0.05s; /* Animación rapidísima garantizada al navegar */
 }
 
-.is-booted .view-section.is-active .avatar-overlay-text {
-  animation: fade-in-up 0.5s var(--ease-out) both;
-  animation-delay: 0.1s;
-}
 
 .is-booted .view-section.is-active .home-label {
   animation: fade-in-up 0.5s var(--ease-out) both;
