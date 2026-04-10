@@ -13,9 +13,25 @@ export function initRouter() {
 
   const navButtons = document.querySelectorAll('.nav-btn');
   const sections   = document.querySelectorAll('.view-section');
+  const overlayBtn = document.getElementById('mobile-menu-btn');
+  const headerNode = document.querySelector('.hud-header');
+
+  // Comportamiento del botón hamburguesa
+  if (overlayBtn) {
+    overlayBtn.addEventListener('click', () => {
+      const isOpen = headerNode.classList.toggle('is-menu-open');
+      overlayBtn.setAttribute('aria-expanded', isOpen);
+    });
+  }
 
   /** Navega a la vista con el id dado y actualiza botones */
   function navigate(targetId) {
+    // 0. Cerrar menú móvil si está abierto
+    if (headerNode && headerNode.classList.contains('is-menu-open')) {
+      headerNode.classList.remove('is-menu-open');
+      if (overlayBtn) overlayBtn.setAttribute('aria-expanded', 'false');
+    }
+
     // 1. Desactivar todas las secciones
     sections.forEach(section => {
       section.classList.remove('is-active');
