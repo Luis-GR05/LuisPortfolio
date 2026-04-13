@@ -1,54 +1,98 @@
-# Luis Portfolio
+<div align="center">
 
-Repositorio oficial del portfolio profesional de Luis-GR05. Este proyecto sirve como demostración técnica de habilidades en desarrollo frontend, gestión de estado y diseño de interfaces optimizadas.
+<img src="https://img.shields.io/badge/HTML5-%23E34F26.svg?style=flat-square&logo=html5&logoColor=white" alt="HTML5">
+<img src="https://img.shields.io/badge/CSS3-%231572B6.svg?style=flat-square&logo=css3&logoColor=white" alt="CSS3">
+<img src="https://img.shields.io/badge/JavaScript-%23F7DF1E.svg?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
+<img src="https://img.shields.io/badge/Status-Activo-0091ff?style=flat-square" alt="Status">
 
-## Stack Tecnológico
+</div>
 
-El proyecto se ha construido bajo un enfoque de eficiencia y modularidad utilizando las siguientes tecnologías:
+---
 
-* **Framework:** React.js (Vite como herramienta de construcción para optimizar tiempos de recarga y empaquetado).
-* **Estilos:** Tailwind CSS (Arquitectura basada en utilidades para garantizar un CSS final mínimo).
-* **Gestión de Estado:** [Especificar si usas Context API, Redux o Hooks nativos].
-* **Despliegue:** [Especificar: Vercel / Netlify / GitHub Pages].
+```text
+> ¿Quién soy?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  Luis — Desarrollador FullStack.
+  Técnico superior en desarrollo de
+  aplicaciones web.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
 
-## Características de Ingeniería
+<br>
 
-A diferencia de portfolios convencionales, este desarrollo prioriza:
+## `Info Portfolio`
 
-1.  **Optimización de Carga:** Implementación de carga diferida (lazy loading) para activos pesados y componentes no críticos.
-2.  **Arquitectura de Componentes:** Separación estricta entre componentes de presentación y lógica de negocio.
-3.  **Accesibilidad (A11y):** Estructura semántica de HTML para garantizar la compatibilidad con lectores de pantalla.
-4.  **Diseño Responsivo:** Implementación de un sistema de rejilla adaptable sin redundancia de código.
+<details>
+<summary><b>Especificaciones técnicas</b></summary>
+<br>
 
-## Configuración y Despliegue Local
+| Módulo | Tecnología |
+|---|---|
+| Estructura | HTML5 semántico |
+| Estilos | CSS3 — custom properties, grid, flexbox |
+| Lógica | JavaScript (ES6+) vanilla |
+| Tipografía | Space Mono — Google Fonts |
+| Paleta | `#030303` · `#0091ff` · `#FF003C` · `#FFFFFF` |
+| Despliegue | Vercel |
 
-Para replicar el entorno de desarrollo, siga los pasos detallados a continuación. Se requiere Node.js (versión 18 o superior) y npm/yarn.
+</details>
 
-1.  Clonación del repositorio:
-    git clone https://github.com/Luis-GR05/LuisPortfolio.git
+<br>
 
-2.  Instalación de dependencias:
-    npm install
+## `Características`
 
-3.  Ejecución en modo desarrollo:
-    npm run dev
+- ⚡ **Rendimiento nativo** — cero dependencias externas, carga instantánea.
+- 🎨 **Design system propio** — variables CSS estrictas para coherencia visual total.
+- 📐 **Layout fluido** — mobile-first con breakpoints progresivos.
+- ♿ **Accesibilidad** — HTML semántico y navegación por teclado.
+- 🔴 **Micro-animaciones** — transiciones CSS sin librerías de terceros.
 
-4.  Construcción para producción:
-    npm run build
+<br>
 
-## Estructura del Proyecto
+## `Secciones`
 
-El árbol de directorios refleja una organización lógica orientada a la escalabilidad:
+```text
+/portfolio
+├── 01_hero          → Presentación + llamada a la acción
+├── 02_skill_tree    → Técnologías estudiadas y nivel actual.
+├── 03_proyectos     → Trabajos destacados con demo y código
+├── 04_experiencia   → Historial profesional
+├── 05_formacion     → Estudios y certificaciones
+└── 06_contacto      → Formulario + redes
+```
 
-* /src/components: Elementos de UI reutilizables y atómicos.
-* /src/hooks: Lógica personalizada y hooks reutilizables.
-* /src/assets: Recursos estáticos optimizados.
-* /src/data: Archivos de configuración y contenido estático (JSON).
+<br>
 
-## Contacto
+## `Vista -> https://luis-portfolio-pi.vercel.app/`
 
-Información para contacto profesional y consultas técnicas:
+<br>
 
-* LinkedIn: 
-* Email: luisgordillor01@gmail.com
-  
+## `> ./stats.sh`
+
+<div align="center">
+
+<img src="https://github-readme-stats.vercel.app/api?username=Luis-GR05&show_icons=true&theme=tokyonight&title_color=0091ff&icon_color=0091ff&text_color=ffffff&bg_color=030303&hide_border=true&count_private=true" width="48%" alt="GitHub Stats">
+<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Luis-GR05&layout=compact&theme=tokyonight&title_color=0091ff&text_color=ffffff&bg_color=030303&hide_border=true" width="48%" alt="Top Languages">
+
+</div>
+
+<br>
+
+## `> mail --to=luis`
+
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  CONEXIÓN ESTABLECIDA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  LinkedIn  →  linkedin.com/in/TU_USUARIO
+  Email     →  TU_EMAIL@EJEMPLO.COM
+  Portfolio →  https://luis-gr05.github.io/LuisPortfolio
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  luis@portfolio:~$ _
+```
+
+---
+
+<div align="center">
+<sub>Diseñado y desarrollado con <code>#0091ff</code> y mucho <code>#FF003C</code></sub>
+</div>
