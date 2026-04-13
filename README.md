@@ -49,5 +49,6 @@ El árbol de directorios refleja una organización lógica orientada a la escala
 
 Información para contacto profesional y consultas técnicas:
 
-* LinkedIn: [Tu enlace aquí]
-* Email: [Tu email aquí]
+* LinkedIn: 
+* Email: luisgordillor01@gmail.com
+  
