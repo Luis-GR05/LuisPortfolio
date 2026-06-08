@@ -70,7 +70,7 @@ export function initContact() {
       const message = document.getElementById('input-message').value;
 
       if (!CONFIG.formspreeId || CONFIG.formspreeId === 'YOUR_FORMSPREE_ID') {
-        showResponse(response, '> CONFIGURACIÓN INCOMPLETA. Por favor, especifica tu Formspree ID en config.js.', 'is-error');
+        showResponse(response, '> ERROR AL ENVIAR CORREO.', 'is-error');
         setLoadingState(false, submitBtn);
         return;
       }
@@ -80,7 +80,7 @@ export function initContact() {
       form.reset();
     } catch (err) {
       console.error('[Contact] Error al enviar email:', err);
-      showResponse(response, '> ERROR DE TRANSMISIÓN. Inténtalo de nuevo.', 'is-error');
+      showResponse(response, '> ERROR AL ENVIAR CORREO.', 'is-error');
     } finally {
       setLoadingState(false, submitBtn);
     }
