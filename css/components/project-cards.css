@@ -2,6 +2,52 @@
    PROJECT CARDS SLIDER — LuisPortfolio Premium v3.0
    ============================================================ */
 
+/* Projects Tab Filter */
+.projects-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-4);
+  margin: 0 auto var(--sp-6) auto;
+  max-width: 1100px;
+  width: 100%;
+  padding: 0 var(--sp-4);
+  z-index: 5;
+  position: relative;
+}
+
+.project-tab-btn {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+  color: var(--c-text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--c-border);
+  padding: var(--sp-2) var(--sp-6);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--tr-fast);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.project-tab-btn:hover {
+  border-color: var(--c-border-bright);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--c-text);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.02);
+}
+
+.project-tab-btn.active {
+  border-color: var(--c-primary);
+  background: var(--c-primary-dim);
+  color: var(--c-primary);
+  box-shadow: 0 0 16px var(--c-primary-glow), inset 0 0 8px var(--c-primary-dim);
+  text-shadow: 0 0 4px var(--c-primary-glow);
+}
+
 .projects-slider-container {
   position: relative;
   display: flex;
