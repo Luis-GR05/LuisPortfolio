@@ -81,6 +81,7 @@
 .home-ctas {
   display: flex;
   gap: var(--sp-4);
+  flex-wrap: wrap;
 }
 
 .btn-primary, .btn-secondary {
