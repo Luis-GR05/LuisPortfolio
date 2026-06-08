@@ -1,114 +1,12 @@
 /**
  * @file fx.js
- * @description Efectos visuales del sistema HUD.
- *   - Cursor personalizado (reemplaza el nativo)
- *   - Noise canvas (ruido estático CRT)
- *   - Boot sequence (secuencia de arranque)
+ * @description Efectos visuales de la interfaz premium.
+ *   - Cursor personalizado reactivo
  *   - Reloj y uptime en footer
+ *   - Barra de carga e inicio del sistema (Preloader)
+ *   - Easter egg (Código Konami)
  */
 
-/* ══════════════════════════════════════════════
-   CURSOR PERSONALIZADO
-   ══════════════════════════════════════════════ */
-
-function initCursor() {
-  const cursor = document.getElementById('cursor');
-  if (!cursor) return;
-
-  // Actualizar posición via CSS custom properties (más eficiente que left/top)
-  document.addEventListener('mousemove', (e) => {
-    cursor.style.setProperty('--cx', `${e.clientX}px`);
-    cursor.style.setProperty('--cy', `${e.clientY}px`);
-  });
-
-  // Ocultar cursor cuando sale del viewport
-  document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
-  document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
-
-  // Estado hover — detectar sobre todos los elementos interactivos
-  const interactiveSelector = 'a, button, [tabindex], input, textarea, label, .tree-node, .arcade-card';
-
-  document.addEventListener('mouseover', (e) => {
-    if (e.target.closest(interactiveSelector)) {
-      cursor.classList.add('is-hovering');
-    }
-  });
-
-  document.addEventListener('mouseout', (e) => {
-    if (e.target.closest(interactiveSelector)) {
-      cursor.classList.remove('is-hovering');
-    }
-  });
-
-  // Estado click
-  document.addEventListener('mousedown', () => cursor.classList.add('is-clicking'));
-  document.addEventListener('mouseup',   () => cursor.classList.remove('is-clicking'));
-}
-
-
-/* ══════════════════════════════════════════════
-   NOISE CANVAS (Ruido estático CRT)
-   ══════════════════════════════════════════════ */
-
-function initNoiseCanvas() {
-  const canvas = document.createElement('canvas');
-  canvas.id    = 'noise-canvas';
-  canvas.setAttribute('aria-hidden', 'true');
-  document.body.prepend(canvas);
-
-  const ctx = canvas.getContext('2d');
-  let animId;
-
-  // Pre-calcular el ruido en un canvas pequeño (altamente performante)
-  const patternCanvas = document.createElement('canvas');
-  const patternSize = 128;
-  patternCanvas.width = patternSize;
-  patternCanvas.height = patternSize;
-  const pCtx = patternCanvas.getContext('2d', { willReadFrequently: true });
-  const pData = pCtx.createImageData(patternSize, patternSize);
-  const data = pData.data;
-
-  // Llenar con ruido estático
-  for (let i = 0; i < data.length; i += 4) {
-    const value = Math.random() * 255 | 0;
-    data[i]     = value;
-    data[i + 1] = value;
-    data[i + 2] = value;
-    data[i + 3] = 18; // Alpha bajo
-  }
-  pCtx.putImageData(pData, 0, 0);
-
-  function resize() {
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  function drawNoise() {
-    // Offset aleatorio para que el patrón parezca ruido dinámico
-    const offsetX = Math.random() * patternSize | 0;
-    const offsetY = Math.random() * patternSize | 0;
-
-    // Llenar el viewport repitiendo el patrón con el offset
-    ctx.fillStyle = ctx.createPattern(patternCanvas, 'repeat');
-    
-    // Trasladar negativamente el contexto, y dibujar un rect que cubra la pantalla + offset
-    ctx.translate(-offsetX, -offsetY);
-    ctx.fillRect(offsetX, offsetY, canvas.width + offsetX, canvas.height + offsetY);
-    ctx.translate(offsetX, offsetY);
-
-    animId = requestAnimationFrame(drawNoise);
-  }
-
-  resize();
-  window.addEventListener('resize', resize);
-  drawNoise();
-
-  // Reducción de movimiento: detener el canvas
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    cancelAnimationFrame(animId);
-    canvas.style.display = 'none';
-  }
-}
 
 
 /* ══════════════════════════════════════════════
@@ -127,13 +25,13 @@ function initFooterClock() {
   function update() {
     const now = new Date();
 
-    // Reloj
+    // Actualizar reloj
     if (clockEl) {
       clockEl.textContent =
         `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     }
 
-    // Uptime de sesión
+    // Actualizar tiempo de sesión (uptime)
     if (uptimeEl) {
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
       const h = Math.floor(elapsed / 3600);
@@ -149,60 +47,63 @@ function initFooterClock() {
 
 
 /* ══════════════════════════════════════════════
-   BOOT SEQUENCE
+   PRELOADER - SECUENCIA DE ARRANQUE
    ══════════════════════════════════════════════ */
 
 /**
- * Ejecuta la secuencia de arranque tipo terminal.
- * @param {Array<{text: string, delay: number, class?: string}>} lines
- * @returns {Promise<void>} Resuelve cuando el boot termina
+ * Anima la barra de progreso y desvanece el preloader.
+ * @returns {Promise<void>}
  */
-export async function runBoot(lines) {
+export async function runBoot() {
   const overlay    = document.getElementById('boot-overlay');
-  const logEl      = document.getElementById('boot-log');
   const barFill    = document.getElementById('boot-bar-fill');
+  const labelText  = document.getElementById('boot-progress-label');
 
-  if (!overlay || !logEl) return;
+  if (!overlay || !barFill) return;
 
-  const total   = lines.length;
+  const steps = [
+    'SYS_INIT...',
+    'CARGANDO TOKENS DE DISEÑO...',
+    'COMPILANDO PROYECTOS...',
+    'RENDERIZANDO INTERFAZ...',
+    'SISTEMA LISTO'
+  ];
 
-  // Crear y mostrar cada línea según su delay
-  const promises = lines.map((entry, i) =>
-    new Promise(resolve => {
-      setTimeout(() => {
-        const li = document.createElement('li');
-        li.className = `boot-line ${entry.class ?? ''}`;
-        li.textContent = `> ${entry.text}`;
-        logEl.appendChild(li);
-        li.scrollIntoView({ block: 'end', behavior: 'smooth' });
+  return new Promise(resolve => {
+    let progress = 0;
 
-        // Progreso de barra
-        if (barFill) {
-          barFill.style.width = `${Math.round(((i + 1) / total) * 100)}%`;
-        }
+    const interval = setInterval(() => {
+      // Incremento aleatorio de velocidad de carga
+      progress += Math.floor(Math.random() * 8) + 4;
 
-        resolve();
-      }, entry.delay);
-    })
-  );
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        barFill.style.width = '100%';
+        if (labelText) labelText.textContent = 'SYSTEM READY';
 
-  await Promise.all(promises);
-
-  // Pausa final antes de ocultar
-  await new Promise(r => setTimeout(r, 500));
-
-  // Ocultar overlay — GSAP si está disponible, CSS transition como fallback
-  await hideOverlay(overlay);
+        // Ocultar preloader tras pequeña pausa
+        setTimeout(async () => {
+          await hideOverlay(overlay);
+          resolve();
+        }, 500);
+      } else {
+        barFill.style.width = `${progress}%`;
+        const stepIdx = Math.min(Math.floor(progress / 22), steps.length - 1);
+        if (labelText) labelText.textContent = steps[stepIdx];
+      }
+    }, 60);
+  });
 }
 
 function hideOverlay(overlayEl) {
   return new Promise(resolve => {
-    // Usar GSAP si está cargado (más fluido)
     if (typeof gsap !== 'undefined') {
       gsap.to(overlayEl, {
         opacity: 0,
-        duration: 0.6,
-        ease: 'power2.out',
+        y: '-100%',
+        duration: 0.8,
+        ease: 'power4.inOut',
         onComplete: () => {
           overlayEl.style.display = 'none';
           resolve();
@@ -210,8 +111,9 @@ function hideOverlay(overlayEl) {
       });
     } else {
       // Fallback CSS
-      overlayEl.style.transition = 'opacity 0.5s ease';
+      overlayEl.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       overlayEl.style.opacity = '0';
+      overlayEl.style.transform = 'translateY(-100%)';
       overlayEl.addEventListener('transitionend', () => {
         overlayEl.style.display = 'none';
         resolve();
@@ -222,7 +124,7 @@ function hideOverlay(overlayEl) {
 
 
 /* ══════════════════════════════════════════════
-   EASTER EGG — KONAMI CODE
+   EASTER EGG — CÓDIGO KONAMI
    ══════════════════════════════════════════════ */
 
 function initKonamiCode() {
@@ -241,33 +143,31 @@ function initKonamiCode() {
 }
 
 function activateKonami() {
-  console.log('%c[KONAMI] Easter egg activado 🎮', 'color: #ff00ff; font-size: 16px; font-weight: bold;');
+  console.log('%c[EASTER EGG] ¡Código Konami activado! 🎮', 'color: #8b5cf6; font-size: 16px; font-weight: bold;');
 
-  // Invertir colores del HUD brevemente
-  document.documentElement.style.setProperty('--c-primary', 'hsl(300, 100%, 60%)');
-  document.documentElement.style.setProperty('--c-bg', 'hsl(270, 20%, 5%)');
+  // Cambiar color primario temporalmente a rosa neon
+  document.documentElement.style.setProperty('--c-primary', 'hsl(320, 100%, 60%)');
 
-  // Sonido retro via AudioContext
+  // Reproducir efectos de sonido retro a través de Web Audio API
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     [523, 659, 784, 1047].forEach((freq, i) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.type = 'square';
+      osc.type = 'triangle';
       osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.15);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.2);
+      gain.gain.setValueAtTime(0.08, ctx.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.18);
       osc.connect(gain);
       gain.connect(ctx.destination);
-      osc.start(ctx.currentTime + i * 0.15);
-      osc.stop(ctx.currentTime + i * 0.15 + 0.2);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.18);
     });
   } catch (_) {}
 
-  // Restaurar colores tras 3s
+  // Restaurar colores normales
   setTimeout(() => {
     document.documentElement.style.removeProperty('--c-primary');
-    document.documentElement.style.removeProperty('--c-bg');
   }, 3000);
 }
 
@@ -276,10 +176,7 @@ function activateKonami() {
    EXPORT PRINCIPAL
    ══════════════════════════════════════════════ */
 
-/** Inicializa todos los efectos FX del sistema */
 export function initFx() {
-  initCursor();
-  initNoiseCanvas();
   initFooterClock();
   initKonamiCode();
 }

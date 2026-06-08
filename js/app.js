@@ -1,96 +1,103 @@
 /**
  * @file app.js
- * @description Orquestador principal — punto de entrada de la aplicación.
- *   Patrón: Dependency Injection. Todos los módulos reciben sus datos aquí.
- *   No hay estado global disperso — todo fluye desde CONFIG → módulos.
+ * @description Orquestador principal de la aplicación.
+ *   Inicializa todos los subsistemas en el orden correcto y gestiona
+ *   el ciclo de arranque del preloader.
  */
 
 import { CONFIG }          from './config.js';
-import { initRouter }      from './modules/router.js';
+import { SliderEngine }     from './modules/slider.js';
 import { Typewriter }      from './modules/typewriter.js';
 import { SkillTreeEngine } from './modules/skill-tree.js';
 import { ProjectsEngine }  from './modules/projects.js';
 import { initFx, runBoot } from './modules/fx.js';
 import { initContact }     from './modules/contact.js';
 
-// ── Punto de entrada ──────────────────────────────────────────────────────────
+// ── Punto de Entrada ─────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initApp().catch(err => {
-    console.error('[APP] Error de arranque:', err);
+    console.error('[APP] Error crítico durante el arranque:', err);
   });
 });
 
-
 async function initApp() {
-
-  // 1. Inyectar datos del dev en el DOM (antes que todo lo demás)
+  // 1. Inyectar datos dinámicos del desarrollador en el DOM
   injectDevData();
 
-  // 2. Efectos visuales: cursor, noise canvas, reloj, Konami
+  // 2. Inicializar efectos visuales generales (cursor, reloj de sesión, etc.)
   initFx();
 
-  // 3. Router de navegación SPA
-  const router = initRouter();
-
-  // 4. Subsistemas de contenido (pueden renderizar mientras el boot corre)
+  // 3. Inicializar motores de renderizado de contenido
   SkillTreeEngine.init(CONFIG.skills);
   ProjectsEngine.init(CONFIG.projects);
+  
+  // 4. Inicializar lógica de validación y envío de contacto
   initContact();
 
-  // 5. CTA "Contacto" en home → navega a la vista de contacto
-  document.getElementById('cta-contact')?.addEventListener('click', () => {
-    router.navigate('view-contact');
-    // Sincronizar botón de nav activo
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-      btn.classList.toggle('is-active', btn.dataset.target === 'view-contact');
-    });
-  });
+  // 5. Inicializar motor del slider vertical (pantalla completa)
+  SliderEngine.init();
 
-  // 6. Boot sequence — revela el HUD al terminar
-  await runBoot(CONFIG.bootLines);
+  // 6. Activar comportamiento del menú móvil responsivo
+  setupMobileMenu();
+
+  // 7. Ejecutar secuencia de carga del Preloader (barra de carga y textos)
+  await runBoot();
   document.body.classList.add('is-booted');
 
-  // 7. Typewriter del bio DESPUÉS del boot (usuario ya ve el HUD)
+  // 8. Iniciar Typewriter para la biografía (tras desaparecer el cargador)
   const bioEl    = document.getElementById('hero-bio');
   const cursorEl = document.querySelector('.bio-cursor');
   if (bioEl) {
     new Typewriter(bioEl, { speed: 18, cursorEl }).type(CONFIG.bio);
   }
 
-  // Log de sistema en consola (branded)
+  // Confirmación por consola
   console.log(
-    `%c LuisPortfolio.OS v${CONFIG.version} \n%c Loaded in: ${Math.round(performance.now())}ms`,
-    'background: #00c8ff; color: #000; font-weight: bold; padding: 4px 8px;',
-    'color: #00c8ff;'
+    `%c LuisPortfolio Premium v${CONFIG.version || '3.0'} %c Cargado en: ${Math.round(performance.now())}ms`,
+    'background: #8b5cf6; color: #fff; font-weight: bold; padding: 4px 8px; border-radius: 4px;',
+    'color: #06b6d4; font-weight: 500;'
   );
 }
 
-
 /**
- * Inyecta todos los datos del CONFIG en los nodos del DOM.
- * Separación estricta: el HTML define la estructura, JS inyecta los datos.
- * CORRECCIÓN CRÍTICA: data-text sincronizado con textContent para glitch.
+ * Inyecta datos estructurados en los placeholders correspondientes del DOM.
  */
 function injectDevData() {
-  // Nombre en el sidebar (glitch)
-  const nameEl = document.getElementById('dev-name');
-  if (nameEl) {
-    nameEl.textContent = CONFIG.handle;
-    nameEl.setAttribute('data-text', CONFIG.handle); // ← FIX: glitch necesita esto
-  }
-
-  // H1 hero
   setTextContent('hero-name', CONFIG.name);
   setTextContent('hero-role', CONFIG.role);
-
-  // Footer / sidebar
-  setTextContent('sys-status',     CONFIG.status);
-  setTextContent('sys-status-bar', CONFIG.status);
-  setTextContent('sys-location',   CONFIG.location);
+  
+  const statusEl = document.getElementById('sys-status-bar');
+  if (statusEl) {
+    statusEl.textContent = `SISTEMA ${CONFIG.status || 'ONLINE'}`;
+  }
 }
 
-/** Helper: setea textContent de forma segura */
+/** Helper para inyectar textos de forma segura */
 function setTextContent(id, value) {
   const el = document.getElementById(id);
   if (el) el.textContent = value;
+}
+
+/**
+ * Configura la barra de navegación del menú móvil (hamburguesa).
+ */
+function setupMobileMenu() {
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const header = document.querySelector('.site-header');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  if (!menuBtn || !header) return;
+
+  menuBtn.addEventListener('click', () => {
+    const isOpen = header.classList.toggle('is-menu-open');
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Cerrar el menú al hacer click en cualquier link de navegación
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      header.classList.remove('is-menu-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
 }

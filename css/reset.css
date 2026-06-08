@@ -15,14 +15,12 @@ html {
 body {
   background-color: var(--c-bg);
   color: var(--c-text);
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: var(--t-base);
   line-height: var(--lh-normal);
-  letter-spacing: var(--ls-tight);
+  letter-spacing: var(--ls-normal);
   height: 100dvh;
   overflow: hidden;
-  /* Cursor personalizado — ocultamos el nativo */
-  cursor: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -43,7 +41,7 @@ button {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
-  cursor: none;
+  cursor: pointer;
 }
 
 input, textarea {

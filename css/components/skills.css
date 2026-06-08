@@ -1,0 +1,214 @@
+/* ============================================================
+   SKILLS DASHBOARD — LuisPortfolio Premium v3.0
+   ============================================================ */
+
+.skills-dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-6);
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.skill-group {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: var(--sp-6);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-glass);
+  transition: border-color var(--tr-normal), transform var(--tr-normal);
+}
+
+.skill-group:hover {
+  border-color: var(--c-border-bright);
+  transform: translateY(-2px);
+}
+
+.skill-group-title {
+  font-family: var(--font-title);
+  font-size: var(--t-md);
+  font-weight: 700;
+  color: var(--c-text);
+  margin-bottom: var(--sp-4);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+}
+
+.skill-group-title .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--c-primary);
+  box-shadow: 0 0 8px var(--c-primary-glow);
+}
+
+.skill-group-title.frontend .dot {
+  background: var(--c-accent);
+  box-shadow: 0 0 8px var(--c-accent-glow);
+}
+
+.skill-group-title.backend .dot {
+  background: var(--c-primary);
+  box-shadow: 0 0 8px var(--c-primary-glow);
+}
+
+.skill-group-title.systems .dot {
+  background: hsl(280, 80%, 65%);
+  box-shadow: 0 0 8px hsla(280, 80%, 65%, 0.4);
+}
+
+.skill-group-title.data .dot {
+  background: hsl(142, 70%, 50%);
+  box-shadow: 0 0 8px hsla(142, 70%, 50%, 0.4);
+}
+
+.skills-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-4);
+}
+
+.skill-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  background: rgba(255, 255, 255, 0.012);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  transition: all var(--tr-normal);
+}
+
+.skill-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.02);
+}
+
+.skill-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--c-border);
+  flex-shrink: 0;
+}
+
+.skill-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.skill-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.skill-name {
+  font-family: var(--font-title);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--c-text);
+  line-height: var(--lh-tight);
+}
+
+.skill-level-container {
+  display: flex;
+  gap: 3px;
+  margin-top: var(--sp-1);
+}
+
+.level-pip {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--c-text-muted);
+  background: transparent;
+  transition: all var(--tr-normal);
+}
+
+/* Colores personalizados de pips según grupo */
+.skill-group-title.frontend ~ .skills-list .level-pip.is-filled {
+  border-color: var(--c-accent);
+  background: var(--c-accent);
+  box-shadow: 0 0 6px var(--c-accent-glow);
+}
+
+.skill-group-title.backend ~ .skills-list .level-pip.is-filled {
+  border-color: var(--c-primary);
+  background: var(--c-primary);
+  box-shadow: 0 0 6px var(--c-primary-glow);
+}
+
+.skill-group-title.systems ~ .skills-list .level-pip.is-filled {
+  border-color: hsl(280, 80%, 65%);
+  background: hsl(280, 80%, 65%);
+  box-shadow: 0 0 6px hsla(280, 80%, 65%, 0.4);
+}
+
+.skill-group-title.data ~ .skills-list .level-pip.is-filled {
+  border-color: hsl(142, 70%, 50%);
+  background: hsl(142, 70%, 50%);
+  box-shadow: 0 0 6px hsla(142, 70%, 50%, 0.4);
+}
+
+/* Tooltip explicativo de la skill en Hover */
+.skill-tooltip {
+  position: absolute;
+  bottom: calc(100% + var(--sp-2));
+  left: 50%;
+  transform: translateX(-50%) translateY(5px);
+  width: 220px;
+  background: rgba(7, 7, 10, 0.95);
+  border: 1px solid var(--c-border-bright);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-2) var(--sp-3);
+  font-family: var(--font-ui);
+  font-size: var(--t-xs);
+  color: var(--c-text-sub);
+  line-height: var(--lh-snug);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(10px);
+  transition: opacity var(--tr-normal), transform var(--tr-normal);
+}
+
+.skill-card:hover .skill-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .skills-dashboard {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+    max-height: 52vh;
+    overflow-y: auto;
+    padding-right: var(--sp-2);
+  }
+
+  .skill-group {
+    padding: var(--sp-4);
+  }
+
+  .skills-list {
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+  }
+
+  .skill-tooltip {
+    display: none; /* Desactivar tooltips en hover para mobile */
+  }
+}
