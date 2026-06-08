@@ -6,6 +6,8 @@
  *   sustituir simulateSend() por fetch a Formspree/EmailJS.
  */
 
+import { CONFIG } from '../config.js';
+
 export function initContact() {
   const form      = document.getElementById('contact-form');
   if (!form) return;
@@ -63,10 +65,21 @@ export function initContact() {
     clearResponse(response);
 
     try {
-      await simulateSend();
+      const name = document.getElementById('input-name').value;
+      const email = document.getElementById('input-email').value;
+      const message = document.getElementById('input-message').value;
+
+      if (!CONFIG.formspreeId || CONFIG.formspreeId === 'YOUR_FORMSPREE_ID') {
+        showResponse(response, '> CONFIGURACIÓN INCOMPLETA. Por favor, especifica tu Formspree ID en config.js.', 'is-error');
+        setLoadingState(false, submitBtn);
+        return;
+      }
+
+      await sendToFormspree(name, email, message);
       showResponse(response, '> TRANSMISIÓN COMPLETADA. Responderé en breve.', 'is-success');
       form.reset();
     } catch (err) {
+      console.error('[Contact] Error al enviar email:', err);
       showResponse(response, '> ERROR DE TRANSMISIÓN. Inténtalo de nuevo.', 'is-error');
     } finally {
       setLoadingState(false, submitBtn);
@@ -129,17 +142,23 @@ function clearResponse(el) {
   el.textContent = '';
 }
 
-/* ── Envío (simulado) ────────────────────────────────────────────────────── */
+/* ── Envío a Formspree ───────────────────────────────────────────────────── */
 
 /**
- * Simula un envío de formulario con delay.
- * Reemplazar por fetch a Formspree/EmailJS para producción real.
+ * Envía los datos del formulario a Formspree.
  */
-function simulateSend() {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // Simular 90% de éxito para demo
-      Math.random() > 0.1 ? resolve() : reject(new Error('Network error'));
-    }, 1800);
+async function sendToFormspree(name, email, message) {
+  const response = await fetch(`https://formspree.io/f/${CONFIG.formspreeId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({ name, email, message })
   });
+
+  if (!response.ok) {
+    throw new Error('Formspree returned error status: ' + response.status);
+  }
+  return await response.json();
 }

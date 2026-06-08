@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function initApp() {
+  // 0. Cargar variables de entorno desde el archivo .env
+  await loadEnv();
+
   // 1. Inyectar datos dinámicos del desarrollador en el DOM
   injectDevData();
 
@@ -102,7 +105,7 @@ function setupScrollAnimationsObserver() {
 
   const observerOptions = {
     root: null,
-    rootMargin: '0px 0px -12% 0px', // Disparador cuando entra un 12% en pantalla
+    rootMargin: '0px 0px -10% 0px', // Activar cuando entra ligeramente en pantalla
     threshold: 0
   };
 
@@ -111,24 +114,35 @@ function setupScrollAnimationsObserver() {
     if (window.innerWidth >= 992 && window.innerHeight >= 650) return;
 
     entries.forEach(entry => {
+      const section = entry.target;
+      const animElements = section.querySelectorAll('.animate-in');
+
       if (entry.isIntersecting) {
-        const section = entry.target;
-        if (!section.classList.contains('has-animated')) {
-          section.classList.add('has-animated');
-          const animElements = section.querySelectorAll('.animate-in');
-          if (animElements.length > 0 && typeof gsap !== 'undefined') {
-            gsap.fromTo(animElements,
-              { opacity: 0, y: 30 },
-              { 
-                opacity: 1, 
-                y: 0, 
-                duration: 0.6, 
-                stagger: 0.08, 
-                ease: 'power3.out',
-                clearProps: 'all' // Evitar conflictos con estilos CSS normales
-              }
-            );
-          }
+        section.classList.add('has-animated');
+        if (animElements.length > 0 && typeof gsap !== 'undefined') {
+          gsap.killTweensOf(animElements);
+          gsap.fromTo(animElements,
+            { opacity: 0, y: 65 },
+            { 
+              opacity: 1, 
+              y: 0, 
+              duration: 0.8, 
+              stagger: 0.08, 
+              ease: 'power3.out'
+            }
+          );
+        }
+      } else {
+        section.classList.remove('has-animated');
+        if (animElements.length > 0 && typeof gsap !== 'undefined') {
+          gsap.killTweensOf(animElements);
+          gsap.to(animElements, {
+            opacity: 0,
+            y: 40,
+            duration: 0.4,
+            stagger: 0.02,
+            ease: 'power2.in'
+          });
         }
       }
     });
@@ -178,4 +192,52 @@ function setupMobileMenu() {
       menuBtn.setAttribute('aria-expanded', 'false');
     });
   });
+}
+
+/**
+ * Carga dinámicamente las variables de entorno de un archivo .env local en tiempo de ejecución.
+ */
+async function loadEnv() {
+  try {
+    let response = await fetch('.env');
+    console.log('[ENV] Estado de fetch .env:', response.status, response.statusText);
+    
+    if (response.ok) {
+      const text = await response.text();
+      console.log('[ENV] Contenido leído de .env:\n', text);
+      text.split('\n').forEach(line => {
+        const trimmedLine = line.trim();
+        if (!trimmedLine || trimmedLine.startsWith('#')) return;
+        
+        const delimiterIndex = trimmedLine.indexOf('=');
+        if (delimiterIndex === -1) return;
+
+        const key = trimmedLine.substring(0, delimiterIndex).trim();
+        const value = trimmedLine.substring(delimiterIndex + 1).trim().replace(/^['"]|['"]$/g, ''); // Remover comillas simples/dobles
+
+        console.log(`[ENV] Variable encontrada en .env: ${key} = ${value}`);
+        if (key === 'FORMSPREE_ID' || key === 'VITE_FORMSPREE_ID') {
+          CONFIG.formspreeId = value;
+          console.log('[ENV] CONFIG.formspreeId actualizado desde .env con éxito a:', value);
+        }
+      });
+    } else {
+      console.warn('[ENV] No se pudo cargar el archivo .env (posiblemente bloqueado por el servidor local). Intentando cargar env.json...');
+      response = await fetch('env.json');
+      console.log('[ENV] Estado de fetch env.json:', response.status, response.statusText);
+      if (response.ok) {
+        const json = await response.json();
+        console.log('[ENV] Contenido leído de env.json:', json);
+        const value = json.FORMSPREE_ID || json.VITE_FORMSPREE_ID;
+        if (value) {
+          CONFIG.formspreeId = value;
+          console.log('[ENV] CONFIG.formspreeId actualizado desde env.json con éxito a:', value);
+        }
+      } else {
+        console.warn('[ENV] Tampoco se pudo cargar env.json. Usando fallback de config.js.');
+      }
+    }
+  } catch (error) {
+    console.error('[ENV] Error al intentar cargar configuraciones locales:', error);
+  }
 }

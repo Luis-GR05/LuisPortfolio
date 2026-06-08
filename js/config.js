@@ -23,6 +23,9 @@ export const CONFIG = {
     linkedin: '#', // Actualizar con URL real
   },
 
+  // ID de formulario de Formspree para envío de correos
+  formspreeId: 'YOUR_FORMSPREE_ID',
+
   // ── Secuencia de boot ────────────────────────────────────────────────────────
   bootLines: [
     { text: 'BIOS v2.0.4 ... OK',                            delay: 0 },
