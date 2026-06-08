@@ -21,7 +21,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: var(--sp-16) var(--sp-8);
+  padding: 110px var(--sp-8) var(--sp-12) var(--sp-8);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;

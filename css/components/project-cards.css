@@ -2,16 +2,58 @@
    PROJECT CARDS SLIDER — LuisPortfolio Premium v3.0
    ============================================================ */
 
+/* Split Layout Grid for Projects Section */
+.projects-layout-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--sp-8);
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+}
+
+.projects-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  text-align: center;
+  align-items: center;
+}
+
+.projects-left-col .section-header {
+  text-align: center;
+  margin-bottom: 0;
+  width: auto;
+  max-width: none;
+}
+
+.projects-carousel-nav {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+.projects-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  overflow: hidden; /* Prevent horizontal scroll from stretching grid */
+  width: 100%;
+}
+
 /* Projects Tab Filter */
 .projects-tabs {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: var(--sp-4);
-  margin: 0 auto var(--sp-6) auto;
-  max-width: 1100px;
+  margin: 0 0 var(--sp-2) 0;
+  max-width: none;
   width: 100%;
-  padding: 0 var(--sp-4);
+  padding: 0;
   z-index: 5;
   position: relative;
 }
@@ -108,7 +150,7 @@
 
 /* Project Card */
 .project-card {
-  flex: 0 0 clamp(290px, 32vw, 360px);
+  flex: 0 0 clamp(230px, 20vw, 290px);
   scroll-snap-align: center;
   display: flex;
   flex-direction: column;
@@ -132,16 +174,19 @@
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: var(--c-bg-elevated);
+  background: #000000;
   overflow: hidden;
   border-bottom: 1px solid var(--c-border);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .project-video,
 .project-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 70%;
+  max-height: 70%;
+  object-fit: contain;
   transition: transform var(--tr-slow), filter var(--tr-normal);
   filter: brightness(0.8) contrast(1.05);
 }
@@ -187,7 +232,7 @@
 
 /* Card Body */
 .project-body {
-  padding: var(--sp-4);
+  padding: var(--sp-3);
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -202,7 +247,7 @@
 
 .project-title {
   font-family: var(--font-title);
-  font-size: var(--t-md);
+  font-size: var(--t-sm);
   font-weight: 700;
   color: var(--c-text);
   margin: 0;
@@ -218,15 +263,15 @@
   font-family: var(--font-ui);
   font-size: var(--t-xs);
   color: var(--c-accent);
-  margin-bottom: var(--sp-3);
+  margin-bottom: var(--sp-2);
   font-weight: 500;
 }
 
 .project-desc-block {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
-  margin-top: var(--sp-2);
+  gap: var(--sp-1);
+  margin-top: var(--sp-1);
   font-size: var(--t-xs);
   line-height: var(--lh-snug);
   color: var(--c-text-sub);
@@ -240,11 +285,11 @@
 
 /* Card Footer & CTAs */
 .project-footer {
-  padding: var(--sp-3) var(--sp-4);
+  padding: var(--sp-2) var(--sp-3);
   border-top: 1px solid var(--c-border);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: var(--sp-2);
 }
 
 .project-tech-list {
@@ -270,7 +315,7 @@
 
 .project-btn {
   flex: 1;
-  padding: var(--sp-2) 0;
+  padding: var(--sp-1.5) 0;
   border-radius: var(--radius-sm);
   font-family: var(--font-title);
   font-size: var(--t-xs);
@@ -309,6 +354,32 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .projects-layout-grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+    text-align: center;
+    padding: 0 var(--sp-4);
+  }
+
+  .projects-left-col {
+    text-align: center;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+
+  .projects-left-col .section-header {
+    text-align: center;
+  }
+
+  .projects-carousel-nav {
+    display: none; /* Hide on mobile */
+  }
+
+  .projects-right-col .projects-tabs {
+    justify-content: center;
+    margin-bottom: var(--sp-4);
+  }
+
   .projects-slider-container {
     gap: var(--sp-2);
   }

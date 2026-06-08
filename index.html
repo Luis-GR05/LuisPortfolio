@@ -172,20 +172,31 @@
 
     <!-- ── DIAPOSITIVA 3: PROYECTOS ── -->
     <article id="view-projects" class="slide-section" role="region" aria-label="Proyectos">
-      <header class="section-header animate-in">
-        <h2 class="section-title">Proyectos Destacados</h2>
-        <p class="section-subtitle">Selección de desarrollos y casos de estudio.</p>
-      </header>
-      <div class="projects-tabs animate-in" role="tablist" aria-label="Filtrar proyectos">
-        <button class="project-tab-btn active" role="tab" aria-selected="true" data-group="completed" id="tab-completed">Terminados</button>
-        <button class="project-tab-btn" role="tab" aria-selected="false" data-group="in-progress" id="tab-in-progress">En proceso</button>
-      </div>
-      <div class="projects-slider-container animate-in">
-        <button class="slider-arrow prev-arrow" id="project-prev-btn" aria-label="Proyecto anterior" disabled>&larr;</button>
-        <div class="projects-grid-slider" id="project-grid" role="list">
-          <!-- Renderizado dinámicamente mediante js/modules/projects.js -->
+      <div class="projects-layout-grid">
+        <!-- Columna izquierda: Título y Controles (Centrados internamente) -->
+        <div class="projects-left-col">
+          <header class="section-header animate-in">
+            <h2 class="section-title">Proyectos Destacados</h2>
+            <p class="section-subtitle">Selección de desarrollos y casos de estudio.</p>
+          </header>
+          <div class="projects-carousel-nav animate-in">
+            <button class="slider-arrow prev-arrow" id="project-prev-btn" aria-label="Proyecto anterior" disabled>&larr;</button>
+            <button class="slider-arrow next-arrow" id="project-next-btn" aria-label="Siguiente proyecto">&rarr;</button>
+          </div>
         </div>
-        <button class="slider-arrow next-arrow" id="project-next-btn" aria-label="Siguiente proyecto">&rarr;</button>
+
+        <!-- Columna derecha: Filtros y Carrusel -->
+        <div class="projects-right-col">
+          <div class="projects-tabs animate-in" role="tablist" aria-label="Filtrar proyectos">
+            <button class="project-tab-btn active" role="tab" aria-selected="true" data-group="completed" id="tab-completed">Terminados</button>
+            <button class="project-tab-btn" role="tab" aria-selected="false" data-group="in-progress" id="tab-in-progress">En proceso</button>
+          </div>
+          <div class="projects-slider-container animate-in">
+            <div class="projects-grid-slider" id="project-grid" role="list">
+              <!-- Renderizado dinámicamente mediante js/modules/projects.js -->
+            </div>
+          </div>
+        </div>
       </div>
     </article>
 
