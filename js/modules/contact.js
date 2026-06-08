@@ -148,7 +148,11 @@ function clearResponse(el) {
  * Envía los datos del formulario a Formspree.
  */
 async function sendToFormspree(name, email, message) {
-  const response = await fetch(`https://formspree.io/f/${CONFIG.formspreeId}`, {
+  const url = CONFIG.formspreeId.startsWith('http')
+    ? CONFIG.formspreeId
+    : `https://formspree.io/f/${CONFIG.formspreeId}`;
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

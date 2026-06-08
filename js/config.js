@@ -24,7 +24,7 @@ export const CONFIG = {
   },
 
   // ID de formulario de Formspree para envío de correos
-  formspreeId: 'YOUR_FORMSPREE_ID',
+  formspreeId: 'xdavggvp',
 
   // ── Secuencia de boot ────────────────────────────────────────────────────────
   bootLines: [
