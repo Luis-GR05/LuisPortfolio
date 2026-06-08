@@ -84,8 +84,8 @@
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   CONEXIÓN ESTABLECIDA
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  LinkedIn  →  linkedin.com/in/TU_USUARIO
-  Email     →  TU_EMAIL@EJEMPLO.COM
+  LinkedIn  →  https://www.linkedin.com/in/luisgordilloo/
+  Email     →  luisgordillor01@gmail.com
   Portfolio →  https://luis-gr05.github.io/LuisPortfolio
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   luis@portfolio:~$ _
