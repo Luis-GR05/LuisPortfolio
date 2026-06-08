@@ -51,12 +51,90 @@ async function initApp() {
     new Typewriter(bioEl, { speed: 18, cursorEl }).type(CONFIG.bio);
   }
 
+  // 9. Inicializar rastreo de posición para cabecera en móviles
+  setupResponsiveObserver();
+  setupScrollAnimationsObserver();
+
   // Confirmación por consola
   console.log(
     `%c LuisPortfolio Premium v${CONFIG.version || '3.0'} %c Cargado en: ${Math.round(performance.now())}ms`,
     'background: #8b5cf6; color: #fff; font-weight: bold; padding: 4px 8px; border-radius: 4px;',
     'color: #06b6d4; font-weight: 500;'
   );
+}
+
+/**
+ * Rastrear posición de scroll en dispositivos móviles para activar clase en el menú.
+ */
+function setupResponsiveObserver() {
+  const sections = document.querySelectorAll('.slide-section');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '-30% 0px -50% 0px', // Disparador centrado
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    // Si el slider está activo (pantallas grandes), delegar a SliderEngine
+    if (window.innerWidth >= 992 && window.innerHeight >= 650) return;
+
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const activeId = entry.target.id;
+        navLinks.forEach(link => {
+          const isTarget = link.getAttribute('data-target') === activeId;
+          link.classList.toggle('is-active', isTarget);
+        });
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => observer.observe(section));
+}
+
+/**
+ * Animaciones de entrada al hacer scroll en dispositivos móviles/tablets.
+ */
+function setupScrollAnimationsObserver() {
+  const sections = document.querySelectorAll('.slide-section');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px 0px -12% 0px', // Disparador cuando entra un 12% en pantalla
+    threshold: 0
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    // Si el slider está activo, no animar por scroll
+    if (window.innerWidth >= 992 && window.innerHeight >= 650) return;
+
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const section = entry.target;
+        if (!section.classList.contains('has-animated')) {
+          section.classList.add('has-animated');
+          const animElements = section.querySelectorAll('.animate-in');
+          if (animElements.length > 0 && typeof gsap !== 'undefined') {
+            gsap.fromTo(animElements,
+              { opacity: 0, y: 30 },
+              { 
+                opacity: 1, 
+                y: 0, 
+                duration: 0.6, 
+                stagger: 0.08, 
+                ease: 'power3.out',
+                clearProps: 'all' // Evitar conflictos con estilos CSS normales
+              }
+            );
+          }
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => observer.observe(section));
 }
 
 /**

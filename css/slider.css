@@ -33,3 +33,26 @@
   visibility: visible;
   pointer-events: auto;
 }
+
+@media (max-width: 991px), (max-height: 649px) {
+  .slider-container {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .slide-section {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    padding: 100px var(--sp-4) var(--sp-12) var(--sp-4) !important;
+    border-bottom: 1px solid var(--c-border);
+  }
+  .slide-section:not(.has-animated) .animate-in {
+    opacity: 0;
+  }
+}

@@ -190,13 +190,22 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
+  .skills-dashboard {
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding-right: 0;
+  }
+
+  .skill-tooltip {
+    display: none; /* Desactivar tooltips en hover para mobile/tablet */
+  }
+}
+
+@media (max-width: 767px) {
   .skills-dashboard {
     grid-template-columns: 1fr;
     gap: var(--sp-4);
-    max-height: 52vh;
-    overflow-y: auto;
-    padding-right: var(--sp-2);
   }
 
   .skill-group {
@@ -206,9 +215,5 @@
   .skills-list {
     grid-template-columns: 1fr;
     gap: var(--sp-2);
-  }
-
-  .skill-tooltip {
-    display: none; /* Desactivar tooltips en hover para mobile */
   }
 }

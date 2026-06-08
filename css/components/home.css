@@ -282,7 +282,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .home-grid {
     grid-template-columns: 1fr;
     text-align: center;
@@ -292,6 +292,10 @@
   .home-content {
     align-items: center;
     text-align: center;
+  }
+
+  .home-ctas {
+    justify-content: center;
   }
 
   .dev-name-hero {
@@ -316,6 +320,6 @@
   }
 
   .scroll-hint {
-    bottom: var(--sp-8);
+    display: none !important;
   }
 }

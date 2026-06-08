@@ -87,3 +87,11 @@ input, textarea {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── RESPONSIVE OVERRIDES ── */
+@media (max-width: 991px), (max-height: 649px) {
+  body {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+}

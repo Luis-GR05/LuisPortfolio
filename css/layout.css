@@ -292,13 +292,9 @@
 }
 
 /* Responsive styles */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .site-header {
     padding: var(--sp-4) var(--sp-6);
-  }
-
-  .site-footer {
-    padding: var(--sp-3) var(--sp-6);
   }
 
   .mobile-toggle {
@@ -325,5 +321,10 @@
   .site-header.is-menu-open .site-nav {
     transform: translateX(0);
   }
+}
 
+@media (max-width: 767px) {
+  .site-footer {
+    display: none !important;
+  }
 }

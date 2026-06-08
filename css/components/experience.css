@@ -133,7 +133,13 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
+  .experience-timeline-container {
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding-right: 0;
+  }
+
   .experience-timeline::before {
     left: 15px;
   }

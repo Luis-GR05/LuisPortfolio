@@ -216,13 +216,13 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 991px) {
   .contact-layout {
     grid-template-columns: 1fr;
     gap: var(--sp-4);
-    max-height: 52vh;
-    overflow-y: auto;
-    padding-right: var(--sp-2);
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding-right: 0;
   }
 
   .contact-form {

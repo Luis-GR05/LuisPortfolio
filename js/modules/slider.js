@@ -12,6 +12,10 @@ let slides = [];
 let navLinks = [];
 const onSlideChangeCallbacks = [];
 
+function isSliderActive() {
+  return window.innerWidth >= 992 && window.innerHeight >= 650;
+}
+
 export const SliderEngine = {
   
   init() {
@@ -20,34 +24,39 @@ export const SliderEngine = {
 
     if (slides.length === 0) return;
 
-    // Configurar estado inicial de las vistas
-    slides.forEach((slide, idx) => {
-      if (idx === currentIndex) {
-        slide.classList.add('is-active');
-        if (typeof gsap !== 'undefined') {
-          gsap.set(slide, { opacity: 1, y: '0%', scale: 1, visibility: 'visible' });
-        } else {
-          slide.style.opacity = '1';
-          slide.style.visibility = 'visible';
-        }
-      } else {
-        slide.classList.remove('is-active');
-        if (typeof gsap !== 'undefined') {
-          gsap.set(slide, { opacity: 0, y: '100%', scale: 0.95, visibility: 'hidden' });
-        } else {
-          slide.style.opacity = '0';
-          slide.style.visibility = 'hidden';
-        }
-      }
-    });
-
+    this.handleResize();
     this.setupEvents();
     this.updateUI();
+  },
+
+  handleResize() {
+    if (isSliderActive()) {
+      slides.forEach((slide, idx) => {
+        if (idx === currentIndex) {
+          slide.classList.add('is-active');
+          if (typeof gsap !== 'undefined') {
+            gsap.set(slide, { opacity: 1, y: '0%', scale: 1, visibility: 'visible' });
+          } else {
+            slide.style.opacity = '1';
+            slide.style.visibility = 'visible';
+          }
+        } else {
+          slide.classList.remove('is-active');
+          if (typeof gsap !== 'undefined') {
+            gsap.set(slide, { opacity: 0, y: '100%', scale: 0.95, visibility: 'hidden' });
+          } else {
+            slide.style.opacity = '0';
+            slide.style.visibility = 'hidden';
+          }
+        }
+      });
+    }
   },
 
   setupEvents() {
     // Interceptar la rueda del ratón (wheel)
     window.addEventListener('wheel', (e) => {
+      if (!isSliderActive()) return;
       if (isAnimating) return;
       if (Math.abs(e.deltaY) < 35) return; // Umbral de sensibilidad mínimo
 
@@ -61,10 +70,12 @@ export const SliderEngine = {
     // Interceptar gestos móviles (Swipe)
     let startY = 0;
     window.addEventListener('touchstart', (e) => {
+      if (!isSliderActive()) return;
       startY = e.touches[0].clientY;
     }, { passive: true });
 
     window.addEventListener('touchend', (e) => {
+      if (!isSliderActive()) return;
       if (isAnimating) return;
       const endY = e.changedTouches[0].clientY;
       const deltaY = startY - endY;
@@ -80,6 +91,7 @@ export const SliderEngine = {
 
     // Interceptar teclas del teclado
     window.addEventListener('keydown', (e) => {
+      if (!isSliderActive()) return;
       if (isAnimating) return;
       switch (e.key) {
         case 'ArrowDown':
@@ -99,12 +111,18 @@ export const SliderEngine = {
       }
     });
 
-
     // Clicks en los enlaces de navegación del header
     navLinks.forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const targetId = link.getAttribute('data-target');
+        if (!isSliderActive()) {
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
+          return;
+        }
         const targetIdx = slides.findIndex(s => s.id === targetId);
         if (targetIdx !== -1) {
           this.goTo(targetIdx);
@@ -117,11 +135,23 @@ export const SliderEngine = {
       const ctaBtn = e.target.closest('[data-go-to]');
       if (ctaBtn) {
         const targetId = ctaBtn.getAttribute('data-go-to');
+        if (!isSliderActive()) {
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
+          return;
+        }
         const targetIdx = slides.findIndex(s => s.id === targetId);
         if (targetIdx !== -1) {
           this.goTo(targetIdx);
         }
       }
+    });
+
+    // Evento de cambio de tamaño (resize)
+    window.addEventListener('resize', () => {
+      this.handleResize();
     });
   },
 
