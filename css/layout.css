@@ -329,11 +329,11 @@
   }
 }
 
-/* ── DESKTOP GRID LAYOUT (15/70/25 Relation) ── */
+/* ── DESKTOP GRID LAYOUT (10/84/6 Relation) ── */
 @media (min-width: 992px) and (min-height: 650px) {
   body {
     display: grid;
-    grid-template-rows: 15fr 70fr 25fr;
+    grid-template-rows: 10fr 84fr 6fr;
     height: 100vh;
     overflow: hidden;
     margin: 0;
@@ -417,5 +417,11 @@
 
   .contact-card-info {
     padding: var(--sp-4) !important;
+  }
+
+  /* Center the home-grid vertically on the main view */
+  #view-home .home-grid {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
   }
 }
