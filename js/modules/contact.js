@@ -88,16 +88,16 @@ export function initContact() {
           console.log('[Contact] Envío exitoso por SMTP.');
         } else {
           console.warn(`[Contact] API SMTP retornó código ${apiResponse.status}.`);
-          // Si es un error que no sea 404 (Endpoint ausente en local) o 500 (SMTP sin configurar),
+          // Si es un error que no sea 404/405 (Endpoint ausente/no permitido en local) o 500 (API sin configurar),
           // arrojamos error para no ignorar problemas de validación u otros del servidor
-          if (apiResponse.status !== 404 && apiResponse.status !== 500) {
+          if (apiResponse.status !== 404 && apiResponse.status !== 405 && apiResponse.status !== 500) {
             const errData = await apiResponse.json().catch(() => ({}));
             throw new Error(errData.error || `Error del servidor: ${apiResponse.status}`);
           }
         }
       } catch (apiErr) {
         console.warn('[Contact] Error al intentar conectar con la API SMTP:', apiErr);
-        // Si no es un error de fetch/red ni un error 404/500 de API, y tiene un mensaje descriptivo, propagamos
+        // Si no es un error de fetch/red ni un error 404/405/500 de API, y tiene un mensaje descriptivo, propagamos
         if (apiErr.message && !apiErr.message.includes('fetch') && !apiErr.message.includes('Failed to fetch') && !apiErr.message.includes('Server error')) {
           throw apiErr;
         }
