@@ -69,18 +69,56 @@ export function initContact() {
       const email = document.getElementById('input-email').value;
       const message = document.getElementById('input-message').value;
 
-      if (!CONFIG.formspreeId || CONFIG.formspreeId === 'YOUR_FORMSPREE_ID') {
-        showResponse(response, '> ERROR AL ENVIAR CORREO.', 'is-error');
-        setLoadingState(false, submitBtn);
-        return;
+      let sent = false;
+      let methodUsed = '';
+
+      try {
+        console.log('[Contact] Intentando enviar correo mediante API SMTP...');
+        const apiResponse = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, message })
+        });
+
+        if (apiResponse.ok) {
+          sent = true;
+          methodUsed = 'SMTP';
+          console.log('[Contact] Envío exitoso por SMTP.');
+        } else {
+          console.warn(`[Contact] API SMTP retornó código ${apiResponse.status}.`);
+          // Si es un error que no sea 404 (Endpoint ausente en local) o 500 (SMTP sin configurar),
+          // arrojamos error para no ignorar problemas de validación u otros del servidor
+          if (apiResponse.status !== 404 && apiResponse.status !== 500) {
+            const errData = await apiResponse.json().catch(() => ({}));
+            throw new Error(errData.error || `Error del servidor: ${apiResponse.status}`);
+          }
+        }
+      } catch (apiErr) {
+        console.warn('[Contact] Error al intentar conectar con la API SMTP:', apiErr);
+        // Si no es un error de fetch/red ni un error 404/500 de API, y tiene un mensaje descriptivo, propagamos
+        if (apiErr.message && !apiErr.message.includes('fetch') && !apiErr.message.includes('Failed to fetch') && !apiErr.message.includes('Server error')) {
+          throw apiErr;
+        }
       }
 
-      await sendToFormspree(name, email, message);
+      // Si no se envió con SMTP (por ejemplo, en local o sin configurar), hacemos fallback a Formspree
+      if (!sent) {
+        if (!CONFIG.formspreeId || CONFIG.formspreeId === 'YOUR_FORMSPREE_ID') {
+          throw new Error('Servicio de correo no configurado (SMTP y Formspree ausentes).');
+        }
+        console.log('[Contact] Iniciando fallback de envío mediante Formspree...');
+        await sendToFormspree(name, email, message);
+        methodUsed = 'Formspree';
+        console.log('[Contact] Envío exitoso por Formspree.');
+      }
+
       showResponse(response, '> TRANSMISIÓN COMPLETADA. Responderé en breve.', 'is-success');
       form.reset();
     } catch (err) {
       console.error('[Contact] Error al enviar email:', err);
-      showResponse(response, '> ERROR AL ENVIAR CORREO.', 'is-error');
+      showResponse(response, `> ERROR: ${err.message || 'FALLO AL ENVIAR CORREO.'}`, 'is-error');
     } finally {
       setLoadingState(false, submitBtn);
     }
