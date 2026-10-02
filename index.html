@@ -1,343 +1,162 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- ── Primary Meta ── -->
-  <title>Luis Gordillo Rodríguez | Frontend & Backend Developer</title>
-  <meta name="description" content="Portfolio de Luis Gordillo Rodríguez — Técnico Superior en DAW. Diseñado a pantalla completa con transiciones de GSAP y diseño premium.">
+  <title>Luis Gordillo, desarrollador web full-stack</title>
+  <meta name="description" content="Portfolio de Luis Gordillo Rodríguez, desarrollador web full-stack en Badajoz. Proyectos con React, Laravel y Supabase.">
   <meta name="author" content="Luis Gordillo Rodríguez">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://luis-gordillo.dev">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 
-  <!-- ── Open Graph ── -->
-  <meta property="og:type"        content="website">
-  <meta property="og:url"         content="https://luis-gordillo.dev">
-  <meta property="og:title"       content="Luis Gordillo Rodríguez | Fullstack Developer">
-  <meta property="og:description" content="Portfolio interactivo premium de Luis Gordillo — DAW Developer.">
-  <meta property="og:image"       content="assets/img/avatar.webp">
-  <meta name="twitter:card"       content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Luis Gordillo, desarrollador web full-stack">
+  <meta property="og:description" content="Proyectos con React, Laravel y Supabase, del primer boceto a producción.">
+  <meta property="og:image" content="assets/img/avatar.webp">
 
-  <!-- ── Fonts (Outfit + Inter + Space Mono) ── -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400;500;600&family=Space+Grotesk:wght@600;700&family=Barlow+Condensed:ital,wght@1,800&family=Cormorant+Garamond:wght@500;600&family=Archivo+Black&family=Sora:wght@700;800&display=swap" rel="stylesheet">
 
-  <!-- ── Design System & Layout CSS ── -->
-  <link rel="stylesheet" href="css/tokens.css">
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/slider.css">
-  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/site.css">
 
-  <!-- ── Component CSS ── -->
-  <link rel="stylesheet" href="css/components/home.css">
-  <link rel="stylesheet" href="css/components/skills.css">
-  <link rel="stylesheet" href="css/components/project-cards.css">
-  <link rel="stylesheet" href="css/components/experience.css">
-  <link rel="stylesheet" href="css/components/contact.css">
-
-  <!-- ── Structured Data (JSON-LD) ── -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Luis Gordillo Rodríguez",
-    "jobTitle": "Técnico Superior en Desarrollo de Aplicaciones Web",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Montijo",
-      "addressRegion": "Badajoz",
-      "addressCountry": "ES"
-    },
-    "url": "https://luis-gordillo.dev",
-    "sameAs": ["https://github.com/Luis-GR05"],
-    "knowsAbout": ["HTML5","CSS3","JavaScript","React","Java","Python","Laravel","SQL"]
+    "jobTitle": "Desarrollador web full-stack",
+    "address": { "@type": "PostalAddress", "addressLocality": "Montijo", "addressRegion": "Badajoz", "addressCountry": "ES" },
+    "sameAs": ["https://github.com/Luis-GR05", "https://www.linkedin.com/in/luisgordilloo/"]
   }
   </script>
-
-  <!-- GSAP CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
-<body>
+<body data-theme="base">
+  <a href="#contenido" class="skip-link">Saltar al contenido</a>
+  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
 
-  <!-- Accesibilidad: skip navigation -->
-  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
-
-  <!-- Fondo de orbes brillantes -->
-  <div class="orb-container">
-    <div class="glowing-orb orb-1"></div>
-    <div class="glowing-orb orb-2"></div>
-    <div class="glowing-orb orb-3"></div>
-  </div>
-
-  <!-- Preloader / Boot Overlay -->
-  <div id="boot-overlay" role="status" aria-live="polite" aria-label="Cargando portfolio">
-    <div class="loader-container">
-      <div class="brand-logo">LUIS GORDILLO<span class="logo-dot"></span></div>
-      <div class="loader-bar">
-        <div class="loader-progress" id="boot-bar-fill"></div>
-      </div>
-      <span class="loader-text" id="boot-progress-label">INITIALIZING...</span>
-    </div>
-  </div>
-
-  <!-- Cabecera y Menú Superior -->
-  <header class="site-header">
-    <div class="brand-logo">
-      LUIS GORDILLO<span class="logo-dot"></span>
-    </div>
-
-    <!-- Toggle de menú móvil -->
-    <button class="mobile-toggle" id="mobile-menu-btn" aria-label="Alternar menú" aria-expanded="false" aria-controls="site-nav">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-    <nav class="site-nav" id="site-nav" aria-label="Navegación principal">
-      <a href="#view-home" class="nav-link is-active" data-target="view-home">INICIO</a>
-      <a href="#view-skills" class="nav-link" data-target="view-skills">HABILIDADES</a>
-      <a href="#view-projects" class="nav-link" data-target="view-projects">PROYECTOS</a>
-      <a href="#view-experience" class="nav-link" data-target="view-experience">EXPERIENCIA</a>
-      <a href="#view-contact" class="nav-link" data-target="view-contact">CONTACTO</a>
+  <header class="top">
+    <a href="#inicio" class="top-name">Luis Gordillo</a>
+    <nav class="top-nav" aria-label="Secciones">
+      <a href="#proyectos">Proyectos</a>
+      <a href="#habilidades">Habilidades</a>
+      <a href="#trayectoria">Trayectoria</a>
+      <a href="#contacto">Contacto</a>
     </nav>
   </header>
 
-  <!-- Contenedor Principal de Sliders -->
-  <main class="slider-container" id="main-content">
+  <main id="contenido">
 
-    <!-- ── DIAPOSITIVA 1: INTRODUCCIÓN ── -->
-    <article id="view-home" class="slide-section is-active" role="region" aria-label="Presentación">
-      <div class="home-grid">
-        <!-- Bloque de texto -->
-        <div class="home-content">
-          <span class="home-tagline animate-in">// HOLA MUNDO</span>
-          <h1 class="dev-name-hero animate-in" id="hero-name">Luis Gordillo</h1>
-          <p class="dev-role-hero animate-in" id="hero-role">Técnico Superior en DAW</p>
-          <div class="bio-wrapper animate-in">
-            <p class="dev-bio" id="hero-bio" aria-label="Presentación personal"></p>
-            <span class="bio-cursor" aria-hidden="true">▋</span>
-          </div>
-          <div class="home-ctas animate-in">
-            <button class="btn-primary" data-go-to="view-projects">
-              Ver Proyectos <span aria-hidden="true">&rarr;</span>
-            </button>
-            <button class="btn-secondary" data-go-to="view-contact">
-              Contacto
-            </button>
-            <a href="assets/cv/LUIS_GORDILLO.pdf" download class="btn-secondary">
-              Descargar CV <span aria-hidden="true">&darr;</span>
-            </a>
-            <a href="https://github.com/Luis-GR05" target="_blank" rel="noopener noreferrer" class="btn-secondary">
-              GitHub <span aria-hidden="true">&nearr;</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Bloque de imagen (Avatar) -->
-        <div class="home-avatar-zone animate-in">
-          <div class="avatar-frame">
-            <picture>
-              <source srcset="assets/img/avatar.webp" type="image/webp">
-              <img src="assets/img/avatar.webp"
-                   alt="Luis Gordillo"
-                   class="dev-avatar"
-                   width="220" height="220"
-                   loading="eager" decoding="sync" fetchpriority="high">
-            </picture>
-            <div class="avatar-glow"></div>
-          </div>
-          <div class="floating-techs">
-            <span class="tech-tag-floater">React</span>
-            <span class="tech-tag-floater">Laravel</span>
-            <span class="tech-tag-floater">Python</span>
-            <span class="tech-tag-floater">Java</span>
-          </div>
+    <section id="inicio" class="hero">
+      <h1 class="hero-name" id="hero-name" aria-label="Luis Gordillo">
+        <span aria-hidden="true">Luis</span>
+        <span aria-hidden="true">Gordillo</span>
+      </h1>
+      <div class="hero-body">
+        <p class="hero-lede">
+          Desarrollador web full-stack en Badajoz. Construyo aplicaciones con React,
+          Laravel y Supabase, y las acompaño desde el primer boceto hasta producción.
+        </p>
+        <p class="hero-status"><span class="dot" aria-hidden="true"></span>Disponible para trabajar</p>
+        <div class="hero-actions">
+          <a class="btn btn-solid" href="#proyectos">Ver proyectos</a>
+          <a class="btn" href="assets/cv/LUIS_GORDILLO.pdf" download>Descargar CV</a>
+          <a class="btn" href="#contacto">Escribirme</a>
         </div>
       </div>
+      <figure class="hero-portrait">
+        <img src="assets/img/avatar.webp" alt="Retrato de Luis Gordillo en pixel art" width="461" height="630" fetchpriority="high">
+      </figure>
+    </section>
 
-      <div class="scroll-hint animate-in">
-        <svg class="scroll-mouse-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36" width="22" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <!-- Cuerpo del ratón -->
-          <rect x="3" y="3" width="18" height="30" rx="9" stroke="var(--c-text-muted)" stroke-width="2"/>
-          <!-- Rueda del ratón (morado/púrpura) -->
-          <rect class="svg-mouse-wheel" x="11" y="8" width="2" height="6" rx="1" fill="var(--c-primary)" stroke="none"/>
-        </svg>
-        <span>Scroll</span>
+    <section id="proyectos" class="projects">
+      <div class="projects-intro">
+        <h2>Proyectos</h2>
+        <p>Cada proyecto tiene su propia identidad, así que la página se viste de él mientras lo lees. Puedes probar las demos sin salir de aquí.</p>
       </div>
-    </article>
-
-    <!-- ── DIAPOSITIVA 2: HABILIDADES ── -->
-    <article id="view-skills" class="slide-section" role="region" aria-label="Habilidades">
-      <header class="section-header animate-in">
-        <h2 class="section-title">Habilidades Técnicas</h2>
-        <p class="section-subtitle">Mi stack tecnológico y herramientas de desarrollo.</p>
-      </header>
-      <div class="skills-dashboard animate-in" id="skills-grid">
-        <!-- Renderizado dinámicamente mediante js/modules/skill-tree.js -->
+      <div class="projects-wrap">
+        <nav class="rail" id="rail" aria-label="Lista de proyectos"></nav>
+        <div class="projects-list" id="projects-list"></div>
       </div>
-    </article>
+    </section>
 
-    <!-- ── DIAPOSITIVA 3: PROYECTOS ── -->
-    <article id="view-projects" class="slide-section" role="region" aria-label="Proyectos">
-      <div class="projects-layout-grid">
-        <!-- Columna izquierda: Título y Controles (Centrados internamente) -->
-        <div class="projects-left-col">
-          <header class="section-header animate-in">
-            <h2 class="section-title">Proyectos Destacados</h2>
-            <p class="section-subtitle">Selección de desarrollos y casos de estudio.</p>
-          </header>
-          <div class="projects-carousel-nav animate-in">
-            <button class="slider-arrow prev-arrow" id="project-prev-btn" aria-label="Proyecto anterior" disabled>&larr;</button>
-            <button class="slider-arrow next-arrow" id="project-next-btn" aria-label="Siguiente proyecto">&rarr;</button>
+    <section id="habilidades" class="block">
+      <div class="block-head">
+        <h2>Habilidades</h2>
+        <p>Pulsa una tecnología para ver qué hago con ella y en qué proyectos la he usado.</p>
+      </div>
+      <div class="skills" id="skills"></div>
+    </section>
+
+    <section id="trayectoria" class="block">
+      <div class="block-head">
+        <h2>Trayectoria</h2>
+      </div>
+      <ol class="timeline">
+        <li>
+          <time>Marzo – junio 2026</time>
+          <div>
+            <h3>Desarrollador web en prácticas</h3>
+            <p class="where">Bittacora, Badajoz</p>
+            <p>Prácticas del grado dentro del equipo de programación y diseño: creación y mantenimiento de soluciones web a lo largo de todo el ciclo de desarrollo.</p>
           </div>
+        </li>
+        <li>
+          <time>2024 – 2026</time>
+          <div>
+            <h3>Grado Superior en Desarrollo de Aplicaciones Web</h3>
+            <p class="where">IES Albarregas, Mérida</p>
+            <p>Proyecto final: KoreManager, un sistema de reservas para instalaciones deportivas municipales.</p>
+          </div>
+        </li>
+        <li>
+          <time>Febrero 2024</time>
+          <div>
+            <h3>Estancia de observación</h3>
+            <p class="where">ecaptureDtech, Badajoz</p>
+            <p>Dos semanas conociendo cómo trabaja un equipo de producto: flujos de trabajo, organización ágil y herramientas internas.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="contacto" class="block contact">
+      <div class="block-head">
+        <h2>Contacto</h2>
+        <p>Cuéntame qué necesitas y te respondo por correo.</p>
+        <ul class="contact-links">
+          <li><a href="mailto:luisgordillor01@gmail.com">luisgordillor01@gmail.com</a></li>
+          <li><a href="https://github.com/Luis-GR05" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://www.linkedin.com/in/luisgordilloo/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li>Montijo, Badajoz</li>
+        </ul>
+      </div>
+      <form id="contact-form" class="form" novalidate>
+        <div class="field">
+          <label for="f-name">Nombre</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+          <p class="field-error" id="e-name" role="alert"></p>
         </div>
-
-        <!-- Columna derecha: Filtros y Carrusel -->
-        <div class="projects-right-col">
-          <div class="projects-tabs animate-in" role="tablist" aria-label="Filtrar proyectos">
-            <button class="project-tab-btn active" role="tab" aria-selected="true" data-group="completed" id="tab-completed">Terminados</button>
-            <button class="project-tab-btn" role="tab" aria-selected="false" data-group="in-progress" id="tab-in-progress">En proceso</button>
-          </div>
-          <div class="projects-slider-container animate-in">
-            <div class="projects-grid-slider" id="project-grid" role="list">
-              <!-- Renderizado dinámicamente mediante js/modules/projects.js -->
-            </div>
-          </div>
+        <div class="field">
+          <label for="f-email">Correo electrónico</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+          <p class="field-error" id="e-email" role="alert"></p>
         </div>
-      </div>
-    </article>
-
-    <!-- ── DIAPOSITIVA 4: EXPERIENCIA ── -->
-    <article id="view-experience" class="slide-section" role="region" aria-label="Experiencia">
-      <header class="section-header animate-in">
-        <h2 class="section-title">Trayectoria</h2>
-        <p class="section-subtitle">Historial académico, prácticas y observación en el sector.</p>
-      </header>
-      <div class="experience-timeline-container animate-in">
-        <div class="experience-timeline">
-          <div class="exp-item animate-in">
-            <div class="exp-date-col">
-              <span class="exp-date">Marzo 2026 - Junio 2026</span>
-            </div>
-            <div class="exp-point-col">
-              <div class="exp-point"></div>
-            </div>
-            <div class="exp-card">
-              <h3 class="exp-role">Desarrollador Web (Prácticas / FCT)</h3>
-              <h4 class="exp-company">Bitttacora | Badajoz, España</h4>
-              <p class="exp-desc">
-                Inmersión de tres meses en el ciclo de vida del desarrollo de software. Contribución activa en la creación y mantenimiento de soluciones web, colaborando estrechamente con el equipo de programación y diseño para alcanzar entregables eficientes, escalables y orientados a resultados.
-              </p>
-            </div>
-          </div>
-
-          <div class="exp-item animate-in">
-            <div class="exp-date-col">
-              <span class="exp-date">Febrero 2024</span>
-            </div>
-            <div class="exp-point-col">
-              <div class="exp-point"></div>
-            </div>
-            <div class="exp-card">
-              <h3 class="exp-role">Observación Técnica y Metodológica</h3>
-              <h4 class="exp-company">ecaptureDtech | Badajoz, España</h4>
-              <p class="exp-desc">
-                Intervención de dos semanas orientada a la asimilación de dinámicas reales en un entorno de producción tecnológica. Análisis directo de los flujos de trabajo en equipo, la orquestación ágil de proyectos y el ecosistema interno de desarrollo corporativo.
-              </p>
-            </div>
-          </div>
+        <div class="field">
+          <label for="f-message">Mensaje</label>
+          <textarea id="f-message" name="message" rows="5" required></textarea>
+          <p class="field-error" id="e-message" role="alert"></p>
         </div>
-      </div>
-    </article>
-
-    <!-- ── DIAPOSITIVA 5: CONTACTO ── -->
-    <article id="view-contact" class="slide-section" role="region" aria-label="Contacto">
-      <header class="section-header animate-in">
-        <h2 class="section-title">Contacto</h2>
-        <p class="section-subtitle">Ponte en contacto conmigo para discutir cualquier propuesta.</p>
-      </header>
-      <div class="contact-layout animate-in">
-        <!-- Formulario glassmorphic -->
-        <form class="contact-form" id="contact-form" novalidate>
-          <div class="form-row">
-            <div class="form-group">
-              <label for="input-name">NOMBRE</label>
-              <input type="text" id="input-name" name="name"
-                     placeholder="Tu nombre completo"
-                     autocomplete="name"
-                     required minlength="2">
-              <span class="field-error" id="error-name" role="alert"></span>
-            </div>
-
-            <div class="form-group">
-              <label for="input-email">CORREO ELECTRÓNICO</label>
-              <input type="email" id="input-email" name="email"
-                     placeholder="tu@email.com"
-                     autocomplete="email"
-                     required>
-              <span class="field-error" id="error-email" role="alert"></span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="input-message">MENSAJE</label>
-            <textarea id="input-message" name="message"
-                      placeholder="Escribe tu propuesta o mensaje aquí..."
-                      rows="4" required minlength="10"></textarea>
-            <span class="field-error" id="error-message" role="alert"></span>
-          </div>
-
-          <button type="submit" class="btn-submit" id="btn-submit">
-            <span class="submit-text">Enviar Mensaje</span>
-            <span class="submit-loader" aria-hidden="true"></span>
-          </button>
-
-          <div class="form-response" id="form-response" aria-live="polite" role="status"></div>
-        </form>
-
-        <!-- Información de contacto lateral -->
-        <div class="contact-cards">
-          <div class="contact-card-info">
-            <span class="card-info-label">GITHUB</span>
-            <a href="https://github.com/Luis-GR05"
-               target="_blank" rel="noopener noreferrer"
-               class="card-info-link">@Luis-GR05</a>
-          </div>
-          <div class="contact-card-info">
-            <span class="card-info-label">LOCALIZACIÓN</span>
-            <span class="card-info-val">Montijo, Badajoz, ES</span>
-          </div>
-          <div class="contact-card-info">
-            <span class="card-info-label">ESTADO ACTUAL</span>
-            <span class="card-info-val text-success">Disponible para trabajar</span>
-          </div>
-        </div>
-      </div>
-    </article>
-
+        <button type="submit" class="btn btn-solid" id="f-submit">Enviar mensaje</button>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
   </main>
 
-  <!-- Pie de Página Fijo (HUD Minimalista) -->
-  <footer class="site-footer">
-    <div class="footer-left">
-      <div class="status-indicator">
-        <span class="status-dot"></span>
-        <span id="sys-status-bar">SISTEMA ONLINE</span>
-      </div>
-    </div>
-    <div class="footer-center">
-      <span id="footer-clock" aria-label="Hora actual"></span>
-    </div>
-    <div class="footer-right">
-      <span id="footer-uptime" aria-label="Tiempo transcurrido">UP: 00:00:00</span>
-    </div>
+  <footer class="foot">
+    <span>Luis Gordillo Rodríguez, <span id="year">2026</span></span>
+    <a href="#inicio">Volver arriba</a>
   </footer>
 
-  <!-- Script de arranque ESModule -->
-  <script type="module" src="js/app.js"></script>
-
+  <script type="module" src="js/site.js"></script>
 </body>
 </html>

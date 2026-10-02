@@ -20,7 +20,7 @@ export const CONFIG = {
   // ── Redes sociales ───────────────────────────────────────────────────────────
   socials: {
     github:   'https://github.com/Luis-GR05',
-    linkedin: '#', // Actualizar con URL real
+    linkedin: 'https://www.linkedin.com/in/luisgordilloo/',
   },
 
   // ID de formulario de Formspree para envío de correos
@@ -198,6 +198,22 @@ export const CONFIG = {
       solution:    'Bóveda de alta seguridad con simulador en tiempo real de ataques por fuerza bruta y generador dinámico de entropía.',
       impact:      'Interfaz interactiva ciberpunk de precisión quirúrgica con retroalimentación animada.',
       statusGroup: 'in-progress',
+    },
+    {
+      id:          'bistroson',
+      title:       'Bistrosón',
+      category:    'Restaurant Website & Booking',
+      tech:        ['Next.js', 'Vercel'],
+      status:      'LIVE',
+      statusColor: 'success',
+      url:         '',
+      demoUrl:     'https://bistroson-web.vercel.app/',
+      previewImg:  '',
+      year:        '2026',
+      problem:     'Un restaurante del centro de Badajoz con tres espacios distintos (salón, taberna y terraza) necesitaba una web que los presentara y facilitara reservar.',
+      solution:    'Sitio en Next.js con la carta completa, la presentación de cada espacio, horarios, contacto y reserva online.',
+      impact:      'Web publicada para un negocio real, con la reserva y la carta accesibles desde el móvil.',
+      statusGroup: 'completed',
     },
   ],
 };
