@@ -282,10 +282,23 @@ html.lenis, html.lenis body { height: auto; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
 /* ── Declaración ── */
-.statement { padding: clamp(72px, 16vh, 180px) var(--pad); border-top: 1px solid var(--line); }
-.statement p { max-width: 22em; font: 600 clamp(1.7rem, 4.2vw, 3.9rem)/1.12 var(--display); letter-spacing: -.025em; }
-.js .statement .w { opacity: .5; transition: opacity .45s ease; }
+.statement { background: #0F1730; color: #E8ECF3; }
+.statement-pin { padding: clamp(72px, 14vh, 160px) var(--pad); }
+.statement p { max-width: 21em; font: 600 clamp(1.8rem, 4.3vw, 4.3rem)/1.14 var(--display); letter-spacing: -.03em; text-wrap: pretty; }
+.statement em { font-style: normal; color: #9DB0FF; }
+.statement .chip { display: inline-block; height: .78em; width: auto; vertical-align: -.1em; margin: 0 .08em; border-radius: .18em; rotate: -3deg; box-shadow: 0 .1em .3em rgba(0, 0, 0, .45); }
+.statement .chip-sq { height: .92em; width: .92em; object-fit: contain; padding: .1em; vertical-align: -.16em; rotate: 4deg; }
+.statement .chip-white { background: #fff; }
+.statement .chip-green { background: #22352C; rotate: -5deg; }
+.js .statement .w { opacity: .4; transition: opacity .45s ease, color .45s ease; }
 .js .statement .w.lit { opacity: 1; }
+.js .statement .chip { opacity: 1; scale: 0; transition: scale .6s cubic-bezier(.34, 1.56, .64, 1); }
+.js .statement .chip.lit { scale: 1; }
+/* En escritorio el texto se queda fijo en pantalla mientras se enciende */
+@media (min-width: 901px) and (min-height: 620px) {
+  .js .statement { height: 240vh; }
+  .js .statement-pin { position: sticky; top: 0; height: 100vh; display: grid; align-content: center; padding-block: 0; }
+}
 
 /* ── Cierre ── */
 .giant { grid-column: 1 / -1; margin: 0; font: 700 clamp(3.4rem, 17vw, 20rem)/.85 var(--display); letter-spacing: -.055em; white-space: nowrap; }

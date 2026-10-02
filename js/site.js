@@ -296,8 +296,28 @@ function initMotion() {
 
   // 0c. Declaración: las palabras se encienden al avanzar
   const statement = $('#statement');
-  statement.innerHTML = statement.textContent.trim().split(/\s+/).map(w => `<span class="w">${esc(w)}</span>`).join(' ');
-  const words = [...statement.children];
+  const wrapWords = node => {
+    [...node.childNodes].forEach(child => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach(part => {
+          if (!part.trim()) return frag.append(part);
+          const span = document.createElement('span');
+          span.className = 'w';
+          span.textContent = part;
+          frag.append(span);
+        });
+        child.replaceWith(frag);
+      } else if (child.tagName === 'IMG') {
+        child.classList.add('w');
+      } else {
+        wrapWords(child);
+      }
+    });
+  };
+  wrapWords(statement);
+  const words = [...statement.querySelectorAll('.w')];
+  const statementBox = statement.closest('.statement');
 
   // 0d. Cierre gigante, letra a letra
   const giant = $('#giant');
@@ -351,8 +371,11 @@ function initMotion() {
     header.classList.toggle('is-hidden', y > lastY && y > innerHeight * 0.6);
     lastY = y;
     // declaración
-    const sr = statement.getBoundingClientRect();
-    const sp = (innerHeight * 0.85 - sr.top) / (sr.height + innerHeight * 0.35);
+    const sr = statementBox.getBoundingClientRect();
+    const pinned = sr.height > innerHeight * 1.5;
+    const sp = pinned
+      ? (-sr.top / (sr.height - innerHeight)) * 1.2 - 0.03
+      : (innerHeight * 0.85 - sr.top) / (sr.height + innerHeight * 0.1);
     words.forEach((w, i) => w.classList.toggle('lit', i / words.length < sp));
     // parallax de los marcos (solo escritorio)
     if (innerWidth > 900) tilts.forEach(t => {
