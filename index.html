@@ -11,7 +11,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Luis Gordillo, desarrollador web full-stack">
   <meta property="og:description" content="Proyectos con React, Laravel y Supabase, del primer boceto a producción.">
-  <meta property="og:image" content="assets/img/avatar.webp">
+  <meta property="og:image" content="assets/img/retrato.webp">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,13 +64,13 @@
         </p>
         <p class="hero-status"><span class="dot" aria-hidden="true"></span>Disponible para trabajar</p>
         <div class="hero-actions">
-          <a class="btn btn-solid" href="#proyectos">Ver proyectos</a>
-          <a class="btn" href="assets/cv/LUIS_GORDILLO.pdf" download>Descargar CV</a>
-          <a class="btn" href="#contacto">Escribirme</a>
+          <a class="btn btn-solid" href="#proyectos" data-icon="arrowdown">Ver proyectos</a>
+          <a class="btn" href="assets/cv/LUIS_GORDILLO.pdf" download data-icon="down">Descargar CV</a>
+          <a class="btn" href="#contacto" data-icon="mail">Escribirme</a>
         </div>
       </div>
       <figure class="hero-portrait">
-        <img src="assets/img/avatar.webp" alt="Retrato de Luis Gordillo en pixel art" width="461" height="630" fetchpriority="high">
+        <img src="assets/img/retrato.webp" alt="Retrato de Luis Gordillo" width="720" height="960" fetchpriority="high">
       </figure>
     </section>
 
@@ -105,7 +105,7 @@
         <li>
           <time>Marzo – junio 2026</time>
           <div>
-            <h3>Desarrollador web en prácticas</h3>
+            <h3 data-icon="work">Desarrollador web en prácticas</h3>
             <p class="where">Bittacora, Badajoz</p>
             <p>Prácticas del grado dentro del equipo de programación y diseño: creación y mantenimiento de soluciones web a lo largo de todo el ciclo de desarrollo.</p>
           </div>
@@ -113,7 +113,7 @@
         <li>
           <time>2024 – 2026</time>
           <div>
-            <h3>Grado Superior en Desarrollo de Aplicaciones Web</h3>
+            <h3 data-icon="cap">Grado Superior en Desarrollo de Aplicaciones Web</h3>
             <p class="where">IES Albarregas, Mérida</p>
             <p>Proyecto final: KoreManager, un sistema de reservas para instalaciones deportivas municipales.</p>
           </div>
@@ -121,7 +121,7 @@
         <li>
           <time>Febrero 2024</time>
           <div>
-            <h3>Estancia de observación</h3>
+            <h3 data-icon="eye">Estancia de observación</h3>
             <p class="where">ecaptureDtech, Badajoz</p>
             <p>Dos semanas conociendo cómo trabaja un equipo de producto: flujos de trabajo, organización ágil y herramientas internas.</p>
           </div>
@@ -134,10 +134,10 @@
       <div class="block-head">
         <p>Cuéntame qué necesitas y te respondo por correo.</p>
         <ul class="contact-links">
-          <li><a href="mailto:luisgordillor01@gmail.com">luisgordillor01@gmail.com</a></li>
-          <li><a href="https://github.com/Luis-GR05" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://www.linkedin.com/in/luisgordilloo/" target="_blank" rel="noopener">LinkedIn</a></li>
-          <li>Montijo, Badajoz</li>
+          <li data-icon="mail"><a href="mailto:luisgordillor01@gmail.com">luisgordillor01@gmail.com</a></li>
+          <li data-icon="code"><a href="https://github.com/Luis-GR05" target="_blank" rel="noopener">GitHub</a></li>
+          <li data-icon="user"><a href="https://www.linkedin.com/in/luisgordilloo/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li data-icon="pin">Montijo, Badajoz</li>
         </ul>
       </div>
       <form id="contact-form" class="form" novalidate>
@@ -156,7 +156,7 @@
           <textarea id="f-message" name="message" rows="5" required></textarea>
           <p class="field-error" id="e-message" role="alert"></p>
         </div>
-        <button type="submit" class="btn btn-solid" id="f-submit">Enviar mensaje</button>
+        <button type="submit" class="btn btn-solid" id="f-submit" data-icon="send">Enviar mensaje</button>
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       </form>
     </section>

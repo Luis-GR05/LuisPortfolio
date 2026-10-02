@@ -19,7 +19,44 @@ const KIND = {
 };
 const STATUS = { LIVE: 'En producción', DEV: 'En desarrollo' };
 /* Imágenes que llenan el marco en vez de mostrarse como logo */
-const COVER = new Set(['kore']);
+const COVER = new Set(['kore', 'bistroson']);
+/* Logo de cada app (square: icono cuadrado; si no, el logotipo horizontal) */
+const LOGO = {
+  kore:      { src: 'assets/img/kore-logo.png', square: true, contain: true, bg: '#FFFFFF' },
+  dailyset:  { src: 'assets/img/dailyset-logo.png' },
+  nidus:     { src: 'assets/img/Nidus.png' },
+  mantra:    { src: 'assets/img/Mantra.png' },
+  nextvault: { src: 'assets/img/nextvault.png' },
+  bistroson: { src: 'assets/img/bistroson-mark.png', square: true, contain: true, bg: '#16241D' },
+};
+/* Icono de cada tecnología (assets/tech, colección Devicon) */
+const TECH_ICON = [
+  ['react', 'react'], ['tailwind', 'tailwindcss'], ['supabase', 'supabase'], ['next', 'nextjs'], ['three', 'threejs'],
+  ['framer', 'framermotion'], ['vercel', 'vercel'], ['html', 'html5'], ['css', 'css3'], ['js', 'javascript'],
+  ['javascript', 'javascript'], ['typescript', 'typescript'],
+];
+const SKILL_ICON = { html: 'html5', css: 'css3', js: 'javascript', react: 'react', java: 'java', python: 'python', laravel: 'laravel', cpp: 'cplusplus', sql: 'postgresql' };
+const techIcon = t => {
+  const hit = TECH_ICON.find(([k]) => t.toLowerCase().includes(k));
+  return hit ? `<img src="assets/tech/${hit[1]}.svg" alt="" width="18" height="18" loading="lazy">` : '';
+};
+/* Iconos de interfaz (trazo propio, 24×24) */
+const ICONS = {
+  ext: '<path d="M7 17 17 7M8 7h9v9"/>',
+  code: '<path d="m8 7-5 5 5 5M16 7l5 5-5 5"/>',
+  play: '<path d="M8 5v14l11-7z"/>',
+  down: '<path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/>',
+  arrowdown: '<path d="M12 5v14m-6-6 6 6 6-6"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 7 9-7"/>',
+  send: '<path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/>',
+  pin: '<path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  work: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',
+  cap: '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.2 2.7 2.5 6 2.5s6-1.3 6-2.5v-4.5"/>',
+  eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+};
+const icon = name => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
+document.querySelectorAll('[data-icon]').forEach(el => el.insertAdjacentHTML('afterbegin', icon(el.dataset.icon)));
 /* Cómo aparece cada habilidad en las listas de tecnologías de los proyectos */
 const SKILL_MATCH = { html: ['html'], css: ['css', 'tailwind'], js: ['js', 'javascript'], react: ['react'], sql: ['supabase', 'sql'] };
 
@@ -31,6 +68,7 @@ initProgress();
 initNavState();
 initContact();
 initMotion();
+fitTitles();
 $('#year').textContent = new Date().getFullYear();
 initClock();
 
@@ -40,7 +78,12 @@ function renderProjects() {
   const rail = $('#rail');
 
   list.innerHTML = CONFIG.projects.map(p => {
+    const logo = LOGO[p.id];
+    const logoHtml = logo
+      ? `<img class="project-logo reveal${logo.square ? ' is-square' : ''}${logo.contain ? ' is-contain' : ''}" ${logo.bg ? ` style="background:${logo.bg}"` : ''} src="${logo.src}" alt="Logo de ${esc(p.title)}" loading="lazy">`
+      : '';
     const head = `
+      ${logoHtml}
       <p class="project-status reveal">${esc(STATUS[p.status] || p.status)}, ${esc(p.year)}</p>
       <h3 class="project-title"><span class="mask"><span>${esc(p.title)}</span></span></h3>`;
 
@@ -60,10 +103,10 @@ function renderProjects() {
           <div class="reveal" style="--i:4"><dt>La solución</dt><dd>${esc(p.solution)}</dd></div>
           <div class="reveal" style="--i:5"><dt>El resultado</dt><dd>${esc(p.impact)}</dd></div>
         </dl>
-        <ul class="tech reveal" style="--i:6">${p.tech.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+        <ul class="tech reveal" style="--i:6">${p.tech.map(t => `<li>${techIcon(t)}${esc(t)}</li>`).join('')}</ul>
         <div class="project-links reveal" style="--i:7">
-          ${p.demoUrl ? `<a class="btn btn-solid" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">Abrir la demo</a>` : ''}
-          ${p.url ? `<a class="btn" href="${esc(p.url)}" target="_blank" rel="noopener">Ver el código</a>` : ''}
+          ${p.demoUrl ? `<a class="btn btn-solid" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Abrir la demo</a>` : ''}
+          ${p.url ? `<a class="btn" href="${esc(p.url)}" target="_blank" rel="noopener">${icon('code')}Ver el código</a>` : ''}
         </div>
       </div>
       <div class="frame-tilt"><div class="frame">
@@ -71,8 +114,8 @@ function renderProjects() {
         <div class="frame-view">
           ${p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="Imagen de ${esc(p.title)}" loading="lazy">` : `<span class="frame-poster">${esc(p.title)}</span>`}
           ${!p.demoUrl ? '' : p.embed === false
-            ? `<a class="btn frame-play" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">Abrir la demo en otra pestaña</a>`
-            : `<button type="button" class="btn frame-play" data-src="${esc(p.demoUrl)}" data-title="${esc(p.title)}">Probar la demo aquí</button>`}
+            ? `<a class="btn frame-play" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Abrir la demo en otra pestaña</a>`
+            : `<button type="button" class="btn frame-play" data-src="${esc(p.demoUrl)}" data-title="${esc(p.title)}">${icon('play')}Probar la demo aquí</button>`}
         </div>
       </div></div>
     </article>`;
@@ -171,6 +214,7 @@ function renderSkills() {
       : '';
     return `<div class="skill reveal" style="--i:${i}">
       <button type="button" aria-expanded="false" aria-controls="sk-${id}">
+        <img class="skill-icon" src="assets/tech/${SKILL_ICON[id]}.svg" alt="" width="28" height="28" loading="lazy">
         <span class="skill-name">${esc(s.label)}</span>
         <span class="skill-years">${s.years} ${s.years === 1 ? 'año' : 'años'}</span>
         <span class="skill-sign" aria-hidden="true">+</span>
@@ -220,7 +264,7 @@ function initContact() {
     }).then(r => { if (!r.ok) throw new Error(r.status); });
 
     submit.disabled = true;
-    submit.textContent = 'Enviando…';
+    submit.lastChild.textContent = 'Enviando…';
     status.textContent = '';
     try {
       await post('/api/send-email').catch(() => post(`https://formspree.io/f/${CONFIG.formspreeId}`));
@@ -230,7 +274,7 @@ function initContact() {
       status.textContent = 'No se pudo enviar el mensaje. Escríbeme a luisgordillor01@gmail.com.';
     } finally {
       submit.disabled = false;
-      submit.textContent = 'Enviar mensaje';
+      submit.lastChild.textContent = 'Enviar mensaje';
     }
   });
 }
@@ -392,4 +436,24 @@ function initMotion() {
     cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
     requestAnimationFrame(loop);
   })();
+}
+
+/* Los títulos de proyecto nunca se parten: si no caben en su columna, se reducen */
+function fitTitles() {
+  const fit = () => {
+    document.querySelectorAll('.project-title').forEach(title => {
+      const inner = title.querySelector('.mask > span') || title;
+      title.style.fontSize = '';
+      let size = parseFloat(getComputedStyle(title).fontSize);
+      for (let i = 0; i < 12 && inner.scrollWidth > inner.clientWidth + 1 && size > 24; i++) {
+        size *= Math.max(0.6, (inner.clientWidth / inner.scrollWidth) * 0.98);
+        title.style.fontSize = `${size}px`;
+      }
+    });
+  };
+  fit();
+  document.fonts?.ready.then(fit);
+  addEventListener('load', fit);
+  let t = 0;
+  addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 150); });
 }
