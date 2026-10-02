@@ -6,16 +6,39 @@
   <title>Luis Gordillo, desarrollador web full-stack</title>
   <meta name="description" content="Portfolio de Luis Gordillo Rodríguez, desarrollador web full-stack en Badajoz. Proyectos con React, Laravel y Supabase.">
   <meta name="author" content="Luis Gordillo Rodríguez">
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="canonical" href="https://luis-portfolio-pi.vercel.app/">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#E8ECF3">
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="assets/favicon/site.webmanifest">
 
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:site_name" content="Luis Gordillo">
+  <meta property="og:url" content="https://luis-portfolio-pi.vercel.app/">
   <meta property="og:title" content="Luis Gordillo, desarrollador web full-stack">
   <meta property="og:description" content="Proyectos con React, Laravel y Supabase, del primer boceto a producción.">
-  <meta property="og:image" content="assets/img/retrato.webp">
+  <meta property="og:image" content="https://luis-portfolio-pi.vercel.app/assets/img/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Luis Gordillo, desarrollador web full-stack">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Luis Gordillo, desarrollador web full-stack">
+  <meta name="twitter:description" content="Proyectos con React, Laravel y Supabase, del primer boceto a producción.">
+  <meta name="twitter:image" content="https://luis-portfolio-pi.vercel.app/assets/img/og.jpg">
 
+  <link rel="preload" as="image" href="assets/img/retrato.webp" type="image/webp" fetchpriority="high">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400;500;600&family=Space+Grotesk:wght@600;700&family=Barlow+Condensed:ital,wght@1,800&family=Cormorant+Garamond:wght@500;600&family=Archivo+Black&family=Sora:wght@700;800&display=swap" rel="stylesheet">
+  <!-- Tipografías de la página (críticas) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Tipografías de los títulos de proyecto: se cargan sin bloquear el pintado -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Barlow+Condensed:ital,wght@1,800&family=Cormorant+Garamond:ital,wght@0,500;1,600&family=Archivo+Black&family=Sora:wght@800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Barlow+Condensed:ital,wght@1,800&family=Cormorant+Garamond:ital,wght@0,500;1,600&family=Archivo+Black&family=Sora:wght@800&display=swap" rel="stylesheet"></noscript>
 
   <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.className="js"</script>
   <link rel="stylesheet" href="css/site.css">
@@ -23,11 +46,31 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Luis Gordillo Rodríguez",
-    "jobTitle": "Desarrollador web full-stack",
-    "address": { "@type": "PostalAddress", "addressLocality": "Montijo", "addressRegion": "Badajoz", "addressCountry": "ES" },
-    "sameAs": ["https://github.com/Luis-GR05", "https://www.linkedin.com/in/luisgordilloo/"]
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://luis-portfolio-pi.vercel.app/#luis",
+        "name": "Luis Gordillo Rodríguez",
+        "givenName": "Luis",
+        "familyName": "Gordillo Rodríguez",
+        "jobTitle": "Desarrollador web full-stack",
+        "url": "https://luis-portfolio-pi.vercel.app/",
+        "image": "https://luis-portfolio-pi.vercel.app/assets/img/retrato.webp",
+        "email": "mailto:luisgordillor01@gmail.com",
+        "address": { "@type": "PostalAddress", "addressLocality": "Montijo", "addressRegion": "Badajoz", "addressCountry": "ES" },
+        "alumniOf": { "@type": "EducationalOrganization", "name": "IES Albarregas" },
+        "knowsAbout": ["HTML", "CSS", "JavaScript", "React", "Next.js", "Laravel", "Java", "Python", "SQL", "Supabase"],
+        "sameAs": ["https://github.com/Luis-GR05", "https://www.linkedin.com/in/luisgordilloo/"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://luis-portfolio-pi.vercel.app/#web",
+        "url": "https://luis-portfolio-pi.vercel.app/",
+        "name": "Luis Gordillo, desarrollador web full-stack",
+        "inLanguage": "es",
+        "author": { "@id": "https://luis-portfolio-pi.vercel.app/#luis" }
+      }
+    ]
   }
   </script>
 </head>
@@ -70,7 +113,7 @@
         </div>
       </div>
       <figure class="hero-portrait">
-        <img src="assets/img/retrato.webp" alt="Retrato de Luis Gordillo" width="720" height="960" fetchpriority="high">
+        <img src="assets/img/retrato.webp" alt="Retrato de Luis Gordillo" width="720" height="960" fetchpriority="high" decoding="async">
       </figure>
     </section>
 
@@ -81,11 +124,22 @@
     <section id="proyectos" class="projects">
       <div class="projects-intro">
         <h2>Proyectos</h2>
-        <p>Cada proyecto tiene su propia identidad, así que la página se viste de él mientras lo lees. Puedes probar las demos sin salir de aquí.</p>
+        <p>Cada proyecto tiene su propia identidad, así que la página se viste de él mientras lo lees. Cada uno enlaza a su versión desplegada.</p>
       </div>
       <div class="projects-wrap">
         <nav class="rail" id="rail" aria-label="Lista de proyectos"></nav>
-        <div class="projects-list" id="projects-list"></div>
+        <div class="projects-list" id="projects-list">
+          <noscript>
+            <ul class="noscript-list">
+              <li><a href="https://kore-manager.vercel.app/">KoreManager</a>: reserva y gestión de pistas deportivas (React, Tailwind, Supabase).</li>
+              <li><a href="https://dailyset.vercel.app/">DailySet</a>: registro y análisis de entrenamientos (React, Tailwind, Supabase).</li>
+              <li><a href="https://nidus-brown.vercel.app/">Nidus</a>: inmobiliaria boutique (HTML, CSS, JavaScript).</li>
+              <li><a href="https://mantra-three-weld.vercel.app/">Mantra</a>: catálogo para conectar con tatuadores (JavaScript, GSAP).</li>
+              <li><a href="https://next-vault-nine.vercel.app/">NextVault</a>: gestor de contraseñas (React, Framer Motion, Tailwind).</li>
+              <li><a href="https://bistroson-web.vercel.app/">Bistroson</a>: web y reservas para un restaurante de Badajoz (Next.js, Three.js).</li>
+            </ul>
+          </noscript>
+        </div>
       </div>
     </section>
 
@@ -135,25 +189,25 @@
         <p>Cuéntame qué necesitas y te respondo por correo.</p>
         <ul class="contact-links">
           <li data-icon="mail"><a href="mailto:luisgordillor01@gmail.com">luisgordillor01@gmail.com</a></li>
-          <li data-icon="code"><a href="https://github.com/Luis-GR05" target="_blank" rel="noopener">GitHub</a></li>
-          <li data-icon="user"><a href="https://www.linkedin.com/in/luisgordilloo/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li data-icon="code"><a href="https://github.com/Luis-GR05" target="_blank" rel="noopener">GitHub<span class="sr-only"> (se abre en una pestaña nueva)</span></a></li>
+          <li data-icon="user"><a href="https://www.linkedin.com/in/luisgordilloo/" target="_blank" rel="noopener">LinkedIn<span class="sr-only"> (se abre en una pestaña nueva)</span></a></li>
           <li data-icon="pin">Montijo, Badajoz</li>
         </ul>
       </div>
       <form id="contact-form" class="form" novalidate>
         <div class="field">
           <label for="f-name">Nombre</label>
-          <input id="f-name" name="name" type="text" autocomplete="name" required>
+          <input id="f-name" name="name" aria-describedby="e-name" type="text" autocomplete="name" required>
           <p class="field-error" id="e-name" role="alert"></p>
         </div>
         <div class="field">
           <label for="f-email">Correo electrónico</label>
-          <input id="f-email" name="email" type="email" autocomplete="email" required>
+          <input id="f-email" name="email" aria-describedby="e-email" type="email" autocomplete="email" required>
           <p class="field-error" id="e-email" role="alert"></p>
         </div>
         <div class="field">
           <label for="f-message">Mensaje</label>
-          <textarea id="f-message" name="message" rows="5" required></textarea>
+          <textarea id="f-message" name="message" aria-describedby="e-message" rows="5" required></textarea>
           <p class="field-error" id="e-message" role="alert"></p>
         </div>
         <button type="submit" class="btn btn-solid" id="f-submit" data-icon="send">Enviar mensaje</button>

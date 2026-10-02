@@ -37,6 +37,8 @@ img { display: block; max-width: 100%; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.noscript-list { padding: 48px 0; display: grid; gap: 12px; max-width: 44rem; }
 .skip-link { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--bg); padding: 8px 14px; z-index: 30; }
 .skip-link:focus { left: 8px; }
 
@@ -53,6 +55,7 @@ a { color: inherit; }
   transition: background-color .5s ease, border-color .5s ease, transform .5s cubic-bezier(.16, 1, .3, 1);
 }
 .top.is-hidden { transform: translateY(-101%); }
+.top:focus-within { transform: none; }
 .top-name { font: 700 1.05rem/1 var(--display); text-decoration: none; }
 .top-nav { display: flex; gap: clamp(12px, 2.4vw, 32px); font-size: 1rem; }
 .top-nav a { position: relative; text-decoration: none; padding: 4px 0; }
@@ -153,12 +156,10 @@ h2 { font: 700 clamp(2.2rem, 5vw, 4rem)/1 var(--display); letter-spacing: -.03em
 .frame { border: 1.5px solid var(--ink); border-radius: 10px; overflow: hidden; background: #000; transition: border-color .5s; }
 .frame-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px; background: var(--ink); color: var(--bg); font-size: .92rem; transition: background-color .5s, color .5s; }
 .frame-bar span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.frame-bar button { background: none; border: 0; color: inherit; font: inherit; text-decoration: underline; cursor: pointer; padding: 2px; }
 .frame-view { position: relative; aspect-ratio: 16 / 11; display: grid; place-items: center; background: #050505; }
 .frame-poster { font: 600 clamp(1.6rem, 3vw, 2.6rem)/1 var(--display); color: #fff; }
 .frame-view > img { max-width: 62%; max-height: 40%; }
 .frame-view > img.cover { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; }
-.frame-view iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
 .frame-play { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); white-space: nowrap; background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 
 /* ── Bloques ── */
@@ -283,7 +284,7 @@ html.lenis, html.lenis body { height: auto; }
 /* ── Declaración ── */
 .statement { padding: clamp(72px, 16vh, 180px) var(--pad); border-top: 1px solid var(--line); }
 .statement p { max-width: 22em; font: 600 clamp(1.7rem, 4.2vw, 3.9rem)/1.12 var(--display); letter-spacing: -.025em; }
-.js .statement .w { opacity: .24; transition: opacity .45s ease; }
+.js .statement .w { opacity: .5; transition: opacity .45s ease; }
 .js .statement .w.lit { opacity: 1; }
 
 /* ── Cierre ── */

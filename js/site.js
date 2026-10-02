@@ -22,12 +22,12 @@ const STATUS = { LIVE: 'En producción', DEV: 'En desarrollo' };
 const COVER = new Set(['kore', 'bistroson']);
 /* Logo de cada app (square: icono cuadrado; si no, el logotipo horizontal) */
 const LOGO = {
-  kore:      { src: 'assets/img/kore-logo.png', square: true, contain: true, bg: '#FFFFFF' },
-  dailyset:  { src: 'assets/img/dailyset-logo.png' },
-  nidus:     { src: 'assets/img/Nidus.png' },
-  mantra:    { src: 'assets/img/Mantra.png' },
-  nextvault: { src: 'assets/img/nextvault.png' },
-  bistroson: { src: 'assets/img/bistroson-mark.png', square: true, contain: true, bg: '#16241D' },
+  kore:      { src: 'assets/img/kore-logo.webp', w: 225, h: 256, square: true, contain: true, bg: '#FFFFFF' },
+  dailyset:  { src: 'assets/img/dailyset-logo.png', w: 190, h: 62 },
+  nidus:     { src: 'assets/img/Nidus.png', w: 132, h: 53 },
+  mantra:    { src: 'assets/img/Mantra.png', w: 172, h: 56 },
+  nextvault: { src: 'assets/img/nextvault.png', w: 165, h: 47 },
+  bistroson: { src: 'assets/img/bistroson-mark.webp', w: 256, h: 222, square: true, contain: true, bg: '#16241D' },
 };
 /* Icono de cada tecnología (assets/tech, colección Devicon) */
 const TECH_ICON = [
@@ -44,7 +44,6 @@ const techIcon = t => {
 const ICONS = {
   ext: '<path d="M7 17 17 7M8 7h9v9"/>',
   code: '<path d="m8 7-5 5 5 5M16 7l5 5-5 5"/>',
-  play: '<path d="M8 5v14l11-7z"/>',
   down: '<path d="M12 4v11m-5-5 5 5 5-5M5 20h14"/>',
   arrowdown: '<path d="M12 5v14m-6-6 6 6 6-6"/>',
   mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 7 9-7"/>',
@@ -80,7 +79,7 @@ function renderProjects() {
   list.innerHTML = CONFIG.projects.map(p => {
     const logo = LOGO[p.id];
     const logoHtml = logo
-      ? `<img class="project-logo reveal${logo.square ? ' is-square' : ''}${logo.contain ? ' is-contain' : ''}" ${logo.bg ? ` style="background:${logo.bg}"` : ''} src="${logo.src}" alt="Logo de ${esc(p.title)}" loading="lazy">`
+      ? `<img class="project-logo reveal${logo.square ? ' is-square' : ''}${logo.contain ? ' is-contain' : ''}" ${logo.bg ? ` style="background:${logo.bg}"` : ''} src="${logo.src}" width="${logo.w}" height="${logo.h}" alt="Logo de ${esc(p.title)}" loading="lazy">`
       : '';
     const head = `
       ${logoHtml}
@@ -105,45 +104,21 @@ function renderProjects() {
         </dl>
         <ul class="tech reveal" style="--i:6">${p.tech.map(t => `<li>${techIcon(t)}${esc(t)}</li>`).join('')}</ul>
         <div class="project-links reveal" style="--i:7">
-          ${p.demoUrl ? `<a class="btn btn-solid" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Abrir la demo</a>` : ''}
-          ${p.url ? `<a class="btn" href="${esc(p.url)}" target="_blank" rel="noopener">${icon('code')}Ver el código</a>` : ''}
+          ${p.demoUrl ? `<a class="btn btn-solid" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Ver el proyecto<span class="sr-only"> (se abre en una pestaña nueva)</span></a>` : ''}
+          ${p.url ? `<a class="btn" href="${esc(p.url)}" target="_blank" rel="noopener">${icon('code')}Ver el código<span class="sr-only"> (se abre en una pestaña nueva)</span></a>` : ''}
         </div>
       </div>
       <div class="frame-tilt"><div class="frame">
-        <div class="frame-bar"><span>${esc(host)}</span><button type="button" class="frame-close" hidden>Cerrar la demo</button></div>
+        <div class="frame-bar"><span>${esc(host)}</span></div>
         <div class="frame-view">
-          ${p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="Imagen de ${esc(p.title)}" loading="lazy">` : `<span class="frame-poster">${esc(p.title)}</span>`}
-          ${!p.demoUrl ? '' : p.embed === false
-            ? `<a class="btn frame-play" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Abrir la demo en otra pestaña</a>`
-            : `<button type="button" class="btn frame-play" data-src="${esc(p.demoUrl)}" data-title="${esc(p.title)}">${icon('play')}Probar la demo aquí</button>`}
+          ${p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="Imagen de ${esc(p.title)}" loading="lazy" decoding="async">` : `<span class="frame-poster">${esc(p.title)}</span>`}
+          ${p.demoUrl ? `<a class="btn frame-play" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Ver el proyecto<span class="sr-only"> (se abre en una pestaña nueva)</span></a>` : ''}
         </div>
       </div></div>
     </article>`;
   }).join('');
 
   rail.innerHTML = CONFIG.projects.map(p => `<a href="#p-${p.id}" data-id="${p.id}">${esc(p.title)}</a>`).join('');
-
-  // Demo embebida: se carga solo cuando se pide
-  list.addEventListener('click', e => {
-    const play = e.target.closest('button.frame-play');
-    const close = e.target.closest('.frame-close');
-    if (play) {
-      const view = play.parentElement;
-      const iframe = document.createElement('iframe');
-      iframe.src = play.dataset.src;
-      iframe.title = `Demo de ${play.dataset.title}`;
-      iframe.loading = 'lazy';
-      view.append(iframe);
-      play.hidden = true;
-      $('.frame-close', view.parentElement).hidden = false;
-    }
-    if (close) {
-      const frame = close.closest('.frame');
-      $('iframe', frame)?.remove();
-      $('.frame-play', frame).hidden = false;
-      close.hidden = true;
-    }
-  });
 }
 
 /* La página adopta el tema del proyecto que ocupa el centro de la pantalla */
@@ -219,7 +194,7 @@ function renderSkills() {
         <span class="skill-years">${s.years} ${s.years === 1 ? 'año' : 'años'}</span>
         <span class="skill-sign" aria-hidden="true">+</span>
       </button>
-      <div class="skill-panel" id="sk-${id}"><div><p>${esc(s.desc)}</p>${usedHtml}</div></div>
+      <div class="skill-panel" id="sk-${id}" inert><div><p>${esc(s.desc)}</p>${usedHtml}</div></div>
     </div>`;
   }).join('');
 
@@ -227,8 +202,12 @@ function renderSkills() {
     const btn = e.target.closest('.skill > button');
     if (!btn) return;
     const open = btn.getAttribute('aria-expanded') === 'true';
-    root.querySelectorAll('.skill > button').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    root.querySelectorAll('.skill > button').forEach(b => {
+      b.setAttribute('aria-expanded', 'false');
+      b.nextElementSibling.inert = true;
+    });
     btn.setAttribute('aria-expanded', String(!open));
+    btn.nextElementSibling.inert = open;
   });
 }
 
@@ -301,7 +280,10 @@ function initMotion() {
   const loader = $('#loader');
   const count = $('#loader-count');
   const t0 = performance.now();
-  const DURATION = 1100;
+  let seen = false;
+  try { seen = sessionStorage.getItem('seen') === '1'; sessionStorage.setItem('seen', '1'); } catch { /* sin almacenamiento */ }
+  const DURATION = seen ? 0 : 800;
+  if (seen) loader.style.transition = 'none';
   lenis?.stop();
   (function step(now) {
     const k = Math.min(1, (now - t0) / DURATION);
@@ -396,7 +378,6 @@ function initMotion() {
     const frame = $('.frame', project);
     if (!frame) return;
     project.addEventListener('pointermove', e => {
-      if ($('iframe', frame)) { frame.style.removeProperty('--rx'); frame.style.removeProperty('--ry'); return; }
       const r = frame.getBoundingClientRect();
       const x = (e.clientX - (r.left + r.width / 2)) / innerWidth;
       const y = (e.clientY - (r.top + r.height / 2)) / innerHeight;
@@ -431,11 +412,14 @@ function initMotion() {
     cursor.classList.toggle('hide', Boolean(e.target.closest('iframe, input, textarea')));
   }, { passive: true });
   document.addEventListener('pointerleave', () => cursor.classList.remove('on'));
-  (function loop() {
+  let running = false;
+  const loop = () => {
     cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
     cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-    requestAnimationFrame(loop);
-  })();
+    running = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.2;
+    if (running) requestAnimationFrame(loop);
+  };
+  addEventListener('pointermove', () => { if (!running) { running = true; requestAnimationFrame(loop); } }, { passive: true });
 }
 
 /* Los títulos de proyecto nunca se parten: si no caben en su columna, se reducen */
@@ -453,6 +437,7 @@ function fitTitles() {
   };
   fit();
   document.fonts?.ready.then(fit);
+  document.fonts?.addEventListener?.('loadingdone', fit);
   addEventListener('load', fit);
   let t = 0;
   addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fit, 150); });

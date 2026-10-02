@@ -1,98 +1,34 @@
-<div align="center">
+# Portfolio de Luis Gordillo
 
-<img src="https://img.shields.io/badge/HTML5-%23E34F26.svg?style=flat-square&logo=html5&logoColor=white" alt="HTML5">
-<img src="https://img.shields.io/badge/CSS3-%231572B6.svg?style=flat-square&logo=css3&logoColor=white" alt="CSS3">
-<img src="https://img.shields.io/badge/JavaScript-%23F7DF1E.svg?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
-<img src="https://img.shields.io/badge/Status-Activo-0091ff?style=flat-square" alt="Status">
+Portfolio personal de una sola página, con scroll, en HTML, CSS y JavaScript sin framework.
 
-</div>
+**Web:** https://luis-portfolio-pi.vercel.app/
 
----
+## Estructura
 
 ```text
-> ¿Quién soy?
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  Luis — Desarrollador FullStack.
-  Técnico superior en desarrollo de
-  aplicaciones web.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+index.html            Página y metadatos (SEO, Open Graph, datos estructurados)
+css/site.css          Estilos: temas por proyecto, maquetación y animaciones
+js/config.js          Datos: proyectos y habilidades (editar solo aquí)
+js/site.js            Lógica: render, temas al hacer scroll, animaciones, formulario
+js/vendor/            Lenis (scroll suave)
+api/send-email.js     Función de Vercel que envía el formulario con Resend
+assets/               Imágenes, logos, iconos de tecnologías, favicon y CV
+robots.txt, sitemap.xml, vercel.json
 ```
 
-<br>
+## Añadir un proyecto
 
-## `Info Portfolio`
+1. Añade una entrada en `projects` dentro de `js/config.js`.
+2. En `js/site.js`, añade su subtítulo en `KIND` y, si tiene logo, su entrada en `LOGO`.
+3. En `css/site.css`, define sus colores en `body[data-theme="<id>"]`.
 
-<details>
-<summary><b>Especificaciones técnicas</b></summary>
-<br>
+## Desarrollo
 
-| Módulo | Tecnología |
-|---|---|
-| Estructura | HTML5 semántico |
-| Estilos | CSS3 — custom properties, grid, flexbox |
-| Lógica | JavaScript (ES6+) vanilla |
-| Tipografía | Space Mono — Google Fonts |
-| Paleta | `#030303` · `#0091ff` · `#FF003C` · `#FFFFFF` |
-| Despliegue | Vercel |
+Sirve la carpeta con cualquier servidor estático (por ejemplo, Live Server).
+El formulario necesita la variable de entorno `RESEND_API_KEY` en Vercel; si falla, usa Formspree.
 
-</details>
+## Contacto
 
-<br>
-
-## `Características`
-
-- ⚡ **Rendimiento nativo** — cero dependencias externas, carga instantánea.
-- 🎨 **Design system propio** — variables CSS estrictas para coherencia visual total.
-- 📐 **Layout fluido** — mobile-first con breakpoints progresivos.
-- ♿ **Accesibilidad** — HTML semántico y navegación por teclado.
-- 🔴 **Micro-animaciones** — transiciones CSS sin librerías de terceros.
-
-<br>
-
-## `Secciones`
-
-```text
-/portfolio
-├── 01_hero          → Presentación + llamada a la acción
-├── 02_skill_tree    → Técnologías estudiadas y nivel actual.
-├── 03_proyectos     → Trabajos destacados con demo y código
-├── 04_experiencia   → Historial profesional
-├── 05_formacion     → Estudios y certificaciones
-└── 06_contacto      → Formulario + redes
-```
-
-<br>
-
-## `Vista -> https://luis-portfolio-pi.vercel.app/`
-
-<br>
-
-## `> ./stats.sh`
-
-<div align="center">
-
-<img src="https://github-readme-stats.vercel.app/api?username=Luis-GR05&show_icons=true&theme=tokyonight&title_color=0091ff&icon_color=0091ff&text_color=ffffff&bg_color=030303&hide_border=true&count_private=true" width="48%" alt="GitHub Stats">
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=Luis-GR05&layout=compact&theme=tokyonight&title_color=0091ff&text_color=ffffff&bg_color=030303&hide_border=true" width="48%" alt="Top Languages">
-
-</div>
-
-<br>
-
-## `> mail --to=luis`
-
-```text
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  CONEXIÓN ESTABLECIDA
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  LinkedIn  →  https://www.linkedin.com/in/luisgordilloo/
-  Email     →  luisgordillor01@gmail.com
-  Portfolio →  https://luis-gr05.github.io/LuisPortfolio
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  luis@portfolio:~$ _
-```
-
----
-
-<div align="center">
-<sub>Diseñado y desarrollado con <code>#0091ff</code> y mucho <code>#FF003C</code></sub>
-</div>
+- LinkedIn: https://www.linkedin.com/in/luisgordilloo/
+- Email: luisgordillor01@gmail.com
