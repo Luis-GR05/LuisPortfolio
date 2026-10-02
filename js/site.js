@@ -10,7 +10,7 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* Categorías en castellano (config.js las guarda en inglés) */
 const KIND = {
-  kore: 'Reservas de instalaciones deportivas municipales',
+  kore: 'Reserva y gestión de pistas deportivas',
   dailyset: 'Registro y análisis de entrenamientos',
   nidus: 'Inmobiliaria boutique',
   mantra: 'Catálogo para conectar con tatuadores',
@@ -30,7 +30,9 @@ initHeroType();
 initProgress();
 initNavState();
 initContact();
+initMotion();
 $('#year').textContent = new Date().getFullYear();
+initClock();
 
 /* ── Proyectos ─────────────────────────────────────────────── */
 function renderProjects() {
@@ -39,8 +41,8 @@ function renderProjects() {
 
   list.innerHTML = CONFIG.projects.map(p => {
     const head = `
-      <p class="project-status">${esc(STATUS[p.status] || p.status)}, ${esc(p.year)}</p>
-      <h3 class="project-title">${esc(p.title)}</h3>`;
+      <p class="project-status reveal">${esc(STATUS[p.status] || p.status)}, ${esc(p.year)}</p>
+      <h3 class="project-title"><span class="mask"><span>${esc(p.title)}</span></span></h3>`;
 
     if (p.pending) {
       return `<article class="project" id="p-${p.id}" data-id="${p.id}">
@@ -52,25 +54,27 @@ function renderProjects() {
     return `<article class="project" id="p-${p.id}" data-id="${p.id}">
       <div>
         ${head}
-        <p class="project-kind">${esc(KIND[p.id] || p.category)}</p>
+        <p class="project-kind reveal" style="--i:2">${esc(KIND[p.id] || p.category)}</p>
         <dl>
-          <div><dt>El problema</dt><dd>${esc(p.problem)}</dd></div>
-          <div><dt>La solución</dt><dd>${esc(p.solution)}</dd></div>
-          <div><dt>El resultado</dt><dd>${esc(p.impact)}</dd></div>
+          <div class="reveal" style="--i:3"><dt>El problema</dt><dd>${esc(p.problem)}</dd></div>
+          <div class="reveal" style="--i:4"><dt>La solución</dt><dd>${esc(p.solution)}</dd></div>
+          <div class="reveal" style="--i:5"><dt>El resultado</dt><dd>${esc(p.impact)}</dd></div>
         </dl>
-        <ul class="tech">${p.tech.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
-        <div class="project-links">
+        <ul class="tech reveal" style="--i:6">${p.tech.map(t => `<li>${esc(t)}</li>`).join('')}</ul>
+        <div class="project-links reveal" style="--i:7">
           ${p.demoUrl ? `<a class="btn btn-solid" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">Abrir la demo</a>` : ''}
           ${p.url ? `<a class="btn" href="${esc(p.url)}" target="_blank" rel="noopener">Ver el código</a>` : ''}
         </div>
       </div>
-      <div class="frame">
+      <div class="frame-tilt"><div class="frame">
         <div class="frame-bar"><span>${esc(host)}</span><button type="button" class="frame-close" hidden>Cerrar la demo</button></div>
         <div class="frame-view">
           ${p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="Imagen de ${esc(p.title)}" loading="lazy">` : `<span class="frame-poster">${esc(p.title)}</span>`}
-          ${p.demoUrl ? `<button type="button" class="btn frame-play" data-src="${esc(p.demoUrl)}" data-title="${esc(p.title)}">Probar la demo aquí</button>` : ''}
+          ${!p.demoUrl ? '' : p.embed === false
+            ? `<a class="btn frame-play" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">Abrir la demo en otra pestaña</a>`
+            : `<button type="button" class="btn frame-play" data-src="${esc(p.demoUrl)}" data-title="${esc(p.title)}">Probar la demo aquí</button>`}
         </div>
-      </div>
+      </div></div>
     </article>`;
   }).join('');
 
@@ -78,7 +82,7 @@ function renderProjects() {
 
   // Demo embebida: se carga solo cuando se pide
   list.addEventListener('click', e => {
-    const play = e.target.closest('.frame-play');
+    const play = e.target.closest('button.frame-play');
     const close = e.target.closest('.frame-close');
     if (play) {
       const view = play.parentElement;
@@ -159,13 +163,13 @@ function renderSkills() {
   const root = $('#skills');
   const nodes = Object.entries(CONFIG.skills.nodes).sort((a, b) => b[1].level - a[1].level);
 
-  root.innerHTML = nodes.map(([id, s]) => {
+  root.innerHTML = nodes.map(([id, s], i) => {
     const keys = SKILL_MATCH[id] || [s.label.toLowerCase()];
     const used = CONFIG.projects.filter(p => (p.tech || []).some(t => keys.some(k => t.toLowerCase().includes(k))));
     const usedHtml = used.length
       ? `<p>La he usado en ${used.map(p => `<a href="#p-${p.id}">${esc(p.title)}</a>`).join(', ')}.</p>`
       : '';
-    return `<div class="skill">
+    return `<div class="skill reveal" style="--i:${i}">
       <button type="button" aria-expanded="false" aria-controls="sk-${id}">
         <span class="skill-name">${esc(s.label)}</span>
         <span class="skill-years">${s.years} ${s.years === 1 ? 'año' : 'años'}</span>
@@ -229,4 +233,163 @@ function initContact() {
       submit.textContent = 'Enviar mensaje';
     }
   });
+}
+
+/* ── Animación ─────────────────────────────────────────────── */
+function initClock() {
+  const el = $('#clock');
+  const fmt = new Intl.DateTimeFormat('es-ES', { timeZone: 'Europe/Madrid', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const tick = () => { el.textContent = fmt.format(new Date()); };
+  tick();
+  setInterval(tick, 1000);
+}
+
+function initMotion() {
+  if (reduceMotion) return;
+
+  // 0. Scroll suave
+  let lenis = null;
+  if (window.Lenis) {
+    lenis = new window.Lenis({ autoRaf: true, anchors: { offset: -60 }, lerp: 0.11 });
+  }
+
+  // 0b. Cortina de carga: cuenta hasta 100 y se levanta
+  const loader = $('#loader');
+  const count = $('#loader-count');
+  const t0 = performance.now();
+  const DURATION = 1100;
+  lenis?.stop();
+  (function step(now) {
+    const k = Math.min(1, (now - t0) / DURATION);
+    count.textContent = Math.round((1 - Math.pow(1 - k, 3)) * 100);
+    if (k < 1) return requestAnimationFrame(step);
+    loader.classList.add('done');
+    document.documentElement.classList.add('ready');
+    lenis?.start();
+  })(t0);
+
+  // 0c. Declaración: las palabras se encienden al avanzar
+  const statement = $('#statement');
+  statement.innerHTML = statement.textContent.trim().split(/\s+/).map(w => `<span class="w">${esc(w)}</span>`).join(' ');
+  const words = [...statement.children];
+
+  // 0d. Cierre gigante, letra a letra
+  const giant = $('#giant');
+  const giantLink = $('a', giant);
+  giantLink.innerHTML = [...giantLink.textContent].map((ch, i) => `<span class="ch" style="--i:${i}">${ch}</span>`).join('');
+  giant.classList.add('watch');
+
+  const fine = matchMedia('(pointer: fine)').matches;
+
+  // 1. Entrada del nombre, letra a letra
+  const name = $('#hero-name');
+  let n = 0;
+  name.querySelectorAll(':scope > span').forEach(line => {
+    line.innerHTML = [...line.textContent].map(ch => `<span class="ch" style="--i:${n++}">${ch}</span>`).join('');
+  });
+  name.classList.add('split');
+
+  // 2. Titulares de sección con máscara
+  document.querySelectorAll('.projects-intro h2, .block-head h2:not(.giant)').forEach(h => {
+    h.innerHTML = `<span class="mask"><span>${h.innerHTML}</span></span>`;
+    h.classList.add('watch');
+  });
+  document.querySelectorAll('.projects-intro p, .block-head > p, .contact-links, .timeline li, .form > *').forEach((el, i) => {
+    el.classList.add('reveal', 'watch');
+    el.style.setProperty('--i', i % 5);
+  });
+  document.querySelectorAll('.skill').forEach(el => el.classList.add('watch'));
+
+  // 3. Revelados al entrar en pantalla
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      en.target.classList.add('in');
+      io.unobserve(en.target);
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+  document.querySelectorAll('.watch, .project').forEach(el => io.observe(el));
+
+  // 4. Efectos ligados al scroll: hero y línea de trayectoria
+  const hero = $('.hero');
+  const timeline = $('.timeline');
+  const header = $('.top');
+  const tilts = [...document.querySelectorAll('.frame-tilt')];
+  let lastY = scrollY;
+  let ticking = false;
+  const onScroll = () => {
+    ticking = false;
+    const y = scrollY;
+    if (y < innerHeight * 1.2) hero.style.setProperty('--sy', y);
+    // cabecera: se esconde al bajar y vuelve al subir
+    header.classList.toggle('is-hidden', y > lastY && y > innerHeight * 0.6);
+    lastY = y;
+    // declaración
+    const sr = statement.getBoundingClientRect();
+    const sp = (innerHeight * 0.85 - sr.top) / (sr.height + innerHeight * 0.35);
+    words.forEach((w, i) => w.classList.toggle('lit', i / words.length < sp));
+    // parallax de los marcos (solo escritorio)
+    if (innerWidth > 900) tilts.forEach(t => {
+      const tr = t.parentElement.getBoundingClientRect();
+      if (tr.bottom < 0 || tr.top > innerHeight) return;
+      const off = (tr.top + tr.height / 2 - innerHeight / 2) / innerHeight;
+      t.style.setProperty('--py', `${(off * -70).toFixed(1)}px`);
+    });
+    const r = timeline.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (innerHeight * 0.7 - r.top) / r.height));
+    timeline.style.setProperty('--p', p);
+    timeline.querySelectorAll('li').forEach(li => {
+      li.classList.toggle('lit', li.getBoundingClientRect().top < innerHeight * 0.7);
+    });
+  };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
+
+  if (!fine) return;
+
+  // 5. Marco de la demo: inclinación 3D siguiendo el puntero
+  document.querySelectorAll('.project').forEach(project => {
+    const frame = $('.frame', project);
+    if (!frame) return;
+    project.addEventListener('pointermove', e => {
+      if ($('iframe', frame)) { frame.style.removeProperty('--rx'); frame.style.removeProperty('--ry'); return; }
+      const r = frame.getBoundingClientRect();
+      const x = (e.clientX - (r.left + r.width / 2)) / innerWidth;
+      const y = (e.clientY - (r.top + r.height / 2)) / innerHeight;
+      frame.style.setProperty('--ry', `${(x * 16).toFixed(2)}deg`);
+      frame.style.setProperty('--rx', `${(-y * 12).toFixed(2)}deg`);
+    });
+    project.addEventListener('pointerleave', () => {
+      frame.style.removeProperty('--rx');
+      frame.style.removeProperty('--ry');
+    });
+  });
+
+  // 6. Botones magnéticos
+  document.querySelectorAll('.btn:not(.frame-play)').forEach(btn => {
+    btn.addEventListener('pointermove', e => {
+      const r = btn.getBoundingClientRect();
+      btn.style.translate = `${(e.clientX - r.left - r.width / 2) * 0.25}px ${(e.clientY - r.top - r.height / 2) * 0.35}px`;
+    });
+    btn.addEventListener('pointerleave', () => { btn.style.translate = ''; });
+  });
+
+  // 7. Cursor
+  const cursor = document.createElement('div');
+  cursor.className = 'cursor';
+  cursor.setAttribute('aria-hidden', 'true');
+  document.body.append(cursor);
+  let tx = innerWidth / 2, ty = innerHeight / 2, cx = tx, cy = ty;
+  addEventListener('pointermove', e => {
+    tx = e.clientX; ty = e.clientY;
+    cursor.classList.add('on');
+    cursor.classList.toggle('big', Boolean(e.target.closest('a, button, .frame')));
+    cursor.classList.toggle('hide', Boolean(e.target.closest('iframe, input, textarea')));
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => cursor.classList.remove('on'));
+  (function loop() {
+    cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
+    cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+    requestAnimationFrame(loop);
+  })();
 }
