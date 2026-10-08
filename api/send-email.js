@@ -9,6 +9,10 @@ export default async function handler(req, res) {
 
   const { name, email, message } = req.body;
 
+  // Escapar el contenido antes de insertarlo en el HTML del correo
+  const esc = (v = '') => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const safeName = esc(name), safeEmail = esc(email), safeMessage = esc(message);
+
   // Validación básica en el servidor
   if (!name || !email || !message) {
     return res.status(400).json({ error: 'Todos los campos (nombre, email, mensaje) son obligatorios.' });
@@ -37,10 +41,10 @@ export default async function handler(req, res) {
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #0091ff; border-radius: 8px; background-color: #0c0c0e; color: #ffffff;">
           <h2 style="color: #0091ff; border-bottom: 2px solid #0091ff; padding-bottom: 10px; margin-top: 0;">Nuevo mensaje de contacto</h2>
-          <p style="margin: 10px 0;"><strong style="color: #0091ff;">Nombre:</strong> ${name}</p>
-          <p style="margin: 10px 0;"><strong style="color: #0091ff;">Email:</strong> <a href="mailto:${email}" style="color: #ffffff; text-decoration: underline;">${email}</a></p>
+          <p style="margin: 10px 0;"><strong style="color: #0091ff;">Nombre:</strong> ${safeName}</p>
+          <p style="margin: 10px 0;"><strong style="color: #0091ff;">Email:</strong> <a href="mailto:${safeEmail}" style="color: #ffffff; text-decoration: underline;">${safeEmail}</a></p>
           <p style="margin: 15px 0 5px 0;"><strong style="color: #0091ff;">Mensaje:</strong></p>
-          <div style="white-space: pre-line; background-color: #16161a; padding: 15px; border-left: 4px solid #0091ff; border-radius: 4px; color: #e4e4e7; line-height: 1.5;">${message}</div>
+          <div style="white-space: pre-line; background-color: #16161a; padding: 15px; border-left: 4px solid #0091ff; border-radius: 4px; color: #e4e4e7; line-height: 1.5;">${safeMessage}</div>
           <hr style="border: 0; border-top: 1px solid #27272a; margin: 20px 0;">
           <p style="font-size: 11px; color: #71717a; text-align: center; margin: 0;">Mensaje enviado automáticamente desde tu Portfolio.</p>
         </div>

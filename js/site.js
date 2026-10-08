@@ -220,22 +220,24 @@ function initContact() {
     name: v => (v.trim().length >= 2 ? '' : 'Escribe tu nombre.'),
     email: v => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : 'Escribe un correo válido, como nombre@dominio.com.'),
     message: v => (v.trim().length >= 10 ? '' : 'Escribe un mensaje de al menos 10 caracteres.'),
+    privacy: v => (v ? '' : 'Marca la casilla para poder enviar el mensaje.'),
   };
   const check = name => {
     const input = form.elements[name];
-    const msg = rules[name](input.value);
+    const msg = rules[name](input.type === 'checkbox' ? input.checked : input.value);
     $(`#e-${name}`).textContent = msg;
     input.setAttribute('aria-invalid', String(Boolean(msg)));
     return !msg;
   };
-  Object.keys(rules).forEach(name => form.elements[name].addEventListener('blur', () => check(name)));
+  Object.keys(rules).forEach(name => form.elements[name].addEventListener(name === 'privacy' ? 'change' : 'blur', () => check(name)));
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
     const ok = Object.keys(rules).map(check).every(Boolean);
     if (!ok) { form.querySelector('[aria-invalid="true"]')?.focus(); return; }
 
-    const data = Object.fromEntries(new FormData(form));
+    const { privacy, ...data } = Object.fromEntries(new FormData(form));
+    data.consent = privacy === 'on';
     const post = url => fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -280,10 +282,8 @@ function initMotion() {
   const loader = $('#loader');
   const count = $('#loader-count');
   const t0 = performance.now();
-  let seen = false;
-  try { seen = sessionStorage.getItem('seen') === '1'; sessionStorage.setItem('seen', '1'); } catch { /* sin almacenamiento */ }
-  const DURATION = seen ? 0 : 800;
-  if (seen) loader.style.transition = 'none';
+  // Sin cookies ni almacenamiento local: la cortina dura poco y se muestra siempre
+  const DURATION = 700;
   lenis?.stop();
   (function step(now) {
     const k = Math.min(1, (now - t0) / DURATION);

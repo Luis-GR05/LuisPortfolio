@@ -32,13 +32,9 @@
   <meta name="twitter:image" content="https://luis-portfolio-pi.vercel.app/assets/img/og.jpg">
 
   <link rel="preload" as="image" href="assets/img/retrato.webp" type="image/webp" fetchpriority="high">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Tipografías de la página (críticas) -->
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <!-- Tipografías de los títulos de proyecto: se cargan sin bloquear el pintado -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Barlow+Condensed:ital,wght@1,800&family=Cormorant+Garamond:ital,wght@0,500;1,600&family=Archivo+Black&family=Sora:wght@800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Barlow+Condensed:ital,wght@1,800&family=Cormorant+Garamond:ital,wght@0,500;1,600&family=Archivo+Black&family=Sora:wght@800&display=swap" rel="stylesheet"></noscript>
+  <link rel="preload" href="assets/fonts/bricolage-grotesque-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/instrument-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css">
 
   <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.className="js"</script>
   <link rel="stylesheet" href="css/site.css">
@@ -212,6 +208,12 @@
           <textarea id="f-message" name="message" aria-describedby="e-message" rows="5" required></textarea>
           <p class="field-error" id="e-message" role="alert"></p>
         </div>
+        <div class="field-check">
+          <input id="f-privacy" name="privacy" type="checkbox" required aria-describedby="e-privacy">
+          <label for="f-privacy">He leído la <a href="privacidad.html">política de privacidad</a> y acepto que se usen mis datos para responder a mi mensaje.</label>
+        </div>
+        <p class="field-error" id="e-privacy" role="alert"></p>
+        <p class="form-legal"><strong>Responsable:</strong> Luis Gordillo Rodríguez. <strong>Finalidad:</strong> responder a tu mensaje. <strong>Base legal:</strong> tu consentimiento. <strong>Destinatarios:</strong> los proveedores que alojan la web y envían el correo, con garantías para transferencias fuera de la UE. <strong>Derechos:</strong> acceso, rectificación, supresión y los demás que reconoce la ley, escribiendo a luisgordillor01@gmail.com. Más información en la <a href="privacidad.html">política de privacidad</a>.</p>
         <button type="submit" class="btn btn-solid" id="f-submit" data-icon="send">Enviar mensaje</button>
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       </form>
@@ -221,7 +223,12 @@
   <footer class="foot">
     <span>Luis Gordillo Rodríguez, <span id="year">2026</span></span>
     <span>Badajoz, <span id="clock"></span></span>
-    <a href="#inicio">Volver arriba</a>
+    <nav class="foot-legal" aria-label="Información legal">
+      <a href="aviso-legal.html">Aviso legal</a>
+      <a href="privacidad.html">Privacidad</a>
+      <a href="cookies.html">Cookies</a>
+      <a href="#inicio">Volver arriba</a>
+    </nav>
   </footer>
 
   <script defer src="js/vendor/lenis.min.js"></script>
