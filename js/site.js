@@ -105,10 +105,9 @@ function renderProjects() {
         <ul class="tech reveal" style="--i:6">${p.tech.map(t => `<li>${techIcon(t)}${esc(t)}</li>`).join('')}</ul>
         <div class="project-links reveal" style="--i:7">
           ${p.demoUrl ? `<a class="btn btn-solid" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Ver el proyecto<span class="sr-only"> (se abre en una pestaña nueva)</span></a>` : ''}
-          ${p.url ? `<a class="btn" href="${esc(p.url)}" target="_blank" rel="noopener">${icon('code')}Ver el código<span class="sr-only"> (se abre en una pestaña nueva)</span></a>` : ''}
         </div>
       </div>
-      <div class="frame-tilt"><div class="frame">
+      <div class="frame-tilt"><div class="frame"${p.demoUrl ? ' data-cursor="Abrir"' : ''}>
         <div class="frame-bar"><span>${esc(host)}</span></div>
         <div class="frame-view">
           ${p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="Imagen de ${esc(p.title)}" loading="lazy" decoding="async">` : `<span class="frame-poster">${esc(p.title)}</span>`}
@@ -117,6 +116,14 @@ function renderProjects() {
       </div></div>
     </article>`;
   }).join('');
+
+  // Pulsar en cualquier parte del marco abre el proyecto (el botón sigue siendo el acceso por teclado)
+  list.addEventListener('click', e => {
+    const frame = e.target.closest('.frame');
+    if (!frame || e.target.closest('a')) return;
+    const link = frame.querySelector('.frame-play');
+    if (link) window.open(link.href, '_blank', 'noopener');
+  });
 
   rail.innerHTML = CONFIG.projects.map(p => `<a href="#p-${p.id}" data-id="${p.id}">${esc(p.title)}</a>`).join('');
 }
@@ -422,27 +429,46 @@ function initMotion() {
     btn.addEventListener('pointerleave', () => { btn.style.translate = ''; });
   });
 
-  // 7. Cursor
-  const cursor = document.createElement('div');
-  cursor.className = 'cursor';
-  cursor.setAttribute('aria-hidden', 'true');
-  document.body.append(cursor);
-  let tx = innerWidth / 2, ty = innerHeight / 2, cx = tx, cy = ty;
-  addEventListener('pointermove', e => {
-    tx = e.clientX; ty = e.clientY;
-    cursor.classList.add('on');
-    cursor.classList.toggle('big', Boolean(e.target.closest('a, button, .frame')));
-    cursor.classList.toggle('hide', Boolean(e.target.closest('iframe, input, textarea')));
-  }, { passive: true });
-  document.addEventListener('pointerleave', () => cursor.classList.remove('on'));
-  let running = false;
+  // 7. Cursor propio: un punto que va exacto con el ratón y un aro que lo sigue.
+  //    Sustituye al del sistema; en campos de texto vuelve el cursor normal.
+  $('#giant a')?.setAttribute('data-cursor', 'Escribir');
+  const dot = document.createElement('div');
+  const ring = document.createElement('div');
+  dot.className = 'cursor-dot';
+  ring.className = 'cursor-ring';
+  ring.innerHTML = '<span class="cursor-label"></span>';
+  [dot, ring].forEach(el => { el.setAttribute('aria-hidden', 'true'); document.body.append(el); });
+  const label = ring.firstChild;
+  document.documentElement.classList.add('has-cursor');
+
+  let tx = -100, ty = -100, rx = tx, ry = ty, running = false;
+  const place = (el, x, y) => { el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`; };
   const loop = () => {
-    cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
-    cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-    running = Math.abs(tx - cx) + Math.abs(ty - cy) > 0.2;
+    rx += (tx - rx) * 0.2; ry += (ty - ry) * 0.2;
+    place(ring, rx, ry);
+    running = Math.abs(tx - rx) + Math.abs(ty - ry) > 0.1;
     if (running) requestAnimationFrame(loop);
   };
-  addEventListener('pointermove', () => { if (!running) { running = true; requestAnimationFrame(loop); } }, { passive: true });
+  addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    tx = e.clientX; ty = e.clientY;
+    place(dot, tx, ty);
+    if (!ring.classList.contains('on')) { rx = tx; ry = ty; }
+    dot.classList.add('on'); ring.classList.add('on');
+    const t = e.target;
+    const view = t.closest('[data-cursor]');
+    const text = t.closest('input:not([type="checkbox"]), textarea, select');
+    const link = !view && t.closest('a, button, label, input[type="checkbox"], [role="button"]');
+    ring.classList.toggle('is-view', Boolean(view));
+    ring.classList.toggle('is-link', Boolean(link));
+    dot.classList.toggle('is-hidden', Boolean(view || link || text));
+    ring.classList.toggle('is-hidden', Boolean(text));
+    if (view) label.textContent = view.dataset.cursor;
+    if (!running) { running = true; requestAnimationFrame(loop); }
+  }, { passive: true });
+  addEventListener('pointerdown', () => ring.classList.add('is-down'));
+  addEventListener('pointerup', () => ring.classList.remove('is-down'));
+  document.documentElement.addEventListener('pointerleave', () => { dot.classList.remove('on'); ring.classList.remove('on'); });
 }
 
 /* Los títulos de proyecto nunca se parten: si no caben en su columna, se reducen */
