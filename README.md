@@ -26,7 +26,16 @@ robots.txt, sitemap.xml, vercel.json
 ## Desarrollo
 
 Sirve la carpeta con cualquier servidor estático (por ejemplo, Live Server).
-El formulario necesita la variable de entorno `RESEND_API_KEY` en Vercel; si falla, usa Formspree.
+El formulario (`api/send-email.js`) necesita estas variables de entorno en Vercel:
+
+| Variable | Para qué |
+|---|---|
+| `RESEND_API_KEY` | Enviar el correo con Resend (obligatoria) |
+| `CONTACT_TO_EMAIL` | Buzón que recibe los mensajes |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Límite de un mensaje al día por correo e IP (las crea la integración de Upstash en Vercel) |
+| `RATE_LIMIT_SALT` | Texto secreto para cifrar correo e IP antes de guardarlos |
+
+Sin las variables de Upstash el formulario funciona, pero sin límite diario.
 
 ## Contacto
 

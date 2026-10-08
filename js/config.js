@@ -23,8 +23,6 @@ export const CONFIG = {
     linkedin: 'https://www.linkedin.com/in/luisgordilloo/',
   },
 
-  // ID de formulario de Formspree para envío de correos
-  formspreeId: 'xdavggvp',
 
 
   // ── Habilidades (Skill Tree) ─────────────────────────────────────────────────

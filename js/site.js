@@ -245,21 +245,30 @@ function initContact() {
 
     const { privacy, ...data } = Object.fromEntries(new FormData(form));
     data.consent = privacy === 'on';
-    const post = url => fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(data),
-    }).then(r => { if (!r.ok) throw new Error(r.status); });
+    const post = async url => {
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (r.ok) return;
+      const body = await r.json().catch(() => ({}));
+      const err = new Error(body.error || String(r.status));
+      err.status = r.status;
+      throw err;
+    };
 
     submit.disabled = true;
     submit.lastChild.textContent = 'Enviando…';
     status.textContent = '';
     try {
-      await post('/api/send-email').catch(() => post(`https://formspree.io/f/${CONFIG.formspreeId}`));
+      await post('/api/send-email');
       form.reset();
       status.textContent = 'Mensaje enviado. Te responderé por correo.';
-    } catch {
-      status.textContent = 'No se pudo enviar el mensaje. Escríbeme a luisgordillor01@gmail.com.';
+    } catch (err) {
+      status.textContent = err.status === 429
+        ? 'Ya has enviado un mensaje hoy. Podrás enviar otro pasadas 24 horas; si es urgente, escríbeme a luisgordillor01@gmail.com.'
+        : 'No se pudo enviar el mensaje. Escríbeme a luisgordillor01@gmail.com.';
     } finally {
       submit.disabled = false;
       submit.lastChild.textContent = 'Enviar mensaje';
