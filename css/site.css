@@ -253,23 +253,199 @@ h2 { font: 700 clamp(2.2rem, 5vw, 4rem)/1 var(--display); letter-spacing: -.03em
 @keyframes block-in { from { inset: 0; } }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(31, 157, 85, .6); } 100% { box-shadow: 0 0 0 12px rgba(31, 157, 85, 0); } }
 
-/* ── Cursor ── */
+/* ── Cursor de Autor: Visor / Retícula Arquitectónica ── */
 .has-cursor, .has-cursor * { cursor: none !important; }
-.has-cursor input:not([type="checkbox"]), .has-cursor textarea { cursor: text !important; }
-.cursor-dot, .cursor-ring { position: fixed; left: 0; top: 0; z-index: 60; pointer-events: none; border-radius: 50%; mix-blend-mode: difference; opacity: 0; will-change: transform; }
-.cursor-dot { width: 7px; height: 7px; background: #fff; transition: opacity .2s, width .25s, height .25s; }
-.cursor-ring {
-  display: grid; place-items: center; width: 38px; height: 38px;
-  border: 1.5px solid rgba(255, 255, 255, .9); background: transparent;
-  transition: opacity .25s, width .45s cubic-bezier(.16, 1, .3, 1), height .45s cubic-bezier(.16, 1, .3, 1), background-color .3s, border-color .3s, scale .2s;
+.has-cursor input:not([type="checkbox"]), .has-cursor textarea, .has-cursor select { cursor: text !important; }
+
+/* Micro-cruz central (precisión 1:1, hotspot exacto en el clic) */
+.cursor-cross {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 70;
+  pointer-events: none;
+  width: 10px;
+  height: 10px;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  opacity: 0;
+  will-change: transform;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+  transition: opacity .2s ease, color .3s ease;
 }
-.cursor-dot.on, .cursor-ring.on { opacity: 1; }
-.cursor-dot.is-hidden, .cursor-ring.is-hidden { opacity: 0; }
-.cursor-ring.is-link { width: 58px; height: 58px; background: #fff; border-color: transparent; }
-.cursor-ring.is-view { width: 104px; height: 104px; background: #fff; border-color: transparent; }
-.cursor-ring.is-down { scale: .82; }
-.cursor-label { font: 600 .9rem/1 var(--body); color: #000; opacity: 0; transition: opacity .2s; }
-.cursor-ring.is-view .cursor-label { opacity: 1; }
+
+.cursor-cross svg {
+  display: block;
+  width: 10px;
+  height: 10px;
+  transition: transform .25s cubic-bezier(.16, 1, .3, 1);
+}
+
+.cursor-cross.on { opacity: 1; }
+.cursor-cross.is-hidden { opacity: 0; }
+.cursor-cross.is-link svg {
+  transform: rotate(45deg) scale(1.25);
+  color: var(--accent);
+}
+.cursor-cross.is-down svg {
+  transform: scale(0.7);
+}
+
+/* Retícula elástica que orbita y encuadra */
+.cursor-reticle {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 69;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  transition: opacity .25s ease;
+}
+
+.cursor-reticle.on { opacity: 1; }
+.cursor-reticle.is-hidden { opacity: 0; }
+
+/* Caja interna para transiciones limpias de tamaño y rotación */
+.reticle-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  color: var(--ink);
+  transition:
+    width .35s cubic-bezier(.16, 1, .3, 1),
+    height .35s cubic-bezier(.16, 1, .3, 1),
+    transform .35s cubic-bezier(.16, 1, .3, 1),
+    color .3s ease;
+}
+
+/* Brackets esquineros (┌ ┐ └ ┘) */
+.corner {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: currentColor;
+  border-style: solid;
+  pointer-events: none;
+  transition:
+    width .25s cubic-bezier(.16, 1, .3, 1),
+    height .25s cubic-bezier(.16, 1, .3, 1),
+    border-color .3s ease,
+    border-width .2s ease;
+}
+
+.corner-tl { top: 0; left: 0; border-width: 1.5px 0 0 1.5px; border-top-left-radius: 2px; }
+.corner-tr { top: 0; right: 0; border-width: 1.5px 1.5px 0 0; border-top-right-radius: 2px; }
+.corner-bl { bottom: 0; left: 0; border-width: 0 0 1.5px 1.5px; border-bottom-left-radius: 2px; }
+.corner-br { bottom: 0; right: 0; border-width: 0 1.5px 1.5px 0; border-bottom-right-radius: 2px; }
+
+/* Estado interactivo (enlaces, botones): rotación 45° a rombo de enfoque */
+.cursor-reticle.is-link .reticle-box {
+  width: 38px;
+  height: 38px;
+  transform: rotate(45deg);
+  color: var(--accent);
+}
+
+.cursor-reticle.is-link .corner {
+  width: 8px;
+  height: 8px;
+  border-width: 2px;
+}
+
+/* Clic táctil mecánico: contracción tipo obturador */
+.cursor-reticle.is-down .reticle-box {
+  transform: scale(0.72);
+}
+
+.cursor-reticle.is-link.is-down .reticle-box {
+  transform: rotate(45deg) scale(0.75);
+}
+
+/* Estado de vista (tarjetas de proyectos con data-cursor): se expande en cápsula editorial */
+.cursor-reticle.is-view .reticle-box {
+  width: var(--badge-w, 108px);
+  height: 38px;
+  transform: none;
+  color: var(--accent);
+}
+
+.cursor-reticle.is-view .corner {
+  width: 7px;
+  height: 7px;
+  border-width: 1.5px;
+  border-color: var(--accent);
+}
+
+.cursor-reticle.is-view.is-down .reticle-box {
+  transform: scale(0.92);
+}
+
+/* Badge con tipografía editorial y micro-flecha animada */
+.reticle-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  max-width: 0;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(0.85);
+  pointer-events: none;
+  transition:
+    opacity .25s cubic-bezier(.16, 1, .3, 1),
+    transform .25s cubic-bezier(.16, 1, .3, 1),
+    max-width .35s cubic-bezier(.16, 1, .3, 1),
+    padding .35s ease,
+    background-color .3s ease,
+    border-color .3s ease;
+}
+
+.cursor-reticle.is-view .reticle-badge {
+  opacity: 1;
+  transform: scale(1);
+  max-width: 220px;
+  padding: 6px 14px;
+}
+
+.reticle-label {
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.reticle-arrow {
+  width: 11px;
+  height: 11px;
+  color: var(--accent);
+  transition: transform .25s ease;
+}
+
+.cursor-reticle.is-view .reticle-arrow {
+  animation: reticle-nudge 1.6s ease-in-out infinite;
+}
+
+@keyframes reticle-nudge {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(2px, -2px); }
+}
+
 .frame[data-cursor] .frame-view { cursor: pointer; }
 
 /* ── Scroll suave (Lenis) ── */

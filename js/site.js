@@ -438,46 +438,114 @@ function initMotion() {
     btn.addEventListener('pointerleave', () => { btn.style.translate = ''; });
   });
 
-  // 7. Cursor propio: un punto que va exacto con el ratón y un aro que lo sigue.
-  //    Sustituye al del sistema; en campos de texto vuelve el cursor normal.
+  // 7. Cursor de autor: visor / retícula arquitectónica con física elástica y morphing contextual.
+  //    Sustituye al clásico círculo y punto por una mira técnica con brackets de encuadre.
   $('#giant a')?.setAttribute('data-cursor', 'Escribir');
-  const dot = document.createElement('div');
-  const ring = document.createElement('div');
-  dot.className = 'cursor-dot';
-  ring.className = 'cursor-ring';
-  ring.innerHTML = '<span class="cursor-label"></span>';
-  [dot, ring].forEach(el => { el.setAttribute('aria-hidden', 'true'); document.body.append(el); });
-  const label = ring.firstChild;
+
+  const cross = document.createElement('div');
+  cross.className = 'cursor-cross';
+  cross.setAttribute('aria-hidden', 'true');
+  cross.innerHTML = `
+    <svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true">
+      <path d="M5 1V9M1 5H9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  `;
+
+  const reticle = document.createElement('div');
+  reticle.className = 'cursor-reticle';
+  reticle.setAttribute('aria-hidden', 'true');
+  reticle.innerHTML = `
+    <div class="reticle-box">
+      <span class="corner corner-tl"></span>
+      <span class="corner corner-tr"></span>
+      <span class="corner corner-bl"></span>
+      <span class="corner corner-br"></span>
+      <div class="reticle-badge">
+        <span class="reticle-label"></span>
+        <svg class="reticle-arrow" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">
+          <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  `;
+
+  document.body.append(cross, reticle);
+  const label = reticle.querySelector('.reticle-label');
   document.documentElement.classList.add('has-cursor');
 
-  let tx = -100, ty = -100, rx = tx, ry = ty, running = false;
-  const place = (el, x, y) => { el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`; };
+  let tx = -100, ty = -100;
+  let rx = tx, ry = ty;
+  let running = false;
+
+  const place = (el, x, y) => {
+    el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+  };
+
   const loop = () => {
-    rx += (tx - rx) * 0.2; ry += (ty - ry) * 0.2;
-    place(ring, rx, ry);
+    rx += (tx - rx) * 0.18;
+    ry += (ty - ry) * 0.18;
+    place(reticle, rx, ry);
     running = Math.abs(tx - rx) + Math.abs(ty - ry) > 0.1;
     if (running) requestAnimationFrame(loop);
   };
+
   addEventListener('pointermove', e => {
     if (e.pointerType !== 'mouse') return;
-    tx = e.clientX; ty = e.clientY;
-    place(dot, tx, ty);
-    if (!ring.classList.contains('on')) { rx = tx; ry = ty; }
-    dot.classList.add('on'); ring.classList.add('on');
+    tx = e.clientX;
+    ty = e.clientY;
+    place(cross, tx, ty);
+
+    if (!reticle.classList.contains('on')) {
+      rx = tx;
+      ry = ty;
+      place(reticle, rx, ry);
+    }
+
+    cross.classList.add('on');
+    reticle.classList.add('on');
+
     const t = e.target;
     const view = t.closest('[data-cursor]');
     const text = t.closest('input:not([type="checkbox"]), textarea, select');
     const link = !view && t.closest('a, button, label, input[type="checkbox"], [role="button"]');
-    ring.classList.toggle('is-view', Boolean(view));
-    ring.classList.toggle('is-link', Boolean(link));
-    dot.classList.toggle('is-hidden', Boolean(view || link || text));
-    ring.classList.toggle('is-hidden', Boolean(text));
-    if (view) label.textContent = view.dataset.cursor;
-    if (!running) { running = true; requestAnimationFrame(loop); }
+
+    reticle.classList.toggle('is-view', Boolean(view));
+    reticle.classList.toggle('is-link', Boolean(link));
+    cross.classList.toggle('is-link', Boolean(link));
+    cross.classList.toggle('is-hidden', Boolean(view || text));
+    reticle.classList.toggle('is-hidden', Boolean(text));
+
+    if (view) {
+      const textVal = view.dataset.cursor || '';
+      label.textContent = textVal;
+      reticle.style.setProperty('--badge-w', `${Math.max(104, textVal.length * 10 + 44)}px`);
+    }
+
+    if (!running) {
+      running = true;
+      requestAnimationFrame(loop);
+    }
   }, { passive: true });
-  addEventListener('pointerdown', () => ring.classList.add('is-down'));
-  addEventListener('pointerup', () => ring.classList.remove('is-down'));
-  document.documentElement.addEventListener('pointerleave', () => { dot.classList.remove('on'); ring.classList.remove('on'); });
+
+  addEventListener('pointerdown', () => {
+    reticle.classList.add('is-down');
+    cross.classList.add('is-down');
+  });
+
+  addEventListener('pointerup', () => {
+    reticle.classList.remove('is-down');
+    cross.classList.remove('is-down');
+  });
+
+  document.documentElement.addEventListener('pointerleave', () => {
+    cross.classList.remove('on');
+    reticle.classList.remove('on');
+  });
+
+  window.addEventListener('blur', () => {
+    cross.classList.remove('on');
+    reticle.classList.remove('on');
+  });
 }
 
 /* Los títulos de proyecto nunca se parten: si no caben en su columna, se reducen */
