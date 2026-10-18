@@ -231,6 +231,10 @@ h2 { font: 700 clamp(2.2rem, 5vw, 4rem)/1 var(--display); letter-spacing: -.03em
 .timeline p { max-width: 36rem; }
 
 .btn-cv { margin-top: 20px; padding: 10px 18px; font-size: .95rem; }
+/* En escritorio el texto y los datos de contacto acompañan al formulario al bajar */
+@media (min-width: 901px) {
+  .contact .block-head { position: sticky; top: 84px; }
+}
 .contact-links { margin-top: 24px; display: grid; gap: 8px; }
 .form { display: grid; gap: 18px; max-width: 36rem; justify-items: start; }
 .field { width: 100%; }
