@@ -17,6 +17,10 @@ export const CONFIG = {
   version:  '2.0',
   bio: 'Técnico Superior en Desarrollo Web. Forjado en distintos entornos corporativos e institucionales. Construyo arquitecturas robustas combinando lógica de backend (Java/Python) con interfaces de precisión (HTML/CSS/React). Entrego código limpio a alta velocidad.',
 
+  // ── Disponibilidad (badge del hero) ─────────────────────────────────────────
+  // Mes en que se puede empezar un proyecto nuevo. Dejar '' para ocultar el mes.
+  availableFrom: 'noviembre',
+
   // ── Redes sociales ───────────────────────────────────────────────────────────
   socials: {
     github:   'https://github.com/Luis-GR05',

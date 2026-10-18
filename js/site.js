@@ -59,6 +59,7 @@ document.querySelectorAll('[data-icon]').forEach(el => el.insertAdjacentHTML('af
 /* Cómo aparece cada habilidad en las listas de tecnologías de los proyectos */
 const SKILL_MATCH = { html: ['html'], css: ['css', 'tailwind'], js: ['js', 'javascript'], react: ['react'], sql: ['supabase', 'sql'] };
 
+if (CONFIG.availableFrom) $('#hero-status').textContent = `Agenda abierta para nuevos proyectos en ${CONFIG.availableFrom}`;
 renderProjects();
 renderSkills();
 initThemeOnScroll();
