@@ -526,7 +526,7 @@ html.lenis, html.lenis body { height: auto; }
 .statement .chip { display: inline-block; height: .78em; width: auto; vertical-align: -.1em; margin: 0 .08em; border-radius: .18em; rotate: -3deg; box-shadow: 0 .1em .3em rgba(0, 0, 0, .45); }
 .statement .chip-sq { height: .92em; width: .92em; object-fit: contain; padding: .1em; vertical-align: -.16em; rotate: 4deg; }
 .statement .chip-white { background: #fff; }
-.js .statement .w { opacity: .4; transition: opacity .45s ease, color .45s ease; }
+.js .statement .w { opacity: .58; transition: opacity .45s ease, color .45s ease; }
 .js .statement .w.lit { opacity: 1; }
 .js .statement .chip { opacity: 1; scale: 0; transition: scale .6s cubic-bezier(.34, 1.56, .64, 1); }
 .js .statement .chip.lit { scale: 1; }
@@ -608,6 +608,10 @@ html.lenis, html.lenis body { height: auto; }
   .hero-portrait { justify-self: start; width: 46%; }
   .timeline li { grid-template-columns: minmax(0, 1fr); gap: 4px; }
   .steps { grid-template-columns: minmax(0, 1fr); }
+}
+/* En pantallas muy estrechas la navegación prioriza lo que busca un cliente */
+@media (max-width: 480px) {
+  .nav-optional { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
