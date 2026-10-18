@@ -52,6 +52,7 @@ const ICONS = {
   user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
   work: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',
   cap: '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.2 2.7 2.5 6 2.5s6-1.3 6-2.5v-4.5"/>',
+  check: '<path d="m5 12.5 4.5 4.5L19 7"/>',
   eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
 };
 const icon = name => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
@@ -61,6 +62,7 @@ const SKILL_MATCH = { html: ['html'], css: ['css', 'tailwind'], js: ['js', 'java
 
 if (CONFIG.availableFrom) $('#hero-status').textContent = `Agenda abierta para nuevos proyectos en ${CONFIG.availableFrom}`;
 renderProjects();
+renderServices();
 renderSkills();
 initThemeOnScroll();
 initHeroType();
@@ -182,6 +184,43 @@ function initNavState() {
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
   document.querySelectorAll('main > section').forEach(s => io.observe(s));
+}
+
+/* ── Servicios ─────────────────────────────────────────────── */
+function renderServices() {
+  const root = $('#plans');
+  const euros = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+  const newTab = '<span class="sr-only"> (se abre en una pestaña nueva)</span>';
+
+  root.innerHTML = CONFIG.services.map((s, i) => {
+    const proof = s.proof?.length
+      ? `<p class="plan-proof">Ya funciona en ${s.proof.map(p => `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.label)}${newTab}</a>`).join(' y ')}.</p>`
+      : '<span class="plan-proof" aria-hidden="true"></span>';
+    return `<article class="plan reveal${s.featured ? ' is-featured' : ''}" id="plan-${s.id}" style="--i:${i}" aria-labelledby="plan-${s.id}-name">
+      <h3 class="plan-name" id="plan-${s.id}-name">${esc(s.name)}</h3>
+      <p class="plan-price">${s.from ? '<span class="plan-from">desde</span>' : ''}<strong>${euros.format(s.price)}</strong>${s.unit ? `<span class="plan-unit">${esc(s.unit)}</span>` : ''}</p>
+      <p class="plan-summary">${esc(s.summary)}</p>
+      <ul class="plan-list" aria-label="Qué incluye">${s.includes.map(it => `<li>${icon('check')}${esc(it)}</li>`).join('')}</ul>
+      ${proof}
+      <p class="plan-time"><span>${esc(s.timelineLabel || 'Plazo orientativo')}:</span> ${esc(s.timeline)}</p>
+      <a class="btn${s.featured ? ' btn-solid' : ''}" href="#contacto" data-need="${esc(s.need)}">${icon('mail')}Pide presupuesto<span class="sr-only"> de ${esc(s.name.toLowerCase())}</span></a>
+    </article>`;
+  }).join('');
+
+  $('#steps').innerHTML = CONFIG.process.map((p, i) => `<li class="reveal" style="--i:${i}">
+    <span class="step-n" aria-hidden="true">${i + 1}</span>
+    <h4>${esc(p.title)}</h4>
+    <p>${esc(p.text)}</p>
+  </li>`).join('');
+
+  // El botón de cada paquete deja el servicio elegido en el formulario
+  root.addEventListener('click', e => {
+    const link = e.target.closest('[data-need]');
+    const select = $('#f-need');
+    if (!link || !select) return;
+    select.value = link.dataset.need;
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+  });
 }
 
 /* ── Habilidades ───────────────────────────────────────────── */
@@ -361,7 +400,7 @@ function initMotion() {
     el.classList.add('reveal', 'watch');
     el.style.setProperty('--i', i % 5);
   });
-  document.querySelectorAll('.skill').forEach(el => el.classList.add('watch'));
+  document.querySelectorAll('.skill, .plan, .steps li').forEach(el => el.classList.add('watch'));
 
   // 3. Revelados al entrar en pantalla
   const io = new IntersectionObserver(entries => {

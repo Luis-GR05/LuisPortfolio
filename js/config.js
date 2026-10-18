@@ -21,6 +21,74 @@ export const CONFIG = {
   // Mes en que se puede empezar un proyecto nuevo. Dejar '' para ocultar el mes.
   availableFrom: 'noviembre',
 
+  // ── Servicios y precios ─────────────────────────────────────────────────────
+  // Precios en euros. from: true muestra "desde" delante del precio.
+  // need: valor que se preselecciona en "¿Qué necesitas?" del formulario.
+  // timelineLabel: texto de la etiqueta del plazo (por defecto "Plazo orientativo").
+  // TODO: confirmar los plazos orientativos y el tiempo de respuesta del mantenimiento.
+  services: [
+    {
+      id:       'web',
+      need:     'web',
+      name:     'Web para negocio',
+      price:    350,
+      from:     true,
+      summary:  'Tu negocio bien presentado en Google y en el móvil, con una forma fácil de contactarte.',
+      includes: [
+        'Diseño a medida, adaptado a móvil, tablet y ordenador',
+        'SEO básico para aparecer en búsquedas de tu zona',
+        'Formulario de contacto que llega a tu correo',
+        'Publicación en internet y dominio configurado',
+      ],
+      timeline: '2 a 3 semanas',
+    },
+    {
+      id:       'reservas',
+      need:     'reservas',
+      name:     'Sistema de reservas',
+      price:    600,
+      from:     true,
+      featured: true,
+      summary:  'Tus clientes reservan online a cualquier hora y tú lo controlas todo desde un panel.',
+      includes: [
+        'Reservas online desde la web, sin llamadas',
+        'Panel de gestión para ver, mover y cancelar reservas',
+        'Horarios, pistas, mesas o servicios configurables',
+        'Todo lo que incluye la web para negocio',
+      ],
+      timeline: '4 a 6 semanas',
+      proof: [
+        { label: 'KoreManager', url: 'https://kore-manager.vercel.app/' },
+        { label: 'Bistroson',   url: 'https://bistroson-web.vercel.app/' },
+      ],
+    },
+    {
+      id:       'mantenimiento',
+      need:     'mantenimiento',
+      name:     'Mantenimiento',
+      price:    50,
+      unit:     '/mes',
+      from:     false,
+      summary:  'Tu web al día y alguien de confianza a quien escribir cuando necesites un cambio.',
+      includes: [
+        'Actualizaciones de seguridad y de versiones',
+        'Cambios menores de textos, fotos y horarios',
+        'Copias de seguridad periódicas',
+        'Soporte por correo',
+      ],
+      timeline: '48 h laborables',
+      timelineLabel: 'Respuesta',
+    },
+  ],
+
+  // Pasos del proceso de trabajo (sección Servicios)
+  process: [
+    { title: 'Llamada',           text: 'Una llamada corta y sin compromiso para entender tu negocio y lo que necesitas.' },
+    { title: 'Propuesta',         text: 'Te envío por escrito qué incluye, cuánto cuesta y cuándo la tendrás.' },
+    { title: 'Desarrollo',        text: 'Construyo la web y te enseño avances para que opines antes de publicar.' },
+    { title: 'Entrega y soporte', text: 'La publico, te explico cómo usarla y sigo disponible para cambios.' },
+  ],
+
   // ── Redes sociales ───────────────────────────────────────────────────────────
   socials: {
     github:   'https://github.com/Luis-GR05',

@@ -166,6 +166,47 @@ h2 { font: 700 clamp(2.2rem, 5vw, 4rem)/1 var(--display); letter-spacing: -.03em
 /* ── Bloques ── */
 .block { padding: clamp(64px, 12vh, 140px) var(--pad); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 80px); align-items: start; border-top: 1px solid var(--line); }
 
+/* ── Servicios ── */
+.block-wide { grid-template-columns: minmax(0, 1fr); }
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--line); }
+.plan { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; padding: clamp(28px, 3.4vw, 44px) clamp(20px, 2.6vw, 36px); }
+.plan + .plan { border-left: 1px solid var(--line); }
+/* En escritorio las filas (precio, lista, plazo…) se alinean entre tarjetas */
+@supports (grid-template-rows: subgrid) {
+  @media (min-width: 901px) {
+    .plan { display: grid; grid-row: span 7; grid-template-rows: subgrid; align-content: start; justify-items: start; }
+  }
+}
+.plan-name { font: 600 clamp(1.35rem, 2vw, 1.7rem)/1.15 var(--display); letter-spacing: -.01em; }
+.plan-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 10px; margin-top: -6px; }
+.plan-price strong { font: 700 clamp(2.8rem, 4.6vw, 4.2rem)/1 var(--display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+.plan-from, .plan-unit { color: var(--muted); font-size: 1rem; }
+.plan-unit { margin-left: -6px; }
+.plan-summary { max-width: 30rem; }
+.plan-list { display: grid; gap: 10px; font-size: 1rem; line-height: 1.45; padding-top: 18px; border-top: 1px solid var(--line); width: 100%; }
+.plan-list li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+.plan-list .ic { margin-top: .12em; color: var(--accent); }
+.plan-proof { font-size: 1rem; }
+.plan-proof a { font-weight: 600; }
+.plan-time { margin-top: auto; padding-top: 6px; font-size: 1rem; }
+.plan-time span { color: var(--muted); }
+.plan.is-featured { background: var(--ink); color: var(--bg); border-color: transparent; }
+.plan.is-featured + .plan { border-left-color: transparent; }
+.plan.is-featured :is(.plan-from, .plan-unit, .plan-time span) { color: color-mix(in srgb, var(--bg) 72%, var(--ink)); }
+.plan.is-featured .plan-list { border-top-color: color-mix(in srgb, var(--bg) 22%, transparent); }
+.plan.is-featured .plan-list .ic { color: #9DB0FF; }
+.plan.is-featured :focus-visible { outline-color: var(--bg); }
+.plan.is-featured .btn-solid:hover { border-color: var(--bg); color: var(--ink); background-image: linear-gradient(var(--bg), var(--bg)); }
+
+.process { margin-top: clamp(48px, 8vh, 88px); }
+.process-title { font: 600 clamp(1.35rem, 2vw, 1.7rem)/1.15 var(--display); margin-bottom: 24px; }
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); }
+.steps li { position: relative; padding-top: 22px; border-top: 2px solid var(--line); }
+.steps li::before { content: ""; position: absolute; left: 0; top: -2px; width: 44px; height: 2px; background: var(--accent); }
+.step-n { display: block; font: 700 2.2rem/1 var(--display); color: var(--accent); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
+.steps h4 { font: 600 1.2rem/1.2 var(--display); margin: 0 0 6px; }
+.steps p { color: var(--muted); font-size: 1rem; max-width: 22rem; }
+
 .skills { display: grid; }
 .skill { border-bottom: 1px solid var(--line); }
 .skill:first-child { border-top: 1px solid var(--line); }
@@ -549,6 +590,11 @@ html.lenis, html.lenis body { height: auto; }
   .rail { display: none; }
   .project { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 64px 0; }
   .block { grid-template-columns: minmax(0, 1fr); }
+  .plans { grid-template-columns: minmax(0, 1fr); border-bottom: 0; }
+  .plan + .plan { border-left: 0; }
+  .plan { border-bottom: 1px solid var(--line); padding-inline: 0; }
+  .plan.is-featured { margin-inline: calc(var(--pad) * -1); padding-inline: var(--pad); }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
   .top-nav { gap: 14px; font-size: .88rem; }
@@ -558,6 +604,7 @@ html.lenis, html.lenis body { height: auto; }
   .hero { grid-template-columns: minmax(0, 1fr); grid-template-areas: "name" "portrait" "body"; min-height: 0; }
   .hero-portrait { justify-self: start; width: 46%; }
   .timeline li { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .steps { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {
