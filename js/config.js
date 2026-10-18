@@ -55,7 +55,6 @@ export const CONFIG = {
       timeline: '4 a 6 semanas',
       proof: [
         { label: 'KoreManager', url: 'https://kore-manager.vercel.app/' },
-        { label: 'Bistroson',   url: 'https://bistroson-web.vercel.app/' },
       ],
     },
     {
@@ -220,24 +219,6 @@ export const CONFIG = {
       solution:    'Bóveda de alta seguridad con simulador en tiempo real de ataques por fuerza bruta y generador dinámico de entropía.',
       impact:      'Interfaz interactiva ciberpunk de precisión quirúrgica con retroalimentación animada.',
       statusGroup: 'in-progress',
-    },
-    {
-      id:          'bistroson',
-      title:       'Bistroson',
-      category:    'Restaurant Website & Booking',
-      tech:        ['Next.js', 'React', 'Three.js', 'GSAP', 'Tailwind'],
-      status:      'LIVE',
-      statusColor: 'success',
-      url:         'https://github.com/Luis-GR05/bistroson-web',
-      demoUrl:     'https://bistroson-web.vercel.app/',
-      previewImg:  'assets/img/bistroson.jpg',
-      year:        '2026',
-      problem:     'Un restaurante del centro de Badajoz con tres espacios distintos (salón, taberna y terraza) necesitaba una web que los presentara y facilitara reservar.',
-      solution:    'Sitio en Next.js con el logo en 3D en la portada (Three.js), animaciones con GSAP, la carta completa, la presentación de cada espacio, horarios, contacto y reserva online.',
-      impact:      'Web publicada para un negocio real, con la reserva y la carta accesibles desde el móvil.',
-      // TODO: si el restaurante comparte datos o una opinión, añadirlos aquí (sin estimaciones).
-      forClient:   'De depender del teléfono para reservar a que los clientes vean la carta y los espacios y reserven mesa online desde el móvil.',
-      statusGroup: 'completed',
     },
   ],
 };

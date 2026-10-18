@@ -19,7 +19,6 @@ body[data-theme="dailyset"]  { --bg:#0A0A0A; --ink:#FFFFFF; --muted:#CFCFCF; --a
 body[data-theme="nidus"]     { --bg:#12201A; --ink:#F3EFE4; --muted:#CBD6CD; --accent:#8FC6A4; --on-accent:#12201A; --line:rgba(243,239,228,.2); }
 body[data-theme="mantra"]    { --bg:#EDE8DF; --ink:#000000; --muted:#3B362F; --accent:#000000; --on-accent:#EDE8DF; --line:rgba(0,0,0,.25); }
 body[data-theme="nextvault"] { --bg:#060A22; --ink:#FFFFFF; --muted:#C3CCEE; --accent:#5B7CFF; --on-accent:#060A22; --line:rgba(255,255,255,.2); }
-body[data-theme="bistroson"] { --bg:#22352C; --ink:#F2EBDD; --muted:#D3DCD2; --accent:#E3B766; --on-accent:#22352C; --line:rgba(242,235,221,.22); }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 72px; }
@@ -152,7 +151,6 @@ h2 { font: 700 clamp(2.2rem, 5vw, 4rem)/1 var(--display); letter-spacing: -.03em
 .project[data-id="nidus"]     .project-title { font-family: 'Cormorant Garamond', serif; font-weight: 500; letter-spacing: -.01em; font-size: clamp(3.4rem, 8vw, 7.5rem); }
 .project[data-id="mantra"]    .project-title { font-family: 'Archivo Black', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; }
 .project[data-id="nextvault"] .project-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2.4rem, 5.2vw, 4.8rem); }
-.project[data-id="bistroson"] .project-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-style: italic; letter-spacing: -.01em; font-size: clamp(3.2rem, 7.4vw, 7rem); }
 
 /* Marco de demo */
 .frame { border: 1.5px solid var(--ink); border-radius: 10px; overflow: hidden; background: #000; transition: border-color .5s; }
@@ -524,7 +522,6 @@ html.lenis, html.lenis body { height: auto; }
 .statement .chip { display: inline-block; height: .78em; width: auto; vertical-align: -.1em; margin: 0 .08em; border-radius: .18em; rotate: -3deg; box-shadow: 0 .1em .3em rgba(0, 0, 0, .45); }
 .statement .chip-sq { height: .92em; width: .92em; object-fit: contain; padding: .1em; vertical-align: -.16em; rotate: 4deg; }
 .statement .chip-white { background: #fff; }
-.statement .chip-green { background: #22352C; rotate: -5deg; }
 .js .statement .w { opacity: .4; transition: opacity .45s ease, color .45s ease; }
 .js .statement .w.lit { opacity: 1; }
 .js .statement .chip { opacity: 1; scale: 0; transition: scale .6s cubic-bezier(.34, 1.56, .64, 1); }

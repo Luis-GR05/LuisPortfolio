@@ -15,11 +15,10 @@ const KIND = {
   nidus: 'Inmobiliaria boutique',
   mantra: 'Catálogo para conectar con tatuadores',
   nextvault: 'Gestor de contraseñas',
-  bistroson: 'Web y reservas para un restaurante de Badajoz',
 };
 const STATUS = { LIVE: 'En producción', DEV: 'En desarrollo' };
 /* Imágenes que llenan el marco en vez de mostrarse como logo */
-const COVER = new Set(['kore', 'bistroson']);
+const COVER = new Set(['kore']);
 /* Logo de cada app (square: icono cuadrado; si no, el logotipo horizontal) */
 const LOGO = {
   kore:      { src: 'assets/img/kore-logo.webp', w: 225, h: 256, square: true, contain: true, bg: '#FFFFFF' },
@@ -27,7 +26,6 @@ const LOGO = {
   nidus:     { src: 'assets/img/Nidus.png', w: 132, h: 53 },
   mantra:    { src: 'assets/img/Mantra.png', w: 172, h: 56 },
   nextvault: { src: 'assets/img/nextvault.png', w: 165, h: 47 },
-  bistroson: { src: 'assets/img/bistroson-mark.webp', w: 256, h: 222, square: true, contain: true, bg: '#16241D' },
 };
 /* Icono de cada tecnología (assets/tech, colección Devicon) */
 const TECH_ICON = [
