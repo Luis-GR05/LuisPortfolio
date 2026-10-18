@@ -190,7 +190,6 @@ function initNavState() {
 /* ── Servicios ─────────────────────────────────────────────── */
 function renderServices() {
   const root = $('#plans');
-  const euros = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
   const newTab = '<span class="sr-only"> (se abre en una pestaña nueva)</span>';
 
   root.innerHTML = CONFIG.services.map((s, i) => {
@@ -199,12 +198,11 @@ function renderServices() {
       : '<span class="plan-proof" aria-hidden="true"></span>';
     return `<article class="plan reveal${s.featured ? ' is-featured' : ''}" id="plan-${s.id}" style="--i:${i}" aria-labelledby="plan-${s.id}-name">
       <h3 class="plan-name" id="plan-${s.id}-name">${esc(s.name)}</h3>
-      <p class="plan-price">${s.from ? '<span class="plan-from">desde</span>' : ''}<strong>${euros.format(s.price)}</strong>${s.unit ? `<span class="plan-unit">${esc(s.unit)}</span>` : ''}</p>
       <p class="plan-summary">${esc(s.summary)}</p>
       <ul class="plan-list" aria-label="Qué incluye">${s.includes.map(it => `<li>${icon('check')}${esc(it)}</li>`).join('')}</ul>
       ${proof}
-      <p class="plan-time"><span>${esc(s.timelineLabel || 'Plazo orientativo')}:</span> ${esc(s.timeline)}</p>
-      <a class="btn${s.featured ? ' btn-solid' : ''}" href="#contacto" data-need="${esc(s.need)}">${icon('mail')}Pide presupuesto<span class="sr-only"> de ${esc(s.name.toLowerCase())}</span></a>
+      <p class="plan-time"><span>${esc(s.timelineLabel || 'Plazo orientativo')}:</span> ${esc(s.timeline)}<br><span>Precio:</span> a consultar, sin compromiso</p>
+      <a class="btn${s.featured ? ' btn-solid' : ''}" href="#contacto" data-need="${esc(s.need)}">${icon('mail')}Consultar precio<span class="sr-only"> de ${esc(s.name.toLowerCase())}</span></a>
     </article>`;
   }).join('');
 

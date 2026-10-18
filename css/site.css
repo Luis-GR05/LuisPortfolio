@@ -173,17 +173,13 @@ h2 { font: 700 clamp(2.2rem, 5vw, 4rem)/1 var(--display); letter-spacing: -.03em
 .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--line); }
 .plan { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; padding: clamp(28px, 3.4vw, 44px) clamp(20px, 2.6vw, 36px); }
 .plan + .plan { border-left: 1px solid var(--line); }
-/* En escritorio las filas (precio, lista, plazo…) se alinean entre tarjetas */
+/* En escritorio las filas (resumen, lista, plazo…) se alinean entre tarjetas */
 @supports (grid-template-rows: subgrid) {
   @media (min-width: 901px) {
-    .plan { display: grid; grid-row: span 7; grid-template-rows: subgrid; align-content: start; justify-items: start; }
+    .plan { display: grid; grid-row: span 6; grid-template-rows: subgrid; align-content: start; justify-items: start; }
   }
 }
-.plan-name { font: 600 clamp(1.35rem, 2vw, 1.7rem)/1.15 var(--display); letter-spacing: -.01em; }
-.plan-price { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 10px; margin-top: -6px; }
-.plan-price strong { font: 700 clamp(2.8rem, 4.6vw, 4.2rem)/1 var(--display); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
-.plan-from, .plan-unit { color: var(--muted); font-size: 1rem; }
-.plan-unit { margin-left: -6px; }
+.plan-name { font: 700 clamp(1.9rem, 3vw, 2.6rem)/1.05 var(--display); letter-spacing: -.03em; }
 .plan-summary { max-width: 30rem; }
 .plan-list { display: grid; gap: 10px; font-size: 1rem; line-height: 1.45; padding-top: 18px; border-top: 1px solid var(--line); width: 100%; }
 .plan-list li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
@@ -194,7 +190,7 @@ h2 { font: 700 clamp(2.2rem, 5vw, 4rem)/1 var(--display); letter-spacing: -.03em
 .plan-time span { color: var(--muted); }
 .plan.is-featured { background: var(--ink); color: var(--bg); border-color: transparent; }
 .plan.is-featured + .plan { border-left-color: transparent; }
-.plan.is-featured :is(.plan-from, .plan-unit, .plan-time span) { color: color-mix(in srgb, var(--bg) 72%, var(--ink)); }
+.plan.is-featured .plan-time span { color: color-mix(in srgb, var(--bg) 72%, var(--ink)); }
 .plan.is-featured .plan-list { border-top-color: color-mix(in srgb, var(--bg) 22%, transparent); }
 .plan.is-featured .plan-list .ic { color: #9DB0FF; }
 .plan.is-featured :focus-visible { outline-color: var(--bg); }

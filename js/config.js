@@ -21,8 +21,8 @@ export const CONFIG = {
   // Mes en que se puede empezar un proyecto nuevo. Dejar '' para ocultar el mes.
   availableFrom: 'noviembre',
 
-  // ── Servicios y precios ─────────────────────────────────────────────────────
-  // Precios en euros. from: true muestra "desde" delante del precio.
+  // ── Servicios ───────────────────────────────────────────────────────────────
+  // Sin precios publicados: cada tarjeta invita a consultarlo por el formulario.
   // need: valor que se preselecciona en "¿Qué necesitas?" del formulario.
   // timelineLabel: texto de la etiqueta del plazo (por defecto "Plazo orientativo").
   // TODO: confirmar los plazos orientativos y el tiempo de respuesta del mantenimiento.
@@ -31,8 +31,6 @@ export const CONFIG = {
       id:       'web',
       need:     'web',
       name:     'Web para negocio',
-      price:    350,
-      from:     true,
       summary:  'Tu negocio bien presentado en Google y en el móvil, con una forma fácil de contactarte.',
       includes: [
         'Diseño a medida, adaptado a móvil, tablet y ordenador',
@@ -46,8 +44,6 @@ export const CONFIG = {
       id:       'reservas',
       need:     'reservas',
       name:     'Sistema de reservas',
-      price:    600,
-      from:     true,
       featured: true,
       summary:  'Tus clientes reservan online a cualquier hora y tú lo controlas todo desde un panel.',
       includes: [
@@ -66,9 +62,6 @@ export const CONFIG = {
       id:       'mantenimiento',
       need:     'mantenimiento',
       name:     'Mantenimiento',
-      price:    50,
-      unit:     '/mes',
-      from:     false,
       summary:  'Tu web al día y alguien de confianza a quien escribir cuando necesites un cambio.',
       includes: [
         'Actualizaciones de seguridad y de versiones',
