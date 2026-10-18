@@ -16,6 +16,21 @@ import { createHash } from 'node:crypto';
 const WINDOW_SECONDS = 24 * 60 * 60;
 const LIMITS = { name: 100, email: 200, message: 5000 };
 
+// Opciones válidas de los desplegables del formulario
+const NEEDS = {
+  web: 'Web para negocio',
+  reservas: 'Sistema de reservas',
+  mantenimiento: 'Mantenimiento',
+  otro: 'Otro',
+  empleo: 'Oferta de empleo',
+};
+const BUDGETS = {
+  'menos-500': 'Menos de 500 €',
+  '500-1000': 'De 500 a 1.000 €',
+  '1000-2000': 'De 1.000 a 2.000 €',
+  'mas-2000': 'Más de 2.000 €',
+};
+
 const esc = (v = '') => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 // Correo e IP no se guardan en claro: solo una huella (hash) que caduca a las 24 h
@@ -47,7 +62,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: `Método ${req.method} no permitido` });
   }
 
-  const { name, email, message, consent } = req.body || {};
+  const { name, email, message, consent, need = '', budget = '' } = req.body || {};
 
   // ── Validación en el servidor ──
   if (!name || !email || !message) {
@@ -58,6 +73,12 @@ export default async function handler(req, res) {
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim())) {
     return res.status(400).json({ error: 'El correo electrónico no es válido.' });
+  }
+  if (need && !Object.hasOwn(NEEDS, need)) {
+    return res.status(400).json({ error: 'Elige una opción válida en «¿Qué necesitas?».' });
+  }
+  if (budget && !Object.hasOwn(BUDGETS, budget)) {
+    return res.status(400).json({ error: 'El presupuesto elegido no es válido.' });
   }
   if (String(name).length > LIMITS.name || String(email).length > LIMITS.email || String(message).length > LIMITS.message) {
     return res.status(400).json({ error: 'El mensaje es demasiado largo.' });
@@ -89,18 +110,22 @@ export default async function handler(req, res) {
   try {
     const resend = new Resend(apiKey);
     const safeName = esc(name), safeEmail = esc(email), safeMessage = esc(message);
+    const needLabel = NEEDS[need] || 'Sin indicar';
+    const budgetLabel = BUDGETS[budget] || 'Sin indicar';
 
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev', // Resend usa este remitente mientras no haya un dominio verificado
       to: toEmail,
       replyTo: email,
-      subject: `Nuevo mensaje de contacto de ${String(name).slice(0, 100)} (Portfolio)`,
-      text: `Nombre: ${name}\nEmail: ${email}\nMensaje:\n\n${message}`,
+      subject: `${needLabel}: nuevo mensaje de ${String(name).slice(0, 100)} (Portfolio)`,
+      text: `Nombre: ${name}\nEmail: ${email}\nNecesita: ${needLabel}\nPresupuesto: ${budgetLabel}\nMensaje:\n\n${message}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #2440E6; border-radius: 8px; background-color: #0F1730; color: #ffffff;">
           <h2 style="color: #9DB0FF; border-bottom: 2px solid #2440E6; padding-bottom: 10px; margin-top: 0;">Nuevo mensaje de contacto</h2>
           <p style="margin: 10px 0;"><strong style="color: #9DB0FF;">Nombre:</strong> ${safeName}</p>
           <p style="margin: 10px 0;"><strong style="color: #9DB0FF;">Email:</strong> <a href="mailto:${safeEmail}" style="color: #ffffff; text-decoration: underline;">${safeEmail}</a></p>
+          <p style="margin: 10px 0;"><strong style="color: #9DB0FF;">Necesita:</strong> ${esc(needLabel)}</p>
+          <p style="margin: 10px 0;"><strong style="color: #9DB0FF;">Presupuesto:</strong> ${esc(budgetLabel)}</p>
           <p style="margin: 15px 0 5px 0;"><strong style="color: #9DB0FF;">Mensaje:</strong></p>
           <div style="white-space: pre-line; background-color: #16203d; padding: 15px; border-left: 4px solid #2440E6; border-radius: 4px; color: #e4e4e7; line-height: 1.5;">${safeMessage}</div>
           <hr style="border: 0; border-top: 1px solid #27304d; margin: 20px 0;">

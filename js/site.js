@@ -267,9 +267,18 @@ function initContact() {
   const rules = {
     name: v => (v.trim().length >= 2 ? '' : 'Escribe tu nombre.'),
     email: v => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : 'Escribe un correo válido, como nombre@dominio.com.'),
+    need: v => (v ? '' : 'Elige qué necesitas.'),
     message: v => (v.trim().length >= 10 ? '' : 'Escribe un mensaje de al menos 10 caracteres.'),
     privacy: v => (v ? '' : 'Marca la casilla para poder enviar el mensaje.'),
   };
+  // El presupuesto no aplica a ofertas de empleo
+  const budget = $('#field-budget');
+  const syncBudget = () => {
+    budget.hidden = form.elements.need.value === 'empleo';
+    if (budget.hidden) form.elements.budget.value = '';
+  };
+  form.elements.need.addEventListener('change', syncBudget);
+  form.addEventListener('reset', () => setTimeout(syncBudget));
   const check = name => {
     const input = form.elements[name];
     const msg = rules[name](input.type === 'checkbox' ? input.checked : input.value);
@@ -277,7 +286,10 @@ function initContact() {
     input.setAttribute('aria-invalid', String(Boolean(msg)));
     return !msg;
   };
-  Object.keys(rules).forEach(name => form.elements[name].addEventListener(name === 'privacy' ? 'change' : 'blur', () => check(name)));
+  Object.keys(rules).forEach(name => {
+    const input = form.elements[name];
+    input.addEventListener(input.type === 'checkbox' || input.tagName === 'SELECT' ? 'change' : 'blur', () => check(name));
+  });
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
