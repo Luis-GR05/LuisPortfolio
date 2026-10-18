@@ -136,6 +136,8 @@ h2 { font: 700 clamp(2.2rem, 5vw, 4rem)/1 var(--display); letter-spacing: -.03em
 .project-title { font-size: clamp(2.8rem, 6.4vw, 6rem); line-height: .95; letter-spacing: -.03em; margin-bottom: 10px; white-space: nowrap; }
 .project-kind { font-size: 1.15rem; color: var(--accent); margin-bottom: 26px; }
 [data-theme="mantra"] .project-kind { color: var(--muted); }
+.project-pitch { max-width: 34rem; margin-bottom: 24px; padding: 2px 0 2px 16px; border-left: 3px solid var(--accent); font-size: 1.1rem; line-height: 1.5; }
+.project-pitch strong { font-weight: 600; }
 .project dl { margin: 0; display: grid; gap: 14px; max-width: 34rem; }
 .project dt { font-weight: 600; }
 .project dd { margin: 0; color: var(--ink); opacity: .9; }

@@ -159,6 +159,9 @@ export const CONFIG = {
       problem:     'Reservar una pista de pádel, fútbol o tenis en instalaciones municipales seguía dependiendo de llamadas y papel.',
       solution:    'Plataforma de reservas instantáneas y gestión centralizada de pistas, usable desde web y móvil. SPA en React sobre Supabase, con estadísticas en tiempo real y control de concurrencia.',
       impact:      'TFG orientado a digitalizar instalaciones públicas del municipio.',
+      // Línea "problema → solución" pensada para el cliente que llega desde Servicios.
+      // TODO: si hay datos reales de uso (reservas al mes, horas ahorradas…), añadirlos aquí.
+      forClient:   'De apuntar reservas por teléfono y en papel a que cada vecino reserve su pista desde el móvil y la gestión lo vea todo en un panel.',
       statusGroup: 'completed',
     },
     {
@@ -239,6 +242,8 @@ export const CONFIG = {
       problem:     'Un restaurante del centro de Badajoz con tres espacios distintos (salón, taberna y terraza) necesitaba una web que los presentara y facilitara reservar.',
       solution:    'Sitio en Next.js con el logo en 3D en la portada (Three.js), animaciones con GSAP, la carta completa, la presentación de cada espacio, horarios, contacto y reserva online.',
       impact:      'Web publicada para un negocio real, con la reserva y la carta accesibles desde el móvil.',
+      // TODO: si el restaurante comparte datos o una opinión, añadirlos aquí (sin estimaciones).
+      forClient:   'De depender del teléfono para reservar a que los clientes vean la carta y los espacios y reserven mesa online desde el móvil.',
       statusGroup: 'completed',
     },
   ],

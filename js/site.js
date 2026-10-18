@@ -100,6 +100,7 @@ function renderProjects() {
       <div>
         ${head}
         <p class="project-kind reveal" style="--i:2">${esc(KIND[p.id] || p.category)}</p>
+        ${p.forClient ? `<p class="project-pitch reveal" style="--i:3"><strong>Para tu negocio:</strong> ${esc(p.forClient)}</p>` : ''}
         <dl>
           <div class="reveal" style="--i:3"><dt>El problema</dt><dd>${esc(p.problem)}</dd></div>
           <div class="reveal" style="--i:4"><dt>La solución</dt><dd>${esc(p.solution)}</dd></div>
