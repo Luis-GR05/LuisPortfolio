@@ -18,8 +18,8 @@ export const CONFIG = {
   bio: 'Técnico Superior en Desarrollo Web. Forjado en distintos entornos corporativos e institucionales. Construyo arquitecturas robustas combinando lógica de backend (Java/Python) con interfaces de precisión (HTML/CSS/React). Entrego código limpio a alta velocidad.',
 
   // ── Disponibilidad (frase bajo los botones del hero) ────────────────────────
-  // Mes en que se puede empezar un proyecto nuevo. Dejar '' para ocultar el mes.
-  availableFrom: 'noviembre',
+  // Mes en que se puede empezar un proyecto nuevo (p. ej. 'noviembre'). Vacío: no se muestra mes.
+  availableFrom: '',
 
   // ── Servicios ───────────────────────────────────────────────────────────────
   // Sin precios publicados: cada tarjeta invita a consultarlo por el formulario.
