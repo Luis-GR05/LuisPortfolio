@@ -62,7 +62,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: `Método ${req.method} no permitido` });
   }
 
-  const { name, email, message, consent, need = '', budget = '' } = req.body || {};
+  const { name, email, message, consent, need = '', budget = '', lang = 'es' } = req.body || {};
 
   // ── Validación en el servidor ──
   if (!name || !email || !message) {
@@ -112,13 +112,14 @@ export default async function handler(req, res) {
     const safeName = esc(name), safeEmail = esc(email), safeMessage = esc(message);
     const needLabel = NEEDS[need] || 'Sin indicar';
     const budgetLabel = BUDGETS[budget] || 'Sin indicar';
+    const langLabel = lang === 'en' ? 'Inglés' : 'Español';
 
     const { data, error } = await resend.emails.send({
       from: 'onboarding@resend.dev', // Resend usa este remitente mientras no haya un dominio verificado
       to: toEmail,
       replyTo: email,
       subject: `${needLabel}: nuevo mensaje de ${String(name).slice(0, 100)} (Portfolio)`,
-      text: `Nombre: ${name}\nEmail: ${email}\nNecesita: ${needLabel}\nPresupuesto: ${budgetLabel}\nMensaje:\n\n${message}`,
+      text: `Nombre: ${name}\nEmail: ${email}\nNecesita: ${needLabel}\nPresupuesto: ${budgetLabel}\nIdioma de la web: ${langLabel}\nMensaje:\n\n${message}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #2440E6; border-radius: 8px; background-color: #0F1730; color: #ffffff;">
           <h2 style="color: #9DB0FF; border-bottom: 2px solid #2440E6; padding-bottom: 10px; margin-top: 0;">Nuevo mensaje de contacto</h2>
@@ -126,6 +127,7 @@ export default async function handler(req, res) {
           <p style="margin: 10px 0;"><strong style="color: #9DB0FF;">Email:</strong> <a href="mailto:${safeEmail}" style="color: #ffffff; text-decoration: underline;">${safeEmail}</a></p>
           <p style="margin: 10px 0;"><strong style="color: #9DB0FF;">Necesita:</strong> ${esc(needLabel)}</p>
           <p style="margin: 10px 0;"><strong style="color: #9DB0FF;">Presupuesto:</strong> ${esc(budgetLabel)}</p>
+          <p style="margin: 10px 0;"><strong style="color: #9DB0FF;">Idioma de la web:</strong> ${esc(langLabel)}</p>
           <p style="margin: 15px 0 5px 0;"><strong style="color: #9DB0FF;">Mensaje:</strong></p>
           <div style="white-space: pre-line; background-color: #16203d; padding: 15px; border-left: 4px solid #2440E6; border-radius: 4px; color: #e4e4e7; line-height: 1.5;">${safeMessage}</div>
           <hr style="border: 0; border-top: 1px solid #27304d; margin: 20px 0;">
