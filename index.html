@@ -8,7 +8,8 @@
   <meta name="author" content="Luis Gordillo Rodríguez">
   <link rel="canonical" href="https://luis-portfolio-pi.vercel.app/">
   <meta name="robots" content="index, follow">
-  <meta name="theme-color" content="#E8ECF3">
+  <meta name="theme-color" content="#FBF8FF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#120C1C" media="(prefers-color-scheme: dark)">
 
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
@@ -31,14 +32,14 @@
   <meta name="twitter:description" content="Webs para negocios y sistemas de reservas online en Badajoz, Montijo y Extremadura. Pide presupuesto sin compromiso.">
   <meta name="twitter:image" content="https://luis-portfolio-pi.vercel.app/assets/img/og.jpg">
 
-  <link rel="preload" as="image" href="assets/img/retrato.webp" type="image/webp" fetchpriority="high">
-  <link rel="preload" href="assets/fonts/bricolage-grotesque-latin-standard-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" href="assets/img/retrato-recorte.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" href="assets/fonts/sora-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/instrument-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="modulepreload" href="js/site.js">
   <link rel="modulepreload" href="js/config.js">
   <link rel="stylesheet" href="css/fonts.css">
 
-  <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.className="js"</script>
+  <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.className="js";try{var m=localStorage.getItem("modo");if(m==="light"||m==="dark")document.documentElement.dataset.mode=m}catch(e){}</script>
   <link rel="stylesheet" href="css/site.css">
 
   <script type="application/ld+json">
@@ -113,43 +114,106 @@
 
   <header class="top">
     <a href="#inicio" class="top-name">Luis Gordillo</a>
-    <nav class="top-nav" aria-label="Secciones">
+    <nav class="top-nav" id="top-nav" aria-label="Secciones">
       <a href="#proyectos">Proyectos</a>
       <a href="#servicios">Servicios</a>
-      <a href="#habilidades" class="nav-optional">Habilidades</a>
+      <a href="#habilidades">Habilidades</a>
       <a href="#trayectoria">Trayectoria</a>
       <a href="#contacto">Contacto</a>
     </nav>
+    <button type="button" class="lang-toggle" id="lang-toggle" lang="en" aria-label="EN: view this site in English">EN</button>
+    <button type="button" class="mode-toggle" id="mode-toggle" aria-label="Cambiar a modo oscuro"></button>
+    <button type="button" class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="top-nav" aria-label="Abrir menú"><span></span><span></span></button>
   </header>
 
   <main id="contenido">
 
     <section id="inicio" class="hero">
-      <h1 class="hero-name" id="hero-name" aria-label="Luis Gordillo">
-        <span aria-hidden="true">Luis</span>
-        <span aria-hidden="true">Gordillo</span>
-      </h1>
-      <div class="hero-body">
-        <p class="hero-lede">
-          Webs y sistemas de reservas para negocios de Badajoz y Extremadura:
-          que te encuentren en Google, que te pidan cita sin llamar y que lo
-          gestiones todo desde un panel.
-        </p>
-        <p class="hero-stack">Desarrollador web full-stack con React, Laravel y Supabase.</p>
-        <div class="hero-actions">
-          <a class="btn btn-solid" href="#contacto" data-icon="mail">Pide presupuesto</a>
-          <a class="btn" href="#proyectos" data-icon="arrowdown">Ver proyectos</a>
+      <div class="hero-text">
+        <h1 class="hero-name" id="hero-name" aria-label="Luis Gordillo">
+          <span aria-hidden="true">Luis</span>
+          <span aria-hidden="true">Gordillo</span>
+        </h1>
+        <div class="hero-body">
+          <p class="hero-lede">
+            Webs y sistemas de reservas para negocios de Badajoz y Extremadura:
+            que te encuentren en Google, que te pidan cita sin llamar y que lo
+            gestiones todo desde un panel.
+          </p>
+          <p class="hero-stack">Desarrollador web full-stack con React, Laravel y Supabase.</p>
+          <div class="hero-actions">
+            <a class="btn btn-solid" href="#contacto" data-icon="mail">Pide presupuesto</a>
+            <a class="btn" href="#proyectos" data-icon="arrowdown">Ver proyectos</a>
+          </div>
+          <p class="hero-status" id="hero-status">Listo para empezar nuevos proyectos.</p>
         </div>
-        <p class="hero-status" id="hero-status">Listo para empezar nuevos proyectos.</p>
       </div>
-      <figure class="hero-portrait">
-        <img src="assets/img/retrato.webp" alt="Retrato de Luis Gordillo" width="720" height="960" fetchpriority="high" decoding="async">
-      </figure>
+      <div class="hero-visual">
+        <span class="hero-arch" aria-hidden="true"></span>
+        <figure class="hero-photo">
+          <img src="assets/img/retrato-recorte.webp" alt="Retrato de Luis Gordillo" width="720" height="889" fetchpriority="high" decoding="async">
+        </figure>
+        <div class="ui-bits" aria-hidden="true">
+          <div class="bit bit-code">
+            <span class="bit-head"><span class="dots"><i></i><i></i><i></i></span></span>
+            <span class="code-lines"><i style="--w:70%;--c:var(--accent)"></i><i style="--w:45%;--c:var(--accent-2);--x:12px"></i><i style="--w:58%;--x:12px"></i><i style="--w:34%;--c:var(--accent)"></i></span>
+          </div>
+          <div class="bit bit-cal">
+            <span class="bit-head"><i class="bar"></i><span class="arrows"><i></i><i></i></span></span>
+            <span class="cal"><i></i><i class="busy"></i><i></i><i></i><i></i><i></i><i class="sel"><svg viewBox="0 0 16 16"><path d="m4 8.5 2.6 2.5L12 5.5"/></svg></i><i></i><i></i><i class="busy"></i><i></i><i></i></span>
+            <svg class="cursor" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 6z"/></svg>
+          </div>
+          <div class="bit bit-ctrl">
+            <span class="ctrl-row"><span class="toggle"><i></i></span><i class="bar"></i></span>
+            <span class="ctrl-row"><span class="slider"><i></i></span></span>
+          </div>
+          <div class="bit bit-chart">
+            <svg viewBox="0 0 120 52"><path class="grid" d="M0 13H120M0 26H120M0 39H120"/><path class="area" d="M0 44 L20 34 L40 38 L60 22 L80 26 L100 12 L120 16 L120 52 L0 52Z"/><path class="line" d="M0 44 L20 34 L40 38 L60 22 L80 26 L100 12 L120 16"/><circle class="end" cx="120" cy="16" r="4"/></svg>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="sobre-mi" class="statement" aria-label="Sobre mí">
-      <div class="statement-pin">
-        <p id="statement">No construyo maquetas: desarrollo software que funciona en el <em>mundo real</em>.<br>Desde sistemas de reservas municipales <img class="chip chip-sq chip-white" src="assets/img/kore-logo.webp" width="225" height="256" alt="KoreManager" loading="lazy"> hasta aplicaciones de entrenamiento <img class="chip" src="assets/img/dailyset-logo.png" width="190" height="62" alt="DailySet" loading="lazy">. Construyo soluciones completas de extremo a extremo, con la misma exigencia en la arquitectura de base de datos que en el <em>último píxel</em> de la interfaz.</p>
+    <section id="sobre-mi" class="story" data-story aria-labelledby="story-title">
+      <div class="story-pin">
+        <div class="story-copy">
+          <h2 id="story-title" class="story-title">No hago maquetas: hago software que funciona.</h2>
+          <ol class="story-list">
+            <li class="story-item"><button type="button" aria-pressed="true"><span class="story-proj">KoreManager</span><span class="story-text">Reservas en tiempo real sin solapes: dos personas no pueden quedarse la misma pista.</span></button></li>
+            <li class="story-item"><button type="button" aria-pressed="false"><span class="story-proj">DailySet</span><span class="story-text">Apuntar una serie lleva menos de 10 segundos y se guarda aunque falle la conexión.</span></button></li>
+            <li class="story-item"><button type="button" aria-pressed="false"><span class="story-proj">NextVault</span><span class="story-text">Simula un ataque por fuerza bruta en tiempo real para medir lo segura que es una contraseña.</span></button></li>
+            <li class="story-item"><button type="button" aria-pressed="false"><span class="story-proj">Mantra</span><span class="story-text">Catálogo con scroll por pasos y transiciones de cortina de color entre artistas.</span></button></li>
+          </ol>
+        </div>
+        <div class="story-stage" aria-hidden="true">
+          <div class="demo demo-kore">
+            <div class="demo-bar"><span>Pistas de pádel, sábado</span><span class="demo-live">En directo</span></div>
+            <div class="slots"><span class="slot taken">10:00</span><span class="slot">11:30</span><span class="slot taken">13:00</span><span class="slot">16:00</span><span class="slot taken">17:30</span><span class="slot book">18:30</span><span class="slot clash">19:00</span><span class="slot">20:30</span><span class="slot">21:30</span></div>
+            <p class="demo-toast">Pista 2 reservada a las 18:30</p>
+            <p class="demo-warn">19:00 ya está reservada</p>
+          </div>
+          <div class="demo demo-daily">
+            <div class="demo-bar"><span>Press banca</span><span class="demo-timer">7 s</span></div>
+            <ul class="sets"><li><span>Serie 1</span><span>60 kg × 8</span></li><li><span>Serie 2</span><span>62,5 kg × 8</span></li><li class="new"><span>Serie 3</span><span>62,5 kg × 7</span></li></ul>
+            <div class="bars"><span style="--h:42%"></span><span style="--h:55%"></span><span style="--h:48%"></span><span style="--h:63%"></span><span style="--h:70%"></span><span class="grow" style="--h:82%"></span></div>
+          </div>
+          <div class="demo demo-vault">
+            <div class="demo-bar"><span>Bóveda</span><span class="demo-live">Simulando ataque</span></div>
+            <div class="pass"><span class="pass-dots"></span><span class="caret"></span></div>
+            <div class="meter"><span></span></div>
+            <div class="meter-labels"><span>Débil</span><span>Media</span><span>Fuerte</span></div>
+            <div class="tries"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="demo demo-mantra">
+            <div class="demo-bar"><span>Mantra</span><span>Artistas</span></div>
+            <div class="ink-stage">
+              <div class="ink ink-1" style="--paper:#F3EEE6"><svg viewBox="0 0 200 160" aria-hidden="true"><g fill="none" stroke="#1A1A1A" stroke-width="1.2" stroke-linecap="round"><path d="M100 150V70"/><path d="M100 115c-14-6-26-18-30-34 16 2 28 14 30 34z"/><path d="M100 98c12-6 22-16 26-30-14 2-24 12-26 30z"/><path d="M100 70c-10-4-16-14-14-26 8 4 14 12 14 26z"/><path d="M100 70c10-4 16-14 14-26-8 4-14 12-14 26z"/><path d="M100 70c0-12 0-22 0-34"/><circle cx="100" cy="32" r="6"/><path d="M60 140c20-8 60-8 80 0" stroke-width=".8"/><circle cx="148" cy="40" r="1.5" fill="#1A1A1A"/><circle cx="54" cy="56" r="1" fill="#1A1A1A"/></g></svg><p>Fine line</p></div>
+              <div class="ink ink-2" style="--paper:#E9D5C3"><svg viewBox="0 0 200 160" aria-hidden="true"><g transform="translate(100 80)"><circle r="58" fill="#111"/><circle r="40" fill="#E9D5C3"/><g fill="#111"><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(0)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(30)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(60)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(90)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(120)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(150)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(180)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(210)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(240)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(270)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(300)"/><path d="M0 -40 L9 -18 L-9 -18Z" transform="rotate(330)"/></g><circle r="16" fill="#111"/><circle r="6" fill="#E9D5C3"/></g></svg><p>Blackwork</p></div>
+              <div class="ink ink-3" style="--paper:#F1E4CF"><svg viewBox="0 0 200 160" aria-hidden="true"><g stroke="#111" stroke-width="4" stroke-linejoin="round"><path d="M100 138C60 110 40 88 40 64a26 26 0 0 1 60-12 26 26 0 0 1 60 12c0 24-20 46-60 74z" fill="#C8332B"/><path d="M58 70c6-10 16-14 24-12" fill="none" stroke="#F4E3C1" stroke-width="5" stroke-linecap="round"/><path d="M28 96h144l-12 14 12 14H28l12-14z" fill="#F4E3C1"/><path d="M70 30l-14-14M130 30l14-14M100 22V4" fill="none" stroke-linecap="round"/></g><text x="100" y="116" text-anchor="middle" font-family="Archivo Black, sans-serif" font-size="13" fill="#111">MANTRA</text></svg><p>Tradicional</p></div>
+            </div>
+            <div class="snap-dots"><span></span><span></span><span></span></div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -174,17 +238,70 @@
       </div>
     </section>
 
-    <section id="servicios" class="block block-wide services">
-      <div class="block-head">
-        <h2>Servicios</h2>
-        <p>Tres formas de trabajar juntos. Cada proyecto es distinto, así que el precio se ajusta a lo que necesita tu negocio: escríbeme y te lo digo sin compromiso.</p>
+    <section id="servicios" class="services" aria-labelledby="services-title">
+      <div class="story" data-story>
+        <div class="story-pin">
+          <div class="story-copy">
+            <h2 id="services-title" class="story-title">Servicios</h2>
+            <p class="story-intro">Webs, sistemas de reservas y mantenimiento. Así trabajamos, paso a paso:</p>
+            <ol class="story-list" id="steps"></ol>
+          </div>
+          <div class="story-stage" aria-hidden="true">
+            <div class="demo demo-ux demo-flow">
+              <div class="demo-bar"><span>Notas de la llamada</span><span>Sin compromiso</span></div>
+              <ul class="notes">
+                <li><span>Negocio</span><b>Club de pádel</b></li>
+                <li><span>Problema</span><b>Reservas por teléfono</b></li>
+                <li><span>Necesita</span><b>Reservas online y panel</b></li>
+                <li><span>Siguiente paso</span><b>Propuesta por escrito</b></li>
+              </ul>
+              <div class="flow">
+                <span class="node">Elige pista</span><span class="edge"></span>
+                <span class="node">Elige hora</span><span class="edge"></span>
+                <span class="node">Confirma</span><span class="edge"></span>
+                <span class="node node-end">Reservado</span>
+              </div>
+            </div>
+            <div class="demo demo-ux demo-system">
+              <div class="demo-bar"><span>Una identidad para cada proyecto</span><span>5 sistemas</span></div>
+              <ul class="systems">
+                <li><span class="sw" style="--a:#170E33;--b:#B8F23E"></span><b style="font-family:'Space Grotesk',sans-serif">Aa</b><span>KoreManager</span></li>
+                <li><span class="sw" style="--a:#0A0A0A;--b:#D2F03C"></span><b style="font-family:'Barlow Condensed',sans-serif;font-style:italic">Aa</b><span>DailySet</span></li>
+                <li><span class="sw" style="--a:#12201A;--b:#8FC6A4"></span><b style="font-family:'Cormorant Garamond',serif;font-weight:500">Aa</b><span>Nidus</span></li>
+                <li><span class="sw" style="--a:#000000;--b:#EDE8DF"></span><b style="font-family:'Archivo Black',sans-serif;font-weight:400">Aa</b><span>Mantra</span></li>
+                <li><span class="sw" style="--a:#060A22;--b:#5B7CFF"></span><b style="font-family:'Sora',sans-serif">Aa</b><span>NextVault</span></li>
+              </ul>
+            </div>
+            <div class="demo demo-ux demo-code">
+              <div class="demo-bar"><span>SetCard.jsx</span><span>DailySet</span></div>
+              <div class="code-split">
+                <pre class="code"><code><span class="k">export function</span> <span class="f">SetCard</span>({ peso, reps }) {
+  <span class="k">return</span> (
+    &lt;<span class="t">button</span> <span class="a">onClick</span>={guardar}&gt;
+      {peso} kg × {reps}
+    &lt;/<span class="t">button</span>&gt;
+  );
+}</code></pre>
+                <div class="code-out"><span class="set-btn">62,5 kg × 7</span><small>Guardado</small></div>
+              </div>
+            </div>
+            <div class="demo demo-ux demo-launch">
+              <div class="demo-bar"><span>kore-manager.vercel.app</span><span class="demo-live">En producción</span></div>
+              <div class="kore-app">
+                <div class="kore-top"><img src="assets/img/kore-logo.webp" alt="" width="225" height="256" loading="lazy"><b>KoreManager</b><span>Panel de reservas</span></div>
+                <div class="kore-week"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i></div>
+                <p class="kore-deploy">Desplegado en Vercel</p>
+              </div>
+              <ul class="checks"><li>Copias de seguridad</li><li>Actualizaciones</li><li>Cambios cuando los necesites</li></ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="plans" id="plans">
-        <noscript><p>Web para negocio, sistema de reservas y mantenimiento mensual. <a href="#contacto">Consulta el precio</a> sin compromiso.</p></noscript>
-      </div>
-      <div class="process">
-        <h3 class="process-title">Cómo trabajamos</h3>
-        <ol class="steps" id="steps"></ol>
+      <div class="services-plans">
+        <p class="plans-intro">Tres formas de trabajar juntos. Cada proyecto es distinto, así que el precio se ajusta a lo que necesita tu negocio: escríbeme y te lo digo sin compromiso.</p>
+        <div class="plans" id="plans">
+          <noscript><p>Web para negocio, sistema de reservas y mantenimiento mensual. <a href="#contacto">Consulta el precio</a> sin compromiso.</p></noscript>
+        </div>
       </div>
     </section>
 

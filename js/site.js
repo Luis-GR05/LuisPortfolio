@@ -3,20 +3,31 @@
  * Los datos (proyectos, habilidades) siguen viviendo en config.js.
  */
 import { CONFIG } from './config.js';
+import { LANG, t, tr, translatePage, initLangToggle } from './i18n.js';
+
+// El idioma se aplica antes de pintar iconos y contenido
+translatePage();
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const esc = (s = '') => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Categorías en castellano (config.js las guarda en inglés) */
-const KIND = {
+/* Tipo de cada proyecto, en el idioma de la página */
+const KIND = LANG === 'en' ? {
+  kore: 'Sports court booking and management',
+  dailyset: 'Workout logging and analysis',
+  nidus: 'Boutique real estate',
+  mantra: 'Catalogue to connect with tattoo artists',
+  nextvault: 'Password manager',
+} : {
   kore: 'Reserva y gestión de pistas deportivas',
   dailyset: 'Registro y análisis de entrenamientos',
   nidus: 'Inmobiliaria boutique',
   mantra: 'Catálogo para conectar con tatuadores',
   nextvault: 'Gestor de contraseñas',
 };
-const STATUS = { LIVE: 'En producción', DEV: 'En desarrollo' };
+const STATUS = LANG === 'en' ? { LIVE: 'Live', DEV: 'In development' } : { LIVE: 'En producción', DEV: 'En desarrollo' };
+const NEW_TAB = t(' (se abre en una pestaña nueva)', ' (opens in a new tab)');
 /* Imágenes que llenan el marco en vez de mostrarse como logo */
 const COVER = new Set(['kore']);
 /* Logo de cada app (square: icono cuadrado; si no, el logotipo horizontal) */
@@ -34,8 +45,8 @@ const TECH_ICON = [
   ['javascript', 'javascript'], ['typescript', 'typescript'],
 ];
 const SKILL_ICON = { html: 'html5', css: 'css3', js: 'javascript', react: 'react', java: 'java', python: 'python', laravel: 'laravel', cpp: 'cplusplus', sql: 'postgresql' };
-const techIcon = t => {
-  const hit = TECH_ICON.find(([k]) => t.toLowerCase().includes(k));
+const techIcon = name => {
+  const hit = TECH_ICON.find(([k]) => name.toLowerCase().includes(k));
   return hit ? `<img src="assets/tech/${hit[1]}.svg" alt="" width="18" height="18" loading="lazy">` : '';
 };
 /* Iconos de interfaz (trazo propio, 24×24) */
@@ -51,6 +62,8 @@ const ICONS = {
   work: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/>',
   cap: '<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.2 2.7 2.5 6 2.5s6-1.3 6-2.5v-4.5"/>',
   check: '<path d="m5 12.5 4.5 4.5L19 7"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/>',
   eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
 };
 const icon = name => `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
@@ -58,19 +71,62 @@ document.querySelectorAll('[data-icon]').forEach(el => el.insertAdjacentHTML('af
 /* Cómo aparece cada habilidad en las listas de tecnologías de los proyectos */
 const SKILL_MATCH = { html: ['html'], css: ['css', 'tailwind'], js: ['js', 'javascript'], react: ['react'], sql: ['supabase', 'sql'] };
 
-if (CONFIG.availableFrom) $('#hero-status').textContent = `Listo para empezar nuevos proyectos en ${CONFIG.availableFrom}.`;
+if (CONFIG.availableFrom) $('#hero-status').textContent = t(`Listo para empezar nuevos proyectos en ${CONFIG.availableFrom}.`, `Ready to start new projects from ${CONFIG.availableFromEn || CONFIG.availableFrom}.`);
+initMode();
+initLangToggle($('#lang-toggle'));
+initMenu();
 renderProjects();
 renderServices();
 renderSkills();
 initThemeOnScroll();
-initHeroType();
 initProgress();
 initNavState();
 initContact();
+initStories();
 initMotion();
 fitTitles();
 $('#year').textContent = new Date().getFullYear();
 initClock();
+
+/* ── Modo claro / oscuro ───────────────────────────────────── */
+// Sigue la preferencia del sistema hasta que se pulsa el botón; la elección se recuerda en este navegador
+function initMode() {
+  const btn = $('#mode-toggle');
+  const root = document.documentElement;
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  const current = () => root.dataset.mode || (system.matches ? 'dark' : 'light');
+  const paint = () => {
+    const dark = current() === 'dark';
+    btn.innerHTML = icon(dark ? 'sun' : 'moon');
+    btn.setAttribute('aria-label', dark ? t('Cambiar a modo claro', 'Switch to light mode') : t('Cambiar a modo oscuro', 'Switch to dark mode'));
+  };
+  btn.addEventListener('click', () => {
+    const next = current() === 'dark' ? 'light' : 'dark';
+    root.dataset.mode = next;
+    try { localStorage.setItem('modo', next); } catch {}
+    paint();
+  });
+  system.addEventListener?.('change', paint);
+  paint();
+}
+
+/* ── Menú hamburguesa (móvil) ──────────────────────────────── */
+function initMenu() {
+  const top = $('.top');
+  const btn = $('#menu-toggle');
+  const set = open => {
+    top.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', open ? t('Cerrar menú', 'Close menu') : t('Abrir menú', 'Open menu'));
+  };
+  set(false);
+  btn.addEventListener('click', () => set(!top.classList.contains('is-open')));
+  $('#top-nav').addEventListener('click', e => { if (e.target.closest('a')) set(false); });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape' && top.classList.contains('is-open')) { set(false); btn.focus(); }
+  });
+  matchMedia('(min-width: 761px)').addEventListener?.('change', e => { if (e.matches) set(false); });
+}
 
 /* ── Proyectos ─────────────────────────────────────────────── */
 function renderProjects() {
@@ -80,7 +136,7 @@ function renderProjects() {
   list.innerHTML = CONFIG.projects.map(p => {
     const logo = LOGO[p.id];
     const logoHtml = logo
-      ? `<img class="project-logo reveal${logo.square ? ' is-square' : ''}${logo.contain ? ' is-contain' : ''}" ${logo.bg ? ` style="background:${logo.bg}"` : ''} src="${logo.src}" width="${logo.w}" height="${logo.h}" alt="Logo de ${esc(p.title)}" loading="lazy">`
+      ? `<img class="project-logo reveal${logo.square ? ' is-square' : ''}${logo.contain ? ' is-contain' : ''}" ${logo.bg ? ` style="background:${logo.bg}"` : ''} src="${logo.src}" width="${logo.w}" height="${logo.h}" alt="${t('Logo de', 'Logo of')} ${esc(p.title)}" loading="lazy">`
       : '';
     const head = `
       ${logoHtml}
@@ -89,7 +145,7 @@ function renderProjects() {
 
     if (p.pending) {
       return `<article class="project" id="p-${p.id}" data-id="${p.id}">
-        <div>${head}<p class="pending-note">Ficha en preparación. Muy pronto, aquí, el detalle del proyecto y su demo.</p></div>
+        <div>${head}<p class="pending-note">${t('Ficha en preparación. Muy pronto, aquí, el detalle del proyecto y su demo.', 'Coming soon: project details and demo.')}</p></div>
       </article>`;
     }
 
@@ -98,22 +154,22 @@ function renderProjects() {
       <div>
         ${head}
         <p class="project-kind reveal" style="--i:2">${esc(KIND[p.id] || p.category)}</p>
-        ${p.forClient ? `<p class="project-pitch reveal" style="--i:3"><strong>Para tu negocio:</strong> ${esc(p.forClient)}</p>` : ''}
+        ${p.forClient ? `<p class="project-pitch reveal" style="--i:3"><strong>${t('Para tu negocio:', 'For your business:')}</strong> ${esc(tr(p, 'forClient'))}</p>` : ''}
         <dl>
-          <div class="reveal" style="--i:3"><dt>El problema</dt><dd>${esc(p.problem)}</dd></div>
-          <div class="reveal" style="--i:4"><dt>La solución</dt><dd>${esc(p.solution)}</dd></div>
-          <div class="reveal" style="--i:5"><dt>El resultado</dt><dd>${esc(p.impact)}</dd></div>
+          <div class="reveal" style="--i:3"><dt>${t('El problema', 'The problem')}</dt><dd>${esc(tr(p, 'problem'))}</dd></div>
+          <div class="reveal" style="--i:4"><dt>${t('La solución', 'The solution')}</dt><dd>${esc(tr(p, 'solution'))}</dd></div>
+          <div class="reveal" style="--i:5"><dt>${t('El resultado', 'The result')}</dt><dd>${esc(tr(p, 'impact'))}</dd></div>
         </dl>
-        <ul class="tech reveal" style="--i:6">${p.tech.map(t => `<li>${techIcon(t)}${esc(t)}</li>`).join('')}</ul>
+        <ul class="tech reveal" style="--i:6">${p.tech.map(name => `<li>${techIcon(name)}${esc(name)}</li>`).join('')}</ul>
         <div class="project-links reveal" style="--i:7">
-          ${p.demoUrl ? `<a class="btn btn-solid" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Ver el proyecto<span class="sr-only"> (se abre en una pestaña nueva)</span></a>` : ''}
+          ${p.demoUrl ? `<a class="btn btn-solid" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}${t('Ver el proyecto', 'View project')}<span class="sr-only">${NEW_TAB}</span></a>` : ''}
         </div>
       </div>
-      <div class="frame-tilt"><div class="frame"${p.demoUrl ? ' data-cursor="Abrir"' : ''}>
+      <div class="frame-tilt"><div class="frame"${p.demoUrl ? ` data-cursor="${t('Abrir', 'Open')}"` : ''}>
         <div class="frame-bar"><span>${esc(host)}</span></div>
         <div class="frame-view">
-          ${p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="Imagen de ${esc(p.title)}" loading="lazy" decoding="async">` : `<span class="frame-poster">${esc(p.title)}</span>`}
-          ${p.demoUrl ? `<a class="btn frame-play" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}Ver el proyecto<span class="sr-only"> (se abre en una pestaña nueva)</span></a>` : ''}
+          ${p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="${t('Imagen de', 'Screenshot of')} ${esc(p.title)}" loading="lazy" decoding="async">` : `<span class="frame-poster">${esc(p.title)}</span>`}
+          ${p.demoUrl ? `<a class="btn frame-play" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}${t('Ver el proyecto', 'View project')}<span class="sr-only">${NEW_TAB}</span></a>` : ''}
         </div>
       </div></div>
     </article>`;
@@ -146,23 +202,6 @@ function initThemeOnScroll() {
   document.querySelectorAll('.project').forEach(el => io.observe(el));
 }
 
-/* ── Hero: el nombre cambia de peso y anchura con el puntero ── */
-function initHeroType() {
-  const name = $('#hero-name');
-  if (reduceMotion || !matchMedia('(pointer: fine)').matches) return;
-  let raf = 0;
-  addEventListener('pointermove', e => {
-    if (raf) return;
-    raf = requestAnimationFrame(() => {
-      raf = 0;
-      const x = e.clientX / innerWidth;
-      const y = e.clientY / innerHeight;
-      name.style.setProperty('--w', Math.round(250 + x * 550));
-      name.style.setProperty('--wd', Math.round(100 - y * 25));
-    });
-  }, { passive: true });
-}
-
 function initProgress() {
   const bar = $('#progress-bar');
   const update = () => {
@@ -188,26 +227,24 @@ function initNavState() {
 /* ── Servicios ─────────────────────────────────────────────── */
 function renderServices() {
   const root = $('#plans');
-  const newTab = '<span class="sr-only"> (se abre en una pestaña nueva)</span>';
+  const newTab = `<span class="sr-only">${NEW_TAB}</span>`;
 
   root.innerHTML = CONFIG.services.map((s, i) => {
     const proof = s.proof?.length
-      ? `<p class="plan-proof">Ya funciona en ${s.proof.map(p => `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.label)}${newTab}</a>`).join(' y ')}.</p>`
+      ? `<p class="plan-proof">${t('Ya funciona en', 'Already running in')} ${s.proof.map(p => `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.label)}${newTab}</a>`).join(t(' y ', ' and '))}.</p>`
       : '<span class="plan-proof" aria-hidden="true"></span>';
     return `<article class="plan reveal${s.featured ? ' is-featured' : ''}" id="plan-${s.id}" style="--i:${i}" aria-labelledby="plan-${s.id}-name">
-      <h3 class="plan-name" id="plan-${s.id}-name">${esc(s.name)}</h3>
-      <p class="plan-summary">${esc(s.summary)}</p>
-      <ul class="plan-list" aria-label="Qué incluye">${s.includes.map(it => `<li>${icon('check')}${esc(it)}</li>`).join('')}</ul>
+      <h3 class="plan-name" id="plan-${s.id}-name">${esc(tr(s, 'name'))}</h3>
+      <p class="plan-summary">${esc(tr(s, 'summary'))}</p>
+      <ul class="plan-list" aria-label="${t('Qué incluye', 'What’s included')}">${tr(s, 'includes').map(it => `<li>${icon('check')}${esc(it)}</li>`).join('')}</ul>
       ${proof}
-      <p class="plan-time"><span>${esc(s.timelineLabel || 'Plazo orientativo')}:</span> ${esc(s.timeline)}<br><span>Precio:</span> a consultar, sin compromiso</p>
-      <a class="btn${s.featured ? ' btn-solid' : ''}" href="#contacto" data-need="${esc(s.need)}">${icon('mail')}Consultar precio<span class="sr-only"> de ${esc(s.name.toLowerCase())}</span></a>
+      <p class="plan-time"><span>${esc(tr(s, 'timelineLabel') || t('Plazo orientativo', 'Estimated timeline'))}:</span> ${esc(tr(s, 'timeline'))}<br><span>${t('Precio', 'Price')}:</span> ${t('a consultar, sin compromiso', 'on request, no commitment')}</p>
+      <a class="btn${s.featured ? ' btn-solid' : ''}" href="#contacto" data-need="${esc(s.need)}">${icon('mail')}${t('Consultar precio', 'Ask for a price')}<span class="sr-only"> ${t('de', 'for')} ${esc(tr(s, 'name').toLowerCase())}</span></a>
     </article>`;
   }).join('');
 
-  $('#steps').innerHTML = CONFIG.process.map((p, i) => `<li class="reveal" style="--i:${i}">
-    <span class="step-n" aria-hidden="true">${i + 1}</span>
-    <h4>${esc(p.title)}</h4>
-    <p>${esc(p.text)}</p>
+  $('#steps').innerHTML = CONFIG.process.map((p, i) => `<li class="story-item">
+    <button type="button" aria-pressed="${i === 0}"><span class="story-proj"><span class="step-n">${String(i + 1).padStart(2, '0')}</span>${esc(tr(p, 'title'))}</span><span class="story-text">${esc(tr(p, 'text'))}</span></button>
   </li>`).join('');
 
   // El botón de cada paquete deja el servicio elegido en el formulario
@@ -220,6 +257,63 @@ function renderServices() {
   });
 }
 
+/* ── Secciones fijas ───────────────────────────────────────── */
+// En escritorio, el scroll recorre los pasos mientras la sección queda fija.
+// En móvil o con "reducir movimiento" no se fija: los pasos se eligen pulsando
+// (y en móvil, además, avanzan solos mientras la sección está a la vista).
+function initStories() {
+  const pinnable = matchMedia('(min-width: 901px) and (min-height: 620px)');
+  document.querySelectorAll('[data-story]').forEach(story => {
+    const items = [...story.querySelectorAll('.story-item')];
+    const panels = [...story.querySelectorAll('.story-stage > *')];
+    const n = items.length;
+    let current = -1;
+    const set = i => {
+      if (i === current) return;
+      current = i;
+      items.forEach((it, k) => {
+        it.classList.toggle('is-active', k === i);
+        it.querySelector('button').setAttribute('aria-pressed', String(k === i));
+      });
+      panels.forEach((p, k) => p.classList.toggle('is-active', k === i));
+    };
+    const pinned = () => !reduceMotion && pinnable.matches;
+    story.classList.toggle('is-pinned', pinned());
+    pinnable.addEventListener?.('change', () => story.classList.toggle('is-pinned', pinned()));
+
+    items.forEach((it, k) => it.querySelector('button').addEventListener('click', () => {
+      set(k);
+      if (!pinned()) return;
+      // Lleva el scroll al tramo de ese paso para que no salte al seguir bajando
+      const r = story.getBoundingClientRect();
+      const y = scrollY + r.top + ((k + 0.5) / n) * (r.height - innerHeight);
+      scrollTo({ top: y, behavior: 'smooth' });
+    }));
+
+    let ticking = false;
+    addEventListener('scroll', () => {
+      if (ticking || !pinned()) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        const r = story.getBoundingClientRect();
+        const p = -r.top / Math.max(1, r.height - innerHeight);
+        set(Math.min(n - 1, Math.max(0, Math.floor(p * n))));
+      });
+    }, { passive: true });
+
+    // Móvil: avanza solo cada pocos segundos mientras se ve
+    if (!reduceMotion) {
+      let timer = 0;
+      new IntersectionObserver(([en]) => {
+        clearInterval(timer);
+        if (en.isIntersecting && !pinned()) timer = setInterval(() => set((current + 1) % n), 4500);
+      }, { threshold: 0.4 }).observe(story);
+    }
+    set(0);
+  });
+}
+
 /* ── Habilidades ───────────────────────────────────────────── */
 function renderSkills() {
   const root = $('#skills');
@@ -227,18 +321,18 @@ function renderSkills() {
 
   root.innerHTML = nodes.map(([id, s], i) => {
     const keys = SKILL_MATCH[id] || [s.label.toLowerCase()];
-    const used = CONFIG.projects.filter(p => (p.tech || []).some(t => keys.some(k => t.toLowerCase().includes(k))));
+    const used = CONFIG.projects.filter(p => (p.tech || []).some(name => keys.some(k => name.toLowerCase().includes(k))));
     const usedHtml = used.length
-      ? `<p>La he usado en ${used.map(p => `<a href="#p-${p.id}">${esc(p.title)}</a>`).join(', ')}.</p>`
+      ? `<p>${t('La he usado en', 'I’ve used it in')} ${used.map(p => `<a href="#p-${p.id}">${esc(p.title)}</a>`).join(', ')}.</p>`
       : '';
     return `<div class="skill reveal" style="--i:${i}">
       <button type="button" aria-expanded="false" aria-controls="sk-${id}">
         <img class="skill-icon" src="assets/tech/${SKILL_ICON[id]}.svg" alt="" width="28" height="28" loading="lazy">
         <span class="skill-name">${esc(s.label)}</span>
-        <span class="skill-years">${s.years} ${s.years === 1 ? 'año' : 'años'}</span>
+        <span class="skill-years">${s.years} ${s.years === 1 ? t('año', 'year') : t('años', 'years')}</span>
         <span class="skill-sign" aria-hidden="true">+</span>
       </button>
-      <div class="skill-panel" id="sk-${id}" inert><div><p>${esc(s.desc)}</p>${usedHtml}</div></div>
+      <div class="skill-panel" id="sk-${id}" inert><div><p>${esc(tr(s, 'desc'))}</p>${usedHtml}</div></div>
     </div>`;
   }).join('');
 
@@ -261,11 +355,11 @@ function initContact() {
   const status = $('#form-status');
   const submit = $('#f-submit');
   const rules = {
-    name: v => (v.trim().length >= 2 ? '' : 'Escribe tu nombre.'),
-    email: v => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : 'Escribe un correo válido, como nombre@dominio.com.'),
-    need: v => (v ? '' : 'Elige qué necesitas.'),
-    message: v => (v.trim().length >= 10 ? '' : 'Escribe un mensaje de al menos 10 caracteres.'),
-    privacy: v => (v ? '' : 'Marca la casilla para poder enviar el mensaje.'),
+    name: v => (v.trim().length >= 2 ? '' : t('Escribe tu nombre.', 'Enter your name.')),
+    email: v => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : t('Escribe un correo válido, como nombre@dominio.com.', 'Enter a valid email, like name@domain.com.')),
+    need: v => (v ? '' : t('Elige qué necesitas.', 'Choose what you need.')),
+    message: v => (v.trim().length >= 10 ? '' : t('Escribe un mensaje de al menos 10 caracteres.', 'Write a message of at least 10 characters.')),
+    privacy: v => (v ? '' : t('Marca la casilla para poder enviar el mensaje.', 'Tick the box to send your message.')),
   };
   // El presupuesto no aplica a ofertas de empleo
   const budget = $('#field-budget');
@@ -294,6 +388,7 @@ function initContact() {
 
     const { privacy, ...data } = Object.fromEntries(new FormData(form));
     data.consent = privacy === 'on';
+    data.lang = LANG;
     const post = async url => {
       const r = await fetch(url, {
         method: 'POST',
@@ -308,19 +403,19 @@ function initContact() {
     };
 
     submit.disabled = true;
-    submit.lastChild.textContent = 'Enviando…';
+    submit.lastChild.textContent = t('Enviando…', 'Sending…');
     status.textContent = '';
     try {
       await post('/api/send-email');
       form.reset();
-      status.textContent = 'Mensaje enviado. Te responderé por correo.';
+      status.textContent = t('Mensaje enviado. Te responderé por correo.', 'Message sent. I’ll reply by email.');
     } catch (err) {
       status.textContent = err.status === 429
-        ? 'Ya has enviado un mensaje hoy. Podrás enviar otro pasadas 24 horas; si es urgente, escríbeme a luisgordillor01@gmail.com.'
-        : 'No se pudo enviar el mensaje. Escríbeme a luisgordillor01@gmail.com.';
+        ? t('Ya has enviado un mensaje hoy. Podrás enviar otro pasadas 24 horas; si es urgente, escríbeme a luisgordillor01@gmail.com.', 'You’ve already sent a message today. You can send another one in 24 hours; if it’s urgent, email me at luisgordillor01@gmail.com.')
+        : t('No se pudo enviar el mensaje. Escríbeme a luisgordillor01@gmail.com.', 'Your message couldn’t be sent. Email me at luisgordillor01@gmail.com.');
     } finally {
       submit.disabled = false;
-      submit.lastChild.textContent = 'Enviar mensaje';
+      submit.lastChild.textContent = t('Enviar mensaje', 'Send message');
     }
   });
 }
@@ -359,35 +454,11 @@ function initMotion() {
     lenis?.start();
   })(t0);
 
-  // 0c. Declaración: las palabras se encienden al avanzar
-  const statement = $('#statement');
-  const wrapWords = node => {
-    [...node.childNodes].forEach(child => {
-      if (child.nodeType === Node.TEXT_NODE) {
-        const frag = document.createDocumentFragment();
-        child.textContent.split(/(\s+)/).forEach(part => {
-          if (!part.trim()) return frag.append(part);
-          const span = document.createElement('span');
-          span.className = 'w';
-          span.textContent = part;
-          frag.append(span);
-        });
-        child.replaceWith(frag);
-      } else if (child.tagName === 'IMG') {
-        child.classList.add('w');
-      } else {
-        wrapWords(child);
-      }
-    });
-  };
-  wrapWords(statement);
-  const words = [...statement.querySelectorAll('.w')];
-  const statementBox = statement.closest('.statement');
-
   // 0d. Cierre gigante, letra a letra
   const giant = $('#giant');
   const giantLink = $('a', giant);
-  giantLink.innerHTML = [...giantLink.textContent].map((ch, i) => `<span class="ch" style="--i:${i}">${ch}</span>`).join('');
+  // Los espacios van como &nbsp;: en un elemento inline-block un espacio normal desaparece
+  giantLink.innerHTML = [...giantLink.textContent].map((ch, i) => `<span class="ch" style="--i:${i}">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
   giant.classList.add('watch');
 
   const fine = matchMedia('(pointer: fine)').matches;
@@ -409,7 +480,7 @@ function initMotion() {
     el.classList.add('reveal', 'watch');
     el.style.setProperty('--i', i % 5);
   });
-  document.querySelectorAll('.skill, .plan, .steps li').forEach(el => el.classList.add('watch'));
+  document.querySelectorAll('.skill, .plan').forEach(el => el.classList.add('watch'));
 
   // 3. Revelados al entrar en pantalla
   const io = new IntersectionObserver(entries => {
@@ -421,8 +492,7 @@ function initMotion() {
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
   document.querySelectorAll('.watch, .project').forEach(el => io.observe(el));
 
-  // 4. Efectos ligados al scroll: hero y línea de trayectoria
-  const hero = $('.hero');
+  // 4. Efectos ligados al scroll: cabecera, marcos y línea de trayectoria
   const timeline = $('.timeline');
   const header = $('.top');
   const tilts = [...document.querySelectorAll('.frame-tilt')];
@@ -431,17 +501,9 @@ function initMotion() {
   const onScroll = () => {
     ticking = false;
     const y = scrollY;
-    if (y < innerHeight * 1.2) hero.style.setProperty('--sy', y);
     // cabecera: se esconde al bajar y vuelve al subir
     header.classList.toggle('is-hidden', y > lastY && y > innerHeight * 0.6);
     lastY = y;
-    // declaración
-    const sr = statementBox.getBoundingClientRect();
-    const pinned = sr.height > innerHeight * 1.5;
-    const sp = pinned
-      ? (-sr.top / (sr.height - innerHeight)) * 1.2 - 0.03
-      : (innerHeight * 0.85 - sr.top) / (sr.height + innerHeight * 0.1);
-    words.forEach((w, i) => w.classList.toggle('lit', i / words.length < sp));
     // parallax de los marcos (solo escritorio)
     if (innerWidth > 900) tilts.forEach(t => {
       const tr = t.parentElement.getBoundingClientRect();
@@ -489,7 +551,7 @@ function initMotion() {
 
   // 7. Cursor de autor: visor / retícula arquitectónica con física elástica y morphing contextual.
   //    Sustituye al clásico círculo y punto por una mira técnica con brackets de encuadre.
-  $('#giant a')?.setAttribute('data-cursor', 'Escribir');
+  $('#giant a')?.setAttribute('data-cursor', t('Escribir', 'Email me'));
 
   const cross = document.createElement('div');
   cross.className = 'cursor-cross';
