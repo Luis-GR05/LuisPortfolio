@@ -125,7 +125,7 @@ function initMenu() {
   addEventListener('keydown', e => {
     if (e.key === 'Escape' && top.classList.contains('is-open')) { set(false); btn.focus(); }
   });
-  matchMedia('(min-width: 761px)').addEventListener?.('change', e => { if (e.matches) set(false); });
+  matchMedia('(min-width: 901px)').addEventListener?.('change', e => { if (e.matches) set(false); });
 }
 
 /* ── Proyectos ─────────────────────────────────────────────── */
