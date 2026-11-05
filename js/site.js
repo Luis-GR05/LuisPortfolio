@@ -11,6 +11,7 @@ translatePage();
 const $ = (sel, root = document) => root.querySelector(sel);
 const esc = (s = '') => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let lenis = null;
 
 /* Tipo de cada proyecto, en el idioma de la página */
 const KIND = LANG === 'en' ? {
@@ -30,6 +31,11 @@ const STATUS = LANG === 'en' ? { LIVE: 'Live', DEV: 'In development' } : { LIVE:
 const NEW_TAB = t(' (se abre en una pestaña nueva)', ' (opens in a new tab)');
 /* Imágenes que llenan el marco en vez de mostrarse como logo */
 const COVER = new Set(['kore']);
+/* Capturas de cada web: el marco las pasa como una pequeña demo */
+const SHOTS = ['kore', 'dailyset', 'nidus', 'mantra', 'nextvault'].reduce((acc, id) => {
+  acc[id] = [1, 2, 3].map(n => `assets/img/shots/${id}-${n}.webp`);
+  return acc;
+}, {});
 /* Logo de cada app (square: icono cuadrado; si no, el logotipo horizontal) */
 const LOGO = {
   kore:      { src: 'assets/img/kore-logo.webp', w: 225, h: 256, square: true, contain: true, bg: '#FFFFFF' },
@@ -79,10 +85,12 @@ renderProjects();
 renderServices();
 renderSkills();
 initThemeOnScroll();
+initHorizontalProjects();
 initProgress();
 initNavState();
 initContact();
 initStories();
+initServiceStack();
 initMotion();
 fitTitles();
 $('#year').textContent = new Date().getFullYear();
@@ -133,7 +141,7 @@ function renderProjects() {
   const list = $('#projects-list');
   const rail = $('#rail');
 
-  list.innerHTML = CONFIG.projects.map(p => {
+  list.innerHTML = '<div class="projects-track" id="projects-track">' + CONFIG.projects.map(p => {
     const logo = LOGO[p.id];
     const logoHtml = logo
       ? `<img class="project-logo reveal${logo.square ? ' is-square' : ''}${logo.contain ? ' is-contain' : ''}" ${logo.bg ? ` style="background:${logo.bg}"` : ''} src="${logo.src}" width="${logo.w}" height="${logo.h}" alt="${t('Logo de', 'Logo of')} ${esc(p.title)}" loading="lazy">`
@@ -168,12 +176,15 @@ function renderProjects() {
       <div class="frame-tilt"><div class="frame"${p.demoUrl ? ` data-cursor="${t('Abrir', 'Open')}"` : ''}>
         <div class="frame-bar"><span>${esc(host)}</span></div>
         <div class="frame-view">
-          ${p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="${t('Imagen de', 'Screenshot of')} ${esc(p.title)}" loading="lazy" decoding="async">` : `<span class="frame-poster">${esc(p.title)}</span>`}
+          ${SHOTS[p.id]
+            ? `<div class="shots">${SHOTS[p.id].map((src, i) => `<img class="shot${i === 0 ? ' is-on' : ''}" src="${src}" width="1280" height="880" alt="${i === 0 ? `${t('Captura de', 'Screenshot of')} ${esc(p.title)}` : ''}" loading="lazy" decoding="async">`).join('')}</div>
+              <div class="shot-dots" aria-hidden="true">${SHOTS[p.id].map((_, i) => `<span${i === 0 ? ' class="is-on"' : ''}></span>`).join('')}</div>`
+            : p.previewImg ? `<img class="${COVER.has(p.id) ? 'cover' : ''}" src="${esc(p.previewImg)}" alt="${t('Imagen de', 'Screenshot of')} ${esc(p.title)}" loading="lazy" decoding="async">` : `<span class="frame-poster">${esc(p.title)}</span>`}
           ${p.demoUrl ? `<a class="btn frame-play" href="${esc(p.demoUrl)}" target="_blank" rel="noopener">${icon('ext')}${t('Ver el proyecto', 'View project')}<span class="sr-only">${NEW_TAB}</span></a>` : ''}
         </div>
       </div></div>
     </article>`;
-  }).join('');
+  }).join('') + '</div>';
 
   // Pulsar en cualquier parte del marco abre el proyecto (el botón sigue siendo el acceso por teclado)
   list.addEventListener('click', e => {
@@ -183,7 +194,132 @@ function renderProjects() {
     if (link) window.open(link.href, '_blank', 'noopener');
   });
 
+  // Demo en el marco: las capturas del proyecto que se está viendo avanzan solas
+  if (!reduceMotion) setInterval(() => {
+    const frame = document.querySelector(`.project[data-id="${document.body.dataset.theme}"] .frame-view`);
+    const shots = frame ? [...frame.querySelectorAll('.shot')] : [];
+    if (shots.length < 2 || frame.matches(':hover')) return;
+    const dots = [...frame.querySelectorAll('.shot-dots span')];
+    const i = shots.findIndex(s => s.classList.contains('is-on'));
+    const next = (i + 1) % shots.length;
+    shots.forEach((s, k) => s.classList.toggle('is-on', k === next));
+    dots.forEach((d, k) => d.classList.toggle('is-on', k === next));
+  }, 2800);
+
   rail.innerHTML = CONFIG.projects.map(p => `<a href="#p-${p.id}" data-id="${p.id}">${esc(p.title)}</a>`).join('');
+}
+
+/* ── Proyectos en horizontal ──────────────────────────────────
+   En escritorio la sección se fija y el scroll vertical desplaza los
+   proyectos de derecha a izquierda. Cada panel tiene capas con distinta
+   velocidad: el texto se queda atrás y el marco entra girado en 3D
+   hasta quedar plano en el centro. */
+function initHorizontalProjects() {
+  const section = $('#proyectos');
+  const wrap = $('#projects-wrap');
+  const list = $('#projects-list');
+  const track = $('#projects-track');
+  const rail = $('#rail');
+  if (!section || !track) return;
+
+  const panels = [...track.querySelectorAll('.project')];
+  const railLinks = [...rail.querySelectorAll('a')];
+  const layers = panels.map(p => ({ el: p, text: p.firstElementChild, frame: $('.frame-tilt', p) }));
+  const mq = matchMedia('(min-width: 1024px) and (min-height: 640px)');
+  let on = false;
+  let distance = 0;
+  let theme = '';
+  let ticking = false;
+
+  const setTheme = id => {
+    if (id === theme) return;
+    theme = id;
+    document.body.dataset.theme = id;
+    railLinks.forEach(a => a.setAttribute('aria-current', String(a.dataset.id === id)));
+  };
+
+  const clear = () => {
+    section.classList.remove('is-h');
+    wrap.style.height = '';
+    track.style.transform = '';
+    layers.forEach(({ text, frame }) => {
+      if (text) { text.style.transform = ''; text.style.opacity = ''; }
+      if (frame) frame.style.transform = '';
+    });
+  };
+
+  const measure = () => {
+    if (reduceMotion || !mq.matches) { on = false; clear(); return; }
+    section.classList.add('is-h');
+    // El texto que no cabe en la altura de la pantalla se reduce; si haría falta reducirlo demasiado, se queda en vertical
+    let minFit = 1;
+    layers.forEach(l => {
+      if (!l.text) return;
+      const cs = getComputedStyle(l.el);
+      const avail = l.el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      l.fit = Math.min(1, avail / (l.text.offsetHeight || 1));
+      minFit = Math.min(minFit, l.fit);
+    });
+    if (minFit < 0.72) { on = false; clear(); return; }
+    on = true;
+    distance = Math.max(0, track.scrollWidth - list.clientWidth);
+    wrap.style.height = `${distance + innerHeight}px`;
+    update();
+  };
+
+  const update = () => {
+    ticking = false;
+    if (!on) return;
+    const r = wrap.getBoundingClientRect();
+    const p = distance ? Math.min(1, Math.max(0, -r.top / distance)) : 0;
+    const x = p * distance;
+    track.style.transform = `translate3d(${-x}px, 0, 0)`;
+
+    const vw = list.clientWidth;
+    let best = null;
+    let bestD = Infinity;
+    layers.forEach(({ el, text, frame, fit = 1 }) => {
+      const w = el.offsetWidth;
+      const o = (el.offsetLeft - x) / (w || 1); // 0 = centrado, 1 = un panel a la derecha
+      if (Math.abs(o) < bestD) { bestD = Math.abs(o); best = el; }
+      if (Math.abs(o) > 1.4) return;
+      const k = Math.max(-1, Math.min(1, o));
+      const a = Math.abs(k);
+      if (text) {
+        text.style.transform = `translate3d(${(-k * w * 0.28).toFixed(1)}px, 0, 0) scale(${fit.toFixed(3)})`;
+        text.style.opacity = (1 - a * 0.85).toFixed(3);
+      }
+      if (frame) {
+        frame.style.transform = `perspective(1400px) translate3d(${(k * vw * 0.14).toFixed(1)}px, 0, ${(-a * 160).toFixed(1)}px) rotateY(${(-k * 26).toFixed(2)}deg) rotateZ(${(k * 3).toFixed(2)}deg)`;
+      }
+    });
+
+    const mid = innerHeight / 2;
+    setTheme(r.top <= mid && r.bottom >= mid && best ? best.dataset.id : 'base');
+  };
+
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+  addEventListener('scroll', onScroll, { passive: true });
+  let rt = 0;
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(measure, 120); });
+  mq.addEventListener?.('change', measure);
+  document.fonts?.ready.then(measure);
+  addEventListener('load', measure);
+
+  // La lista lateral lleva a la posición de scroll que centra cada proyecto
+  rail.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (!a || !on) return;
+    const panel = panels.find(p => p.dataset.id === a.dataset.id);
+    if (!panel) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const y = scrollY + wrap.getBoundingClientRect().top + Math.min(distance, panel.offsetLeft) + 1;
+    if (lenis) lenis.scrollTo(y, { duration: 1.4 });
+    else scrollTo({ top: y, behavior: 'smooth' });
+  });
+
+  measure();
 }
 
 /* La página adopta el tema del proyecto que ocupa el centro de la pantalla */
@@ -194,8 +330,11 @@ function initThemeOnScroll() {
     document.body.dataset.theme = id;
     railLinks.forEach(a => a.setAttribute('aria-current', String(a.dataset.id === id)));
   };
+  const section = $('#proyectos');
   const io = new IntersectionObserver(entries => {
     entries.forEach(en => (en.isIntersecting ? visible.add(en.target) : visible.delete(en.target)));
+    // En modo horizontal el tema lo decide initHorizontalProjects
+    if (section.classList.contains('is-h')) return;
     const current = [...visible].pop();
     setTheme(current ? current.dataset.id : 'base');
   }, { rootMargin: '-50% 0px -50% 0px' });
@@ -255,6 +394,95 @@ function renderServices() {
     select.value = link.dataset.need;
     select.dispatchEvent(new Event('change', { bubbles: true }));
   });
+}
+
+/* ── Servicios apilados ──────────────────────────────────────
+   En escritorio los pasos del proceso son filas apiladas: la del paso
+   actual se abre con su texto y su pieza de UI a tamaño completo, y las
+   demás se quedan como una franja fina. El scroll interpola las alturas,
+   así que las filas se abren y cierran de forma continua. */
+function initServiceStack() {
+  const story = $('#servicios [data-story]');
+  if (!story) return;
+  const pin = $('.story-pin', story);
+  const list = $('.story-list', story);
+  const stage = $('.story-stage', story);
+  const items = [...list.querySelectorAll('.story-item')];
+  const demos = [...stage.children];
+  const n = Math.min(items.length, demos.length);
+  if (!n) return;
+  const mq = matchMedia('(min-width: 1024px) and (min-height: 680px)');
+  const COLLAPSED = 64;
+
+  const stack = document.createElement('div');
+  stack.className = 'svc-stack';
+  stack.setAttribute('aria-hidden', 'false');
+  const rows = items.slice(0, n).map((item, k) => {
+    const row = document.createElement('div');
+    row.className = 'svc-row';
+    row.innerHTML = `<div class="svc-copy"><span class="svc-num" aria-hidden="true">${String(k + 1).padStart(2, '0')}<small>/${String(n).padStart(2, '0')}</small></span></div><div class="svc-media" aria-hidden="true"></div>`;
+    stack.append(row);
+    return { row, copy: row.firstChild, media: row.lastChild, item, demo: demos[k] };
+  });
+
+  let on = false;
+  let H = 0;
+  let ticking = false;
+
+  const enable = () => {
+    rows.forEach(r => { r.copy.prepend(r.item); r.media.append(r.demo); });
+    pin.append(stack);
+    story.classList.add('is-stack');
+    on = true;
+  };
+  const disable = () => {
+    rows.forEach(r => { list.append(r.item); stage.append(r.demo); });
+    stack.remove();
+    story.classList.remove('is-stack');
+    on = false;
+  };
+
+  const measure = () => {
+    const want = !reduceMotion && mq.matches;
+    if (want && !on) enable();
+    if (!want && on) disable();
+    if (!on) return;
+    H = stack.clientHeight;
+    const open = H - (n - 1) * COLLAPSED;
+    // Si la fila abierta quedaría demasiado baja, se vuelve al diseño de dos columnas
+    if (open < 300) { disable(); return; }
+    // Cada pieza se pinta a su tamaño de diseño (600 × 450) y se escala entera para caber en la fila abierta
+    const mw = rows[0].media.clientWidth;
+    const scale = Math.min(1.15, mw / 600, (open - 24) / 450);
+    stack.style.setProperty('--demo-scale', scale.toFixed(3));
+    update();
+  };
+
+  const update = () => {
+    ticking = false;
+    if (!on) return;
+    const r = story.getBoundingClientRect();
+    const raw = -r.top / Math.max(1, r.height - innerHeight);
+    // Cada paso se queda abierto y quieto durante buena parte de su tramo; solo después pasa al siguiente
+    const tt = Math.min(n - 1, Math.max(0, raw * n - 0.5));
+    const base = Math.floor(tt);
+    const f = Math.min(1, Math.max(0, (tt - base - 0.45) / 0.55));
+    const p = Math.min(n - 1, base + f * f * (3 - 2 * f));
+    const open = H - (n - 1) * COLLAPSED;
+    rows.forEach(({ row }, k) => {
+      const w = Math.max(0, 1 - Math.abs(p - k));
+      row.style.height = `${(COLLAPSED + (open - COLLAPSED) * w).toFixed(1)}px`;
+      row.style.setProperty('--w', w.toFixed(3));
+      row.classList.toggle('is-open', w > 0.5);
+    });
+  };
+
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  let rt = 0;
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(measure, 120); });
+  mq.addEventListener?.('change', measure);
+  document.fonts?.ready.then(measure);
+  measure();
 }
 
 /* ── Secciones fijas ───────────────────────────────────────── */
@@ -433,7 +661,6 @@ function initMotion() {
   if (reduceMotion) return;
 
   // 0. Scroll suave
-  let lenis = null;
   if (window.Lenis) {
     lenis = new window.Lenis({ autoRaf: true, anchors: { offset: -60 }, lerp: 0.11 });
   }
@@ -505,7 +732,7 @@ function initMotion() {
     header.classList.toggle('is-hidden', y > lastY && y > innerHeight * 0.6);
     lastY = y;
     // parallax de los marcos (solo escritorio)
-    if (innerWidth > 900) tilts.forEach(t => {
+    if (innerWidth > 900 && !$('#proyectos').classList.contains('is-h')) tilts.forEach(t => {
       const tr = t.parentElement.getBoundingClientRect();
       if (tr.bottom < 0 || tr.top > innerHeight) return;
       const off = (tr.top + tr.height / 2 - innerHeight / 2) / innerHeight;
