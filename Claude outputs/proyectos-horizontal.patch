@@ -1,0 +1,255 @@
+diff --git a/css/site.css b/css/site.css
+index af765ae..ebd450e 100644
+--- a/css/site.css
++++ b/css/site.css
+@@ -235,7 +235,8 @@ a { color: inherit; }
+ h2 { font: 800 clamp(2.2rem, 5vw, 4rem)/1.02 var(--display); letter-spacing: -.035em; margin-bottom: 16px; }
+ .projects-intro p, .block-head > p { color: var(--muted); }
+ 
+-.projects-wrap { display: grid; grid-template-columns: 190px minmax(0, 1fr); padding: 0 var(--pad); gap: clamp(24px, 4vw, 64px); }
++.projects-wrap { padding: 0 var(--pad); }
++.projects-pin { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); }
+ .rail { position: sticky; top: 52px; align-self: start; height: calc(100svh - 52px); display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+ .rail a {
+   display: block; padding: 7px 0 7px 16px; text-decoration: none;
+@@ -273,6 +274,22 @@ h2 { font: 800 clamp(2.2rem, 5vw, 4rem)/1.02 var(--display); letter-spacing: -.0
+ .project[data-id="mantra"]    .project-title { font-family: 'Archivo Black', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; }
+ .project[data-id="nextvault"] .project-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2.4rem, 5.2vw, 4.8rem); }
+ 
++/* Modo horizontal (escritorio): la sección se fija y los proyectos pasan de lado */
++.projects.is-h .projects-wrap { position: relative; }
++.projects.is-h .projects-pin { position: sticky; top: 0; height: 100svh; align-items: stretch; }
++.projects.is-h .rail { position: static; height: auto; padding-top: 52px; }
++.projects.is-h .projects-list { position: relative; overflow: hidden; height: 100svh; }
++.projects.is-h .projects-track { display: flex; gap: clamp(60px, 9vw, 160px); height: 100%; will-change: transform; }
++.projects.is-h .project { flex: 0 0 100%; height: 100%; min-height: 0; grid-template-rows: minmax(0, 1fr); padding: 64px 0 24px; }
++.projects.is-h .project > div:first-child { will-change: transform, opacity; transform-origin: 0 50%; }
++.projects.is-h .project-logo { margin-bottom: 14px; }
++.projects.is-h .project-kind { margin-bottom: 16px; }
++.projects.is-h .project-pitch { margin-bottom: 16px; }
++.projects.is-h .project dl { gap: 10px; }
++.projects.is-h .tech { margin-top: 16px; }
++.projects.is-h .project-links { margin-top: 18px; }
++.projects.is-h .frame-tilt { translate: none; transform-origin: 50% 50%; will-change: transform; }
++
+ /* Marco de demo */
+ .frame { border: 1.5px solid var(--ink); border-radius: 10px; overflow: hidden; background: #000; transition: border-color .5s; }
+ .frame-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px; background: var(--ink); color: var(--bg); font-size: .92rem; transition: background-color .5s, color .5s; }
+@@ -874,7 +891,7 @@ html.lenis, html.lenis body { height: auto; }
+   .story-pin { row-gap: 24px; }
+   .hero { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+   .hero-visual { justify-self: center; width: min(100%, 380px); }
+-  .projects-wrap { grid-template-columns: minmax(0, 1fr); }
++  .projects-pin { grid-template-columns: minmax(0, 1fr); }
+   .rail { display: none; }
+   .project { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 64px 0; }
+   .block { grid-template-columns: minmax(0, 1fr); }
+diff --git a/index.html b/index.html
+index 6fa6039..ec3f462 100644
+--- a/index.html
++++ b/index.html
+@@ -222,7 +222,8 @@
+         <h2>Proyectos</h2>
+         <p>Cada proyecto tiene su propia identidad, así que la página se viste de él mientras lo lees. Cada uno enlaza a su versión desplegada.</p>
+       </div>
+-      <div class="projects-wrap">
++      <div class="projects-wrap" id="projects-wrap">
++        <div class="projects-pin">
+         <nav class="rail" id="rail" aria-label="Lista de proyectos"></nav>
+         <div class="projects-list" id="projects-list">
+           <noscript>
+@@ -235,6 +236,7 @@
+             </ul>
+           </noscript>
+         </div>
++        </div>
+       </div>
+     </section>
+ 
+diff --git a/js/site.js b/js/site.js
+index cf2d0d4..1abcd66 100644
+--- a/js/site.js
++++ b/js/site.js
+@@ -11,6 +11,7 @@ translatePage();
+ const $ = (sel, root = document) => root.querySelector(sel);
+ const esc = (s = '') => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
++let lenis = null;
+ 
+ /* Tipo de cada proyecto, en el idioma de la página */
+ const KIND = LANG === 'en' ? {
+@@ -79,6 +80,7 @@ renderProjects();
+ renderServices();
+ renderSkills();
+ initThemeOnScroll();
++initHorizontalProjects();
+ initProgress();
+ initNavState();
+ initContact();
+@@ -133,7 +135,7 @@ function renderProjects() {
+   const list = $('#projects-list');
+   const rail = $('#rail');
+ 
+-  list.innerHTML = CONFIG.projects.map(p => {
++  list.innerHTML = '<div class="projects-track" id="projects-track">' + CONFIG.projects.map(p => {
+     const logo = LOGO[p.id];
+     const logoHtml = logo
+       ? `<img class="project-logo reveal${logo.square ? ' is-square' : ''}${logo.contain ? ' is-contain' : ''}" ${logo.bg ? ` style="background:${logo.bg}"` : ''} src="${logo.src}" width="${logo.w}" height="${logo.h}" alt="${t('Logo de', 'Logo of')} ${esc(p.title)}" loading="lazy">`
+@@ -173,7 +175,7 @@ function renderProjects() {
+         </div>
+       </div></div>
+     </article>`;
+-  }).join('');
++  }).join('') + '</div>';
+ 
+   // Pulsar en cualquier parte del marco abre el proyecto (el botón sigue siendo el acceso por teclado)
+   list.addEventListener('click', e => {
+@@ -186,6 +188,119 @@ function renderProjects() {
+   rail.innerHTML = CONFIG.projects.map(p => `<a href="#p-${p.id}" data-id="${p.id}">${esc(p.title)}</a>`).join('');
+ }
+ 
++/* ── Proyectos en horizontal ──────────────────────────────────
++   En escritorio la sección se fija y el scroll vertical desplaza los
++   proyectos de derecha a izquierda. Cada panel tiene capas con distinta
++   velocidad: el texto se queda atrás y el marco entra girado en 3D
++   hasta quedar plano en el centro. */
++function initHorizontalProjects() {
++  const section = $('#proyectos');
++  const wrap = $('#projects-wrap');
++  const list = $('#projects-list');
++  const track = $('#projects-track');
++  const rail = $('#rail');
++  if (!section || !track) return;
++
++  const panels = [...track.querySelectorAll('.project')];
++  const railLinks = [...rail.querySelectorAll('a')];
++  const layers = panels.map(p => ({ el: p, text: p.firstElementChild, frame: $('.frame-tilt', p) }));
++  const mq = matchMedia('(min-width: 1024px) and (min-height: 640px)');
++  let on = false;
++  let distance = 0;
++  let theme = '';
++  let ticking = false;
++
++  const setTheme = id => {
++    if (id === theme) return;
++    theme = id;
++    document.body.dataset.theme = id;
++    railLinks.forEach(a => a.setAttribute('aria-current', String(a.dataset.id === id)));
++  };
++
++  const clear = () => {
++    section.classList.remove('is-h');
++    wrap.style.height = '';
++    track.style.transform = '';
++    layers.forEach(({ text, frame }) => {
++      if (text) { text.style.transform = ''; text.style.opacity = ''; }
++      if (frame) frame.style.transform = '';
++    });
++  };
++
++  const measure = () => {
++    if (reduceMotion || !mq.matches) { on = false; clear(); return; }
++    section.classList.add('is-h');
++    // El texto que no cabe en la altura de la pantalla se reduce; si haría falta reducirlo demasiado, se queda en vertical
++    let minFit = 1;
++    layers.forEach(l => {
++      if (!l.text) return;
++      const cs = getComputedStyle(l.el);
++      const avail = l.el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
++      l.fit = Math.min(1, avail / (l.text.offsetHeight || 1));
++      minFit = Math.min(minFit, l.fit);
++    });
++    if (minFit < 0.72) { on = false; clear(); return; }
++    on = true;
++    distance = Math.max(0, track.scrollWidth - list.clientWidth);
++    wrap.style.height = `${distance + innerHeight}px`;
++    update();
++  };
++
++  const update = () => {
++    ticking = false;
++    if (!on) return;
++    const r = wrap.getBoundingClientRect();
++    const p = distance ? Math.min(1, Math.max(0, -r.top / distance)) : 0;
++    const x = p * distance;
++    track.style.transform = `translate3d(${-x}px, 0, 0)`;
++
++    const vw = list.clientWidth;
++    let best = null;
++    let bestD = Infinity;
++    layers.forEach(({ el, text, frame, fit = 1 }) => {
++      const w = el.offsetWidth;
++      const o = (el.offsetLeft - x) / (w || 1); // 0 = centrado, 1 = un panel a la derecha
++      if (Math.abs(o) < bestD) { bestD = Math.abs(o); best = el; }
++      if (Math.abs(o) > 1.4) return;
++      const k = Math.max(-1, Math.min(1, o));
++      const a = Math.abs(k);
++      if (text) {
++        text.style.transform = `translate3d(${(-k * w * 0.28).toFixed(1)}px, 0, 0) scale(${fit.toFixed(3)})`;
++        text.style.opacity = (1 - a * 0.85).toFixed(3);
++      }
++      if (frame) {
++        frame.style.transform = `perspective(1400px) translate3d(${(k * vw * 0.14).toFixed(1)}px, 0, ${(-a * 160).toFixed(1)}px) rotateY(${(-k * 26).toFixed(2)}deg) rotateZ(${(k * 3).toFixed(2)}deg)`;
++      }
++    });
++
++    const mid = innerHeight / 2;
++    setTheme(r.top <= mid && r.bottom >= mid && best ? best.dataset.id : 'base');
++  };
++
++  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
++  addEventListener('scroll', onScroll, { passive: true });
++  let rt = 0;
++  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(measure, 120); });
++  mq.addEventListener?.('change', measure);
++  document.fonts?.ready.then(measure);
++  addEventListener('load', measure);
++
++  // La lista lateral lleva a la posición de scroll que centra cada proyecto
++  rail.addEventListener('click', e => {
++    const a = e.target.closest('a');
++    if (!a || !on) return;
++    const panel = panels.find(p => p.dataset.id === a.dataset.id);
++    if (!panel) return;
++    e.preventDefault();
++    e.stopPropagation();
++    const y = scrollY + wrap.getBoundingClientRect().top + Math.min(distance, panel.offsetLeft) + 1;
++    if (lenis) lenis.scrollTo(y, { duration: 1.4 });
++    else scrollTo({ top: y, behavior: 'smooth' });
++  });
++
++  measure();
++}
++
+ /* La página adopta el tema del proyecto que ocupa el centro de la pantalla */
+ function initThemeOnScroll() {
+   const railLinks = [...document.querySelectorAll('.rail a')];
+@@ -194,8 +309,11 @@ function initThemeOnScroll() {
+     document.body.dataset.theme = id;
+     railLinks.forEach(a => a.setAttribute('aria-current', String(a.dataset.id === id)));
+   };
++  const section = $('#proyectos');
+   const io = new IntersectionObserver(entries => {
+     entries.forEach(en => (en.isIntersecting ? visible.add(en.target) : visible.delete(en.target)));
++    // En modo horizontal el tema lo decide initHorizontalProjects
++    if (section.classList.contains('is-h')) return;
+     const current = [...visible].pop();
+     setTheme(current ? current.dataset.id : 'base');
+   }, { rootMargin: '-50% 0px -50% 0px' });
+@@ -433,7 +551,6 @@ function initMotion() {
+   if (reduceMotion) return;
+ 
+   // 0. Scroll suave
+-  let lenis = null;
+   if (window.Lenis) {
+     lenis = new window.Lenis({ autoRaf: true, anchors: { offset: -60 }, lerp: 0.11 });
+   }
+@@ -505,7 +622,7 @@ function initMotion() {
+     header.classList.toggle('is-hidden', y > lastY && y > innerHeight * 0.6);
+     lastY = y;
+     // parallax de los marcos (solo escritorio)
+-    if (innerWidth > 900) tilts.forEach(t => {
++    if (innerWidth > 900 && !$('#proyectos').classList.contains('is-h')) tilts.forEach(t => {
+       const tr = t.parentElement.getBoundingClientRect();
+       if (tr.bottom < 0 || tr.top > innerHeight) return;
+       const off = (tr.top + tr.height / 2 - innerHeight / 2) / innerHeight;

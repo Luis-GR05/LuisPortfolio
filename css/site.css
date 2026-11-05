@@ -235,7 +235,8 @@ a { color: inherit; }
 h2 { font: 800 clamp(2.2rem, 5vw, 4rem)/1.02 var(--display); letter-spacing: -.035em; margin-bottom: 16px; }
 .projects-intro p, .block-head > p { color: var(--muted); }
 
-.projects-wrap { display: grid; grid-template-columns: 190px minmax(0, 1fr); padding: 0 var(--pad); gap: clamp(24px, 4vw, 64px); }
+.projects-wrap { padding: 0 var(--pad); }
+.projects-pin { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); }
 .rail { position: sticky; top: 52px; align-self: start; height: calc(100svh - 52px); display: flex; flex-direction: column; justify-content: center; gap: 2px; }
 .rail a {
   display: block; padding: 7px 0 7px 16px; text-decoration: none;
@@ -273,6 +274,22 @@ h2 { font: 800 clamp(2.2rem, 5vw, 4rem)/1.02 var(--display); letter-spacing: -.0
 .project[data-id="mantra"]    .project-title { font-family: 'Archivo Black', sans-serif; font-weight: 400; text-transform: uppercase; letter-spacing: .02em; }
 .project[data-id="nextvault"] .project-title { font-family: 'Sora', sans-serif; font-weight: 800; font-size: clamp(2.4rem, 5.2vw, 4.8rem); }
 
+/* Modo horizontal (escritorio): la sección se fija y los proyectos pasan de lado */
+.projects.is-h .projects-wrap { position: relative; }
+.projects.is-h .projects-pin { position: sticky; top: 0; height: 100svh; align-items: stretch; }
+.projects.is-h .rail { position: static; align-self: center; height: auto; padding-top: 0; }
+.projects.is-h .projects-list { position: relative; overflow: hidden; height: 100svh; }
+.projects.is-h .projects-track { display: flex; gap: clamp(60px, 9vw, 160px); height: 100%; will-change: transform; }
+.projects.is-h .project { flex: 0 0 100%; height: 100%; min-height: 0; grid-template-rows: minmax(0, 1fr); padding: 64px 0 24px; }
+.projects.is-h .project > div:first-child { will-change: transform, opacity; transform-origin: 0 50%; }
+.projects.is-h .project-logo { margin-bottom: 14px; }
+.projects.is-h .project-kind { margin-bottom: 16px; }
+.projects.is-h .project-pitch { margin-bottom: 16px; }
+.projects.is-h .project dl { gap: 10px; }
+.projects.is-h .tech { margin-top: 16px; }
+.projects.is-h .project-links { margin-top: 18px; }
+.projects.is-h .frame-tilt { translate: none; transform-origin: 50% 50%; will-change: transform; }
+
 /* Marco de demo */
 .frame { border: 1.5px solid var(--ink); border-radius: 10px; overflow: hidden; background: #000; transition: border-color .5s; }
 .frame-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 14px; background: var(--ink); color: var(--bg); font-size: .92rem; transition: background-color .5s, color .5s; }
@@ -282,6 +299,18 @@ h2 { font: 800 clamp(2.2rem, 5vw, 4rem)/1.02 var(--display); letter-spacing: -.0
 .frame-view > img { max-width: 62%; max-height: 40%; }
 .frame-view > img.cover { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; }
 .frame-play { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); white-space: nowrap; background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
+/* Capturas de la web dentro del marco */
+.shots { position: absolute; inset: 0; overflow: hidden; }
+.shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0; scale: 1.06; transition: opacity .9s ease, scale 3.6s ease-out; }
+.shot.is-on { opacity: 1; scale: 1; }
+.shot-dots { position: absolute; top: 12px; right: 12px; display: flex; gap: 6px; z-index: 1; }
+.shot-dots span { width: 18px; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, .35); transition: background .4s, width .4s; }
+.shot-dots span.is-on { width: 30px; background: #fff; }
+@media (hover: hover) {
+  .frame-view:has(.shots) .frame-play { opacity: 0; translate: 0 8px; transition: opacity .3s, translate .4s cubic-bezier(.16, 1, .3, 1); }
+  .frame:hover .frame-view .frame-play, .frame-view .frame-play:focus-visible { opacity: 1; translate: 0 0; }
+}
 
 /* ── Bloques ── */
 .block { padding: clamp(64px, 12vh, 140px) var(--pad); display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 80px); align-items: start; border-top: 1px solid var(--line); }
@@ -744,6 +773,33 @@ html.lenis, html.lenis body { height: auto; }
 .plans-intro { color: var(--muted); max-width: 40rem; margin-bottom: 28px; }
 .demo-vault { justify-content: center; }
 
+/* Escritorio: pasos apilados que se abren con el scroll */
+.story.is-stack .story-pin { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); align-items: stretch; gap: clamp(20px, 3.5vh, 40px); }
+.story.is-stack .story-copy { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); align-items: end; gap: clamp(32px, 5vw, 80px); }
+.story.is-stack .story-title { margin-bottom: 0; }
+.story.is-stack .story-intro { margin: 0; max-width: 30rem; }
+.story.is-stack .story-list, .story.is-stack .story-stage { display: none; }
+.svc-stack { display: flex; flex-direction: column; min-height: 0; overflow: hidden; border-bottom: 1px solid var(--line); }
+.svc-row {
+  --w: 0; flex: none; height: 64px; overflow: hidden; position: relative;
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 5vw, 80px);
+  border-top: 1px solid var(--line); will-change: height;
+}
+/* Línea de acento que crece en la fila abierta */
+.svc-row::before { content: ""; position: absolute; left: 0; top: -1px; height: 2px; width: calc(var(--w) * 100%); background: var(--accent); }
+.svc-copy { min-width: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.svc-copy .story-item button { padding: 0; border: 0; gap: 10px; align-content: start; }
+.svc-copy .story-item button:hover .story-proj { color: var(--accent); }
+.svc-copy .story-proj { font-size: clamp(1.5rem, 2.4vw, 2.2rem); line-height: 64px; height: 64px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: color-mix(in srgb, var(--ink) calc(45% + var(--w) * 55%), transparent); transition: color .3s; }
+.svc-copy .story-item.is-active button { padding-left: 0; }
+.svc-copy .step-n { align-self: center; min-width: 2.4em; }
+.svc-copy .story-text { max-height: none; overflow: visible; max-width: 28rem; font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: var(--muted); padding-left: calc(.875rem * 2.4 + 10px); opacity: var(--w); transform: translateY(calc((1 - var(--w)) * 24px)); transition: none; }
+.svc-num { align-self: end; padding: 0 0 20px calc(.875rem * 2.4 + 10px); font: 800 clamp(4rem, 8vw, 7.5rem)/.8 var(--display); letter-spacing: -.05em; color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--accent) 70%, transparent); opacity: calc(var(--w) * var(--w)); transform: translateY(calc((1 - var(--w)) * 40px)); }
+.svc-num small { font-size: .28em; letter-spacing: 0; -webkit-text-stroke: 0; color: var(--muted); margin-left: .3em; }
+/* Plegada, la fila solo muestra el título; al abrirse aparece la pieza entera */
+.svc-media { position: relative; margin: 12px 0; }
+.svc-media > .demo { position: absolute; left: 50%; top: 50%; width: 600px; height: 450px; transform: translate(-50%, -50%) scale(calc(var(--demo-scale, 1) * (.94 + var(--w) * .06))); opacity: clamp(0, calc((var(--w) - .25) * 1.6), 1); pointer-events: none; box-shadow: 0 30px 60px -36px rgba(27, 18, 38, .45); }
+
 /* Las piezas del proceso usan los colores del sitio y cambian con el modo */
 .demo-ux { --d-bg: var(--surface); --d-ink: var(--ink); --d-muted: var(--muted); --d-acc: var(--accent); --d-line: var(--line); }
 
@@ -874,7 +930,7 @@ html.lenis, html.lenis body { height: auto; }
   .story-pin { row-gap: 24px; }
   .hero { grid-template-columns: minmax(0, 1fr); min-height: 0; }
   .hero-visual { justify-self: center; width: min(100%, 380px); }
-  .projects-wrap { grid-template-columns: minmax(0, 1fr); }
+  .projects-pin { grid-template-columns: minmax(0, 1fr); }
   .rail { display: none; }
   .project { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 64px 0; }
   .block { grid-template-columns: minmax(0, 1fr); }
